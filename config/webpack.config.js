@@ -49,6 +49,8 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const stylusRegex = /\.(styl|stylus)$/;
+const stylusModuleRegex = /\.module\.(styl|stylus)$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -359,6 +361,22 @@ module.exports = function(webpackEnv) {
                 name: 'static/media/[name].[hash:8].[ext]',
               },
             },
+          // isEnvProduction ? 
+					// {
+					// 	test: /\.styl$/,
+          //   use: [
+          //     require.resolve('style-loader'),
+          //     require.resolve('css-loader'),
+          //     require.resolve('stylus-loader')
+          //   ]
+					// }: {
+          //   test: /\.styl$/,
+          //   use: [
+          //     require.resolve('style-loader'),
+          //     require.resolve('css-loader'),
+          //     require.resolve('stylus-loader')
+          //   ]
+          // },
             // Process application JS with Babel.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
@@ -470,6 +488,17 @@ module.exports = function(webpackEnv) {
               // See https://github.com/webpack/webpack/issues/6571
               sideEffects: true,
             },
+						{
+							test: stylusRegex,
+							exclude: stylusModuleRegex,
+							use: getStyleLoaders(
+                {
+                  importLoaders: 3,
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                },
+                'stylus-loader'
+              )
+						},
             // Adds support for CSS Modules, but using SASS
             // using the extension .module.scss or .module.sass
             {
