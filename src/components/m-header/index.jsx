@@ -1,11 +1,17 @@
 import React from 'react'
-import "./index.styl"
+import { NavLink } from "react-router-dom"
+import './index.styl'
+import logo from './logo@2x.png'
 
 function MHeader() {
   return (
-    <div className="music-header">
-      header
-			<div className="header-back">back</div>
+    <div className="m-header">
+			<div className="icon" style={{background: `url(${logo})`}}/>
+			<div className="icon"/>
+      <h1 className="text">Chicken Music</h1>
+			<NavLink className="mine" to="/user">
+				<i className="icon-mine"></i>
+			</NavLink>
     </div>
   )
 }
