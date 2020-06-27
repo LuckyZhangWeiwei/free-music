@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavLink, Switch, Redirect } from "react-router-dom"
-import "./index.stylus"
-import router from './../../router'
 import { renderRoutes } from "react-router-config"
+import router from './../../router'
+
+import "./index.stylus"
 
 function Tab() {
 	return (
