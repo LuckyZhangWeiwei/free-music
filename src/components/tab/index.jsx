@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, NavLink, Switch, Redirect } from "react-router-dom"
+import { NavLink, Switch, Redirect } from "react-router-dom"
 import "./index.stylus"
 import router from './../../router'
 import { renderRoutes } from "react-router-config"
