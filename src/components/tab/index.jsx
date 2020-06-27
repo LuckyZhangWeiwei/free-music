@@ -6,7 +6,7 @@ import { renderRoutes } from "react-router-config"
 
 function Tab() {
 	return (
-		<Router>
+		<>
 			<div className="tab">
 				<NavLink activeClassName="router-link-active" className="tab-item" to="/recommend">
 					<span className="tab-link">推荐</span>
@@ -28,7 +28,7 @@ function Tab() {
 						{ renderRoutes(router) }
 					</Switch>
 			</div>
-		</Router>
+		</>
 	)
 } 
 
