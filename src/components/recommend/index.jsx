@@ -12,7 +12,7 @@ function Recommend() {
 			.then(res => {
 				if (res.code === ERR_OK) {
 					const { slider } = res.data
-					console.log(slider)
+					// console.log(slider)
 					setSlider(slider)
 				}
 			})

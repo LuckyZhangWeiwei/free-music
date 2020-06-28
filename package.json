@@ -65,7 +65,8 @@
     "webpack-dev-server": "3.10.3",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "4.3.1",
-    "classnames": "2.2.6"
+    "classnames": "2.2.6",
+		"prop-types": "15.7.2"
   },
   "scripts": {
     "start": "node scripts/start.js",
