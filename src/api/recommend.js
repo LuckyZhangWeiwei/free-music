@@ -1,4 +1,4 @@
-// import axios from 'axios'
+import axios from 'axios'
 import jsonp from '../common/js/jsonp'
 import {commonParams, options} from './config'
 
@@ -11,4 +11,13 @@ export function getRecommend() {
   })
 
   return jsonp(url, data, options)
+}
+
+export function getDiscList() {
+	const url = 'http://localhost:3000/top/playlist/highquality?limit=20'
+	return axios.get(url, {
+    params: null
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
 }

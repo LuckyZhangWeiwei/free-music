@@ -135,7 +135,7 @@ class Slider extends React.Component {
 			setTimeout(() => {
 				this._setSliderWidth()
 				this._initSlider()	
-			}, 100);
+			}, 200);
 		
 	
 		if (this.props.autoPlay) {

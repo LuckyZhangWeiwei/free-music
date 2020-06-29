@@ -11,3 +11,4 @@ export const options = {
 }
 
 export const ERR_OK = 0
+export const ERR_OK_lOCAL = 200
