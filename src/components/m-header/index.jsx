@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {memo} from 'react'
 import { NavLink } from "react-router-dom"
 
 import './index.styl'
 import logo from './logo@2x.png'
 
-function MHeader() {
+const MHeader = memo(function () {
   return (
     <div className="m-header">
 			<div className="icon" style={{backgroundImage: `url(${logo})`}}/>
@@ -15,6 +15,6 @@ function MHeader() {
 			</NavLink>
     </div>
   )
-}
+})
 
 export default MHeader

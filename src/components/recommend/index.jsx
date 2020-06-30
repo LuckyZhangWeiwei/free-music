@@ -4,6 +4,7 @@ import { getRecommend, getDiscList } from '../../api/recommend'
 import { ERR_OK, ERR_OK_lOCAL } from '../../api/config'
 import Slider from '../../controls/slider'
 import Scroll from '../../controls/scroll'
+import Loading from '../../controls/loading'
 import './index.stylus'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
@@ -83,6 +84,14 @@ function Recommend() {
 							</ul>
 						</div>
 				</div>
+				{
+					!discList.length 
+					&&
+					<div className="loading-container">
+						<Loading title="正在加载..."/>
+					</div>
+				}
+				
 			</Scroll>
 		</div>
   )
