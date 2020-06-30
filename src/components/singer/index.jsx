@@ -4,6 +4,8 @@ import { ERR_OK } from '../../api/config'
 import SingerModel from '../../common/js/models/singer'
 import ListView from '../../controls/listview'
 
+import './index.stylus'
+
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
@@ -22,7 +24,9 @@ function Singer() {
 	},[])
 
   return (
+		<div className="singer">
 			<ListView data={singers} needfresh={needFresh} />
+		</div>
   )
 	
 	function _normalizeSinger(list) {
