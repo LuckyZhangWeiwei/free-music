@@ -112,21 +112,28 @@ class ListView extends React.Component {
 		super(props)
 		this.state = {
 			shortCutList: [], 
-			currentIndex: 0
+			currentIndex: 0,
+			data: [],
 		}
 
 		this.touch = {}
 		this.listHeight = []
 		this.ANCHOR_HEIGHT = 18
+		this.TITLE_HEIGHT = 30
+		this.checkState = false
 
 		this.listGroupRef = React.createRef()
 		this.scrollRef = React.createRef()
+		this.fixedTitleRef = React.createRef()
 
 		this.onShortcutTouchMove = this.onShortcutTouchMove.bind(this)
 		this.onShortcutTouchStart = this.onShortcutTouchStart.bind(this)
 		this.scroll = this.scroll.bind(this)
 	}
 	componentWillReceiveProps(props) {
+		this.setState({
+			data: props.data
+		})
 		const list = props.data.map(group => {
 			return group.title.substr(0, 1)
 		})
@@ -140,6 +147,7 @@ class ListView extends React.Component {
 		}, 200);
 	}
 	render() {
+		
 		return (
 		<Scroll className="listview" {...this.props} ref={this.scrollRef} listenScroll={true} scroll={this.scroll}>
 			<ul ref={this.listGroupRef}>
@@ -175,6 +183,13 @@ class ListView extends React.Component {
 						})
 					}
 				</ul>
+			</div>
+			<div className="list-fixed" ref={this.fixedTitleRef}>
+				<h1 className="fixed-title">
+					{
+						this.state.data[this.state.currentIndex] ? this.state.data[this.state.currentIndex].title : ''
+					}
+				</h1>
 			</div>
 		</Scroll>
 		)
@@ -214,6 +229,12 @@ class ListView extends React.Component {
  	scroll(pos) {
 		const listHeight = this.listHeight
 		const { y } = pos
+		const fixedTitleDiv = this.fixedTitleRef.current
+		if (y > 0) {
+			fixedTitleDiv.style.display = "none"
+		} else {
+			fixedTitleDiv.style.display = "block"
+		}
 		for (let i = 0; i < listHeight.length - 1; i++) {
 			let h1 = listHeight[i]
 			let h2 = listHeight[i+1]

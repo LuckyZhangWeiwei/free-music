@@ -42,7 +42,7 @@ class Scroll extends React.Component {
 			this.scroll.on('scroll', pos => {
 				setTimeout(() => {
 					me.props.scroll(pos)	
-				}, 20);
+				}, 15);
 			})
 		}
 
