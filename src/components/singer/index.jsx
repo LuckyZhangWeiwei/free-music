@@ -24,7 +24,7 @@ function Singer() {
 
   return (
 		<div className="singer">
-			<ListView data={singers} />
+			<ListView data={singers} probeType={3} />
 		</div>
   )
 	
