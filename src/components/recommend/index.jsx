@@ -35,8 +35,8 @@ function Recommend() {
 	}, [])
 
   return (
-		<div className="recommend" ref={scrollRef}>
-			 <Scroll className="recommend-content" data={discList}>
+		<div className="recommend">
+			 <Scroll className="recommend-content" data={discList}  ref={scrollRef}>
 					<div>
 						<div className="slider-wrapper">
 							<Slider loop={true} interval={4000} autoPlay={true}>
@@ -90,7 +90,6 @@ function Recommend() {
 						<Loading title="正在加载..."/>
 					</div>
 				}
-				
 			</Scroll>
 		</div>
   )
