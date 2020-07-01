@@ -17,18 +17,25 @@ const ListView = function (props) {
 	const listGroupRef = useRef()
 
 	const touch = {}
+	let listHeight = []
 
-	const [shortCutList, setShortCutList] = useState([]);
+	const [shortCutList, setShortCutList] = useState([])
+	const [scrollY, setScrollY] = useState(-1)
+	const [currentIndex, setCurrentIndex] = useState(0)
 
 	useEffect(() => {
 		const list = data.map(group => {
 			return group.title.substr(0, 1)
 		})
 		setShortCutList(list)
+
+		setTimeout(() => {
+			_calculateHeight()
+		}, 20);
 	}, [data])
 
 	return (
-		<Scroll className="listview" ref={scrollRef} {...props}>
+		<Scroll className="listview" ref={scrollRef} listenScroll={true} scroll={scroll}>
 			<ul ref={listGroupRef}>
 			{
 				data.map((group, index) => {
@@ -88,6 +95,15 @@ const ListView = function (props) {
 		const touchedGroup = Array.from(group)[index]
 		scrollRef.current.scrollToElement(touchedGroup, 0)
 	}
+
+	function scroll(pos) {
+		setScrollY(pos.y)
+	}
+
+	function _calculateHeight() {
+		listHeight = []
+	}
+ 
 }
 
 ListView.propTypes = {
