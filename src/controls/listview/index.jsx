@@ -230,11 +230,14 @@ class ListView extends React.Component {
 		const listHeight = this.listHeight
 		const { y } = pos
 		const fixedTitleDiv = this.fixedTitleRef.current
-		if (y > 0) {
-			fixedTitleDiv.style.display = "none"
-		} else {
-			fixedTitleDiv.style.display = "block"
+		if (fixedTitleDiv) {
+			if (y > 0) {
+			 	fixedTitleDiv.style.display = "none"
+			} else {
+				fixedTitleDiv.style.display = "block"
+			}
 		}
+		
 		for (let i = 0; i < listHeight.length - 1; i++) {
 			let h1 = listHeight[i]
 			let h2 = listHeight[i+1]
