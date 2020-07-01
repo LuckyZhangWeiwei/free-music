@@ -13,9 +13,8 @@ function Recommend() {
 	let checkLoaded = false
 	const [slider, setSlider] = useState([])
 	const [discList, setDiscList] = useState([])
-	const [needFresh, setNeedFresh] = useState(false)
 
-	const recommendRef = useRef()
+	const scrollRef = useRef()
 
 	useEffect(() => {
 		getRecommend()
@@ -36,8 +35,8 @@ function Recommend() {
 	}, [])
 
   return (
-		<div className="recommend" ref={recommendRef}>
-			 <Scroll className="recommend-content" data={discList} needfresh={needFresh}>
+		<div className="recommend" ref={scrollRef}>
+			 <Scroll className="recommend-content" data={discList}>
 					<div>
 						<div className="slider-wrapper">
 							<Slider loop={true} interval={4000} autoPlay={true}>
@@ -48,7 +47,7 @@ function Recommend() {
 										return (
 											<div key={item.id}>
 												<a href={item.linkUrl}>
-													<img src={item.picUrl} alt=""  onLoad={loadImage} className="needsclick" />
+													<img src={item.picUrl} alt="" onLoad={loadImage} className="needsclick" />
 												</a>
 											</div>
 										)
@@ -98,9 +97,8 @@ function Recommend() {
 
 	function loadImage() {
 		if (!checkLoaded) {
-			setNeedFresh(true)
+			scrollRef.current.refresh()
 			checkLoaded = true
-			setNeedFresh(false)
 		}
 	}
 }

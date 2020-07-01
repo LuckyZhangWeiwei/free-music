@@ -10,7 +10,10 @@ import './index.stylus'
 
 const ListView = function (props) {
 	const { data } = props
+
 	const scrollRef = useRef()
+	const listGroupRef = useRef()
+
 	const [shortCutList, setShortCutList] = useState([]);
 
 	useEffect(() => {
@@ -22,7 +25,7 @@ const ListView = function (props) {
 
 	return (
 		<Scroll className="listview" ref={scrollRef} {...props}>
-			<ul>
+			<ul ref={listGroupRef}>
 			{
 				data.map((group, index) => {
 					return (
@@ -61,8 +64,9 @@ const ListView = function (props) {
 
 	function onShortcutTouchStart(e) {
 		let anchorIndex = getData(e.target, 'index')
-		console.log(anchorIndex)
-		console.log(scrollRef)
+	  const group =	listGroupRef.current.children
+		const touchedGroup = Array.from(group)[anchorIndex]
+		scrollRef.current.scrollToElement(touchedGroup, 0)
 	}
 }
 

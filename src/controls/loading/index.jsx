@@ -7,7 +7,7 @@ import loading from './loading.gif'
 const Loading = memo(function (props) {
 	return (
 		<div className="loading">
-			<img width="24" height="24" src={loading} />
+			<img width="24" height="24" src={loading} alt="" />
 			<p className="desc">{props.title}</p>
 		</div>
 	)

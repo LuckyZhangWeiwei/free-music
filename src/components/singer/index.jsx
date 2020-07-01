@@ -12,7 +12,6 @@ const HOT_SINGER_LEN = 10
 function Singer() {
 	
 	const [singers, setSingers] = useState([])
-	const [needFresh, setNeedFresh] = useState(false) 
 
 	useEffect(()=> {
 		getSingerList().then(res => {
@@ -25,7 +24,7 @@ function Singer() {
 
   return (
 		<div className="singer">
-			<ListView data={singers} needfresh={needFresh} />
+			<ListView data={singers} />
 		</div>
   )
 	
