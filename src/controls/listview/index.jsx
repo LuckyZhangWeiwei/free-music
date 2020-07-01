@@ -198,6 +198,14 @@ class ListView extends React.Component {
  	}
 
  	_scrollTo(index) {
+		if (!index && index !==0) {
+			return
+		}
+		if (index < 0) {
+			index = 0
+		} else if (index > this.listHeight.length -1) {
+			index = this.listHeight.length -1
+		}
  		const group =	this.listGroupRef.current.children
  		const touchedGroup = Array.from(group)[index]
  		this.scrollRef.current.scrollToElement(touchedGroup, 0)
