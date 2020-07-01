@@ -205,14 +205,15 @@ class ListView extends React.Component {
 
  	scroll(pos) {
 		const listHeight = this.listHeight
-		for (let i = 0; i < listHeight.length; i++) {
+		const { y } = pos
+		for (let i = 0; i < listHeight.length - 1; i++) {
 			let h1 = listHeight[i]
 			let h2 = listHeight[i+1]
-			if (!h2 || (-pos.y >= h1 && -pos.y < h2)) {
-			 this.setState({
-				 currentIndex: i
-			 })
-			 return
+			if (-y >= h1 && -y < h2) {
+				this.setState({
+					currentIndex: i + 1
+				})
+				return
 			}
 		}
 		this.setState({

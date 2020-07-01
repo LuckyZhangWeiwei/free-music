@@ -38,7 +38,7 @@ function Recommend() {
 		<div className="recommend">
 			 <Scroll className="recommend-content" data={discList}  ref={scrollRef}>
 					<div>
-						<div className="slider-wrapper">
+						<div className="slider-wrapper" style={{maxHeight:165, minHeight: 165}} >
 							<Slider loop={true} interval={4000} autoPlay={true}>
 								{
 									slider.length > 0 
