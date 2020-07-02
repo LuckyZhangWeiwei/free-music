@@ -16,6 +16,7 @@ class ListView extends React.Component {
 			shortCutList: [], 
 			currentIndex: 0,
 			data: [],
+			diff: -1
 		}
 
 		this.touch = {}
@@ -50,6 +51,19 @@ class ListView extends React.Component {
 
 		this.fixedTitleDiv = this.fixedTitleRef.current
 	}
+
+	componentWillUpdate(nextProps, nextState) {
+		let newVal = nextState.diff
+  	let fixedTop = (newVal > 0 && newVal < this.TITLE_HEIGHT) ? newVal - this.TITLE_HEIGHT : 0
+		if (this.fixedTop === fixedTop) {
+			return
+		}
+		this.fixedTop = fixedTop
+		if (this.fixedTitleDiv) {
+			this.fixedTitleDiv.style.transform = `translate3d(0, ${fixedTop}px, 0)`
+		}
+	}
+
 	render() {
 		return (
 		<Scroll className="listview" {...this.props} ref={this.scrollRef} listenScroll={true} scroll={this.scroll}>
@@ -144,15 +158,11 @@ class ListView extends React.Component {
 			let h2 = listHeight[i + 1]
 			if (-y >= h1 && -y < h2) {
 				this.setState({
-					currentIndex: i + 1
+					currentIndex: i + 1,
+					diff:  h2 + y
 				})
-				this.diff = h2 + y
 				return
 			}
-			// let fixedTop = (this.diff > 0 && this.diff < this.TITLE_HEIGHT) ? this.diff - this.TITLE_HEIGHT : 0
-			// if (this.fixedTitleDiv) {
-			// 	this.fixedTitleDiv.style.transform = `translate3d(0, ${fixedTop}px, 0)`
-			// }
 		}
 		this.setState({
 			currentIndex: 0
