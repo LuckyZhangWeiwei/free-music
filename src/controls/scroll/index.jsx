@@ -16,7 +16,7 @@ class Scroll extends React.Component {
 	componentDidMount() {
 			setTimeout(() => {
 				this._initScroll()	
-			}, 20)
+			}, 8)
 	}
 	render() {
 		return (
@@ -40,9 +40,10 @@ class Scroll extends React.Component {
 		if (this.props.listenScroll) {
 			let me = this
 			this.scroll.on('scroll', pos => {
-				setTimeout(() => {
-					me.props.scroll(pos)	
-				}, 15);
+				// setTimeout(() => {
+				// 	me.props.scroll(pos)	
+				// }, 20);
+					me.props.scroll(pos)
 			})
 		}
 
