@@ -16,7 +16,7 @@ class ListView extends React.Component {
 			shortCutList: [], 
 			currentIndex: 0,
 			data: [],
-			diff: -1
+			diff: -1,
 		}
 
 		this.touch = {}
@@ -66,7 +66,7 @@ class ListView extends React.Component {
 
 	render() {
 		return (
-		<Scroll className="listview" {...this.props} ref={this.scrollRef} listenScroll={true} scroll={this.scroll}>
+		<Scroll className="listview" {...this.props} ref={this.scrollRef} scroll={this.scroll} scrollStart={this.scrollStart} scrollEnd={this.scrollEnd}>
 			<ul ref={this.listGroupRef}>
 			{
 				this.props.data.map((group, index) => {
@@ -172,7 +172,6 @@ class ListView extends React.Component {
 				currentIndex: 0
 			})	
 		}, 10);
-		
  	}
 
  	_calculateHeight() {

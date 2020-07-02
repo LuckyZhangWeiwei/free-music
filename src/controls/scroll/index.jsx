@@ -28,23 +28,35 @@ class Scroll extends React.Component {
 		)
 	}
 	_initScroll() {
-		if (!this.wrapperRef.current) {
-			return
-		}
-
-		this.scroll = new BScroll(this.wrapperRef.current, {
-			probeType: this.props.probeType,
-			click: this.props.click
-		})
-
-		if (this.props.listenScroll) {
+			if (!this.wrapperRef.current) {
+				return
+			}
 			let me = this
-			this.scroll.on('scroll', pos => {
-					me.props.scroll(pos)
+
+			this.scroll = new BScroll(this.wrapperRef.current, {
+				probeType: this.props.probeType,
+				click: this.props.click
 			})
+
+			if (this.props.scroll) {
+				
+				this.scroll.on('scroll', pos => {
+						me.props.scroll(pos)
+				})
+			}
+			if (this.props.scrollStart) {
+				this.scroll.on('scrollStart', () => {
+					me.props.scrollStart()
+				})
+			}
+				
+			if (this.props.scrollEnd) {
+				this.scroll.on('scrollEnd', (x, y) => {
+					me.props.scrollEnd(x, y)
+				})
+			}
 		}
 
-	}
 	refresh() {
 		this.scroll &&	this.scroll.refresh()
 	}
@@ -60,14 +72,15 @@ Scroll.propTypes = {
 	probeType: PropTypes.number,
 	click: PropTypes.bool,
 	data: PropTypes.array,
-	listenScroll: PropTypes.bool
+	scrollStart: PropTypes.func,
+	scroll: PropTypes.func,
+	scrollEnd: PropTypes.func,
 }
 
 Scroll.defaultProps = {
 	probeType: 1,
 	click: true,
 	data: null,
-	listenScroll: false
 }
 
 export default Scroll
