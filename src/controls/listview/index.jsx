@@ -54,14 +54,14 @@ class ListView extends React.Component {
 
 	componentWillUpdate(nextProps, nextState) {
 		let newVal = nextState.diff
-  	let fixedTop = (newVal > 0 && newVal < this.TITLE_HEIGHT) ? newVal - this.TITLE_HEIGHT : 0
+		let fixedTop = (newVal > 0 && newVal < this.TITLE_HEIGHT) ? newVal - this.TITLE_HEIGHT : 0
 		if (this.fixedTop === fixedTop) {
 			return
 		}
 		this.fixedTop = fixedTop
 		if (this.fixedTitleDiv) {
 			this.fixedTitleDiv.style.transform = `translate3d(0, ${fixedTop}px, 0)`
-		}
+		}	
 	}
 
 	render() {
@@ -157,16 +157,22 @@ class ListView extends React.Component {
 			let h1 = listHeight[i]
 			let h2 = listHeight[i + 1]
 			if (-y >= h1 && -y < h2) {
-				this.setState({
-					currentIndex: i + 1,
-					diff:  h2 + y
-				})
+				setTimeout(() => {
+					this.setState({
+						currentIndex: i + 1,
+						diff:  h2 + y
+					})	
+				}, 10);
+				
 				return
 			}
 		}
-		this.setState({
-			currentIndex: 0
-		})
+		setTimeout(() => {
+			this.setState({
+				currentIndex: 0
+			})	
+		}, 10);
+		
  	}
 
  	_calculateHeight() {
