@@ -1,6 +1,7 @@
 import React from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import classnames from 'classnames'
+import { renderRoutes } from "react-router-config"
 import PropTypes from 'prop-types'
 import Scroll from '../scroll'
 import { getData } from '../../common/js/dom'
@@ -33,6 +34,7 @@ class ListView extends React.Component {
 		this.onShortcutTouchMove = this.onShortcutTouchMove.bind(this)
 		this.onShortcutTouchStart = this.onShortcutTouchStart.bind(this)
 		this.scroll = this.scroll.bind(this)
+		this.selectItem = this.selectItem.bind(this)
 	}
 	componentWillReceiveProps(props) {
 		this.setState({
@@ -66,53 +68,55 @@ class ListView extends React.Component {
 	}
 
 	render() {
+		let { match, route } = this.props
 		return (
-		<Scroll className="listview" {...this.props} ref={this.scrollRef} scroll={this.scroll} scrollStart={this.scrollStart} scrollEnd={this.scrollEnd}>
-			<ul ref={this.listGroupRef}>
-			{
-				this.props.data.map((group, index) => {
-					return (
-						<li className="list-group" key={group.title}>
-							<h2 className="list-group-title">{group.title}</h2>
-							<ul>
-								{
-									group.items.map((item, index) => {
-										return (
-											<li className="list-group-item" key={item.name}>
-												<LazyLoadImage className="avatar" src={item.avatar} alt={item.name} effect="blur" />
-												<span className="name">{item.name}</span>
-											</li>
-										)
-									})
-								}
-							</ul>
-						</li>
-						)
-					})
-				}
-			</ul>
-			<div className="list-shortcut" onTouchStart={this.onShortcutTouchStart} onTouchMove={this.onShortcutTouchMove}>
-				<ul>
-					{
-						this.state.shortCutList.map((item, index) => {
-							return (
-								<li className={classnames('item', {'current': this.state.currentIndex === index})} key={item} data-index={index}>{item}</li>
+			<Scroll className="listview" {...this.props} ref={this.scrollRef} scroll={this.scroll} scrollStart={this.scrollStart} scrollEnd={this.scrollEnd}>
+				<ul ref={this.listGroupRef}>
+				{
+					this.props.data.map((group, index) => {
+						return (
+							<li className="list-group" key={group.title}>
+								<h2 className="list-group-title">{group.title}</h2>
+								<ul>
+									{
+										group.items.map((item, index) => {
+											return (
+												<li className="list-group-item" key={item.name} onClick={() =>this.selectItem(`${match.url + '/' + item.id}`)}>
+													<LazyLoadImage className="avatar" src={item.avatar} alt={item.name} effect="blur" />
+													<span className="name">{item.name}</span>
+												</li>
+											)
+										})
+									}
+								</ul>
+							</li>
 							)
 						})
 					}
 				</ul>
-			</div>
-			<div className="list-fixed" ref={this.fixedTitleRef}>
-				<h1 className="fixed-title">{this._getFixedTitle()}</h1>
-			</div>
-			{
-				!this.state.data.length
-				&&
-				<div className="loading-container">
-					<Loading title="正在加载..." />
+				<div className="list-shortcut" onTouchStart={this.onShortcutTouchStart} onTouchMove={this.onShortcutTouchMove}>
+					<ul>
+						{
+							this.state.shortCutList.map((item, index) => {
+								return (
+									<li className={classnames('item', {'current': this.state.currentIndex === index})} key={item} data-index={index}>{item}</li>
+								)
+							})
+						}
+					</ul>
 				</div>
-			}
-		</Scroll>
+				<div className="list-fixed" ref={this.fixedTitleRef}>
+					<h1 className="fixed-title">{this._getFixedTitle()}</h1>
+				</div>
+				{
+					!this.state.data.length
+					&&
+					<div className="loading-container">
+						<Loading title="正在加载..." />
+					</div>
+				}
+				{ renderRoutes(route.routes) }
+			</Scroll>
 		)
 	}
 
@@ -195,6 +199,11 @@ class ListView extends React.Component {
 				}
 			}
  	}
+	 selectItem(url) {
+		 this.props.history.push({
+			 pathname: url
+		 })
+	 }
 }
 
 

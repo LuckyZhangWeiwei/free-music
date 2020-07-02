@@ -9,7 +9,7 @@ import './index.stylus'
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
-function Singer() {
+function Singer(props) {
 	
 	const [singers, setSingers] = useState([])
 
@@ -24,7 +24,7 @@ function Singer() {
 
   return (
 		<div className="singer">
-			<ListView data={singers} probeType={3} />
+			<ListView data={singers} probeType={3} match={props.match} route={props.route} history={props.history} />
 		</div>
   )
 	

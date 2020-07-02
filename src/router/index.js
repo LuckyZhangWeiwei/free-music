@@ -13,6 +13,7 @@ const Rank = withSuspense(lazy(() => import("../components/rank")))
 const Singer = withSuspense(lazy(() => import("../components/singer")))
 const Search = withSuspense(lazy(() => import("../components/search")))
 const UserCenter = withSuspense(lazy(() => import("../components/user-center")))
+const SingerDetail = withSuspense(lazy(() => import("../components/singer-detail")))
 
 const router = [
   {
@@ -23,7 +24,11 @@ const router = [
     component: Rank
 	},{
 		path: "/singer",
-    component: Singer
+    component: Singer,
+		routes: [{
+			path: '/singer/:id',
+			component: SingerDetail
+		}]
 	},
 	{
 		path: "/search",
