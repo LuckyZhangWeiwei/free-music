@@ -4,6 +4,7 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import Scroll from '../scroll'
 import { getData } from '../../common/js/dom'
+import Loading from '../loading'
 
 
 import 'react-lazy-load-image-component/src/effects/blur.css'
@@ -104,6 +105,13 @@ class ListView extends React.Component {
 			<div className="list-fixed" ref={this.fixedTitleRef}>
 				<h1 className="fixed-title">{this._getFixedTitle()}</h1>
 			</div>
+			{
+				!this.state.data.length
+				&&
+				<div className="loading-container">
+					<Loading title="正在加载..." />
+				</div>
+			}
 		</Scroll>
 		)
 	}
