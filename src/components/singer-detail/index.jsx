@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import { CSSTransition } from 'react-transition-group'
 import './index.stylus'
 
 const SingerDetail = function(props) {
+	const [show, setShow] = useState(false)
+	useEffect(() => {
+		setShow(true)
+	}, [])
+
 	return (
-		<div className="singer-detail">
-			singer detail
-		</div>
+		<CSSTransition timeout={300} classNames="fade" in={show}>
+			<div className="singer-detail">singer detail</div>
+		</CSSTransition>
 	)
 }
 
