@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react'
+import { renderRoutes } from "react-router-config"
 import { getSingerList } from './../../api/singer'
 import { ERR_OK } from '../../api/config'
 import SingerModel from '../../common/js/models/singer'
@@ -24,7 +25,8 @@ function Singer(props) {
 
   return (
 		<div className="singer">
-			<ListView data={singers} probeType={3} match={props.match} route={props.route} history={props.history} />
+			<ListView data={singers} probeType={3} selectItem={onSelectItem} />
+			{ renderRoutes(props.route.routes) }
 		</div>
   )
 	
@@ -76,6 +78,12 @@ function Singer(props) {
 		})
 
 		return hot.concat(ret)
+	}
+	function onSelectItem(item) {
+		const url = `${props.match.url + '/' + item.id}`
+ 		props.history.push({
+			pathname: url
+		})
 	}
 }
 

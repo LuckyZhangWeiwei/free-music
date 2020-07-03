@@ -1,7 +1,6 @@
 import React from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import classnames from 'classnames'
-import { renderRoutes } from "react-router-config"
 import PropTypes from 'prop-types'
 import Scroll from '../scroll'
 import { getData } from '../../common/js/dom'
@@ -68,7 +67,6 @@ class ListView extends React.Component {
 	}
 
 	render() {
-		let { match, route } = this.props
 		return (
 			<Scroll className="listview" {...this.props} ref={this.scrollRef} scroll={this.scroll} scrollStart={this.scrollStart} scrollEnd={this.scrollEnd}>
 				<ul ref={this.listGroupRef}>
@@ -81,7 +79,7 @@ class ListView extends React.Component {
 									{
 										group.items.map((item, index) => {
 											return (
-												<li className="list-group-item" key={item.name} onClick={() =>this.selectItem(`${match.url + '/' + item.id}`)}>
+												<li className="list-group-item" key={item.id} onClick={() =>this.selectItem(item)}>
 													<LazyLoadImage className="avatar" src={item.avatar} alt={item.name} effect="blur" />
 													<span className="name">{item.name}</span>
 												</li>
@@ -115,7 +113,6 @@ class ListView extends React.Component {
 						<Loading title="正在加载..." />
 					</div>
 				}
-				{ renderRoutes(route.routes) }
 			</Scroll>
 		)
 	}
@@ -199,16 +196,14 @@ class ListView extends React.Component {
 				}
 			}
  	}
-	 selectItem(url) {
-		 this.props.history.push({
-			 pathname: url
-		 })
+	 selectItem(item) {
+		this.props.selectItem(item)
 	 }
 }
 
-
 ListView.propTypes = {
 		data: PropTypes.array.isRequired,
+		selectItem: PropTypes.func
 }
 
 export default ListView
