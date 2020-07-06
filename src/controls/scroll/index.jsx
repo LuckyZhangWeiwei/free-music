@@ -66,6 +66,9 @@ class Scroll extends React.Component {
 	scrollToElement() {
 		this.scroll &&	this.scroll.scrollToElement.apply(this.scroll, arguments)
 	}
+	destroy() {
+		this.scroll &&	this.scroll.destroy()
+	}
 }
 
 Scroll.propTypes = {

@@ -28,6 +28,7 @@ class ListView extends React.Component {
 
 		this.listGroupRef = React.createRef()
 		this.scrollRef = React.createRef()
+		
 		this.fixedTitleRef = React.createRef()
 
 		this.onShortcutTouchMove = this.onShortcutTouchMove.bind(this)
@@ -52,6 +53,7 @@ class ListView extends React.Component {
 		}, 100);
 
 		this.fixedTitleDiv = this.fixedTitleRef.current
+		this._isMounted = true
 	}
 
 	componentWillUpdate(nextProps, nextState) {
@@ -64,6 +66,10 @@ class ListView extends React.Component {
 		if (this.fixedTitleDiv) {
 			this.fixedTitleDiv.style.transform = `translate3d(0, ${fixedTop}px, 0)`
 		}	
+	}
+
+	componentWillUnmount() {
+		this.scrollRef.current.destroy()
 	}
 
 	render() {
