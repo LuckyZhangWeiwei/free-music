@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import { renderRoutes } from "react-router-config"
+import { connect } from 'react-redux'
 import { getSingerList } from './../../api/singer'
 import { ERR_OK } from '../../api/config'
 import SingerModel from '../../common/js/models/singer'
 import ListView from '../../controls/listview'
+
+import { setSinger } from './../../store/actions'
 
 import './index.stylus'
 
@@ -84,7 +87,14 @@ function Singer(props) {
  		props.history.push({
 			pathname: url
 		})
+		props.dispatch(setSinger(item))
 	}
 }
 
-export default Singer
+export default connect(
+	function mapStateToProps(state) {
+    return state
+  },
+	function mapDispatchToProps(dispatch){
+		return { dispatch }
+})(Singer)

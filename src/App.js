@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { BrowserRouter as Router } from "react-router-dom"
 
 import Tab from './components/tab'
@@ -10,7 +10,7 @@ function App() {
 				<MHeader />
 				<Tab />
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
