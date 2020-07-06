@@ -11,13 +11,14 @@ import 'react-lazy-load-image-component/src/effects/blur.css'
 import './index.stylus'
 
 class ListView extends React.Component {
+	_isMounted = false
 	constructor(props) {
 		super(props)
 		this.state = {
 			shortCutList: [], 
 			currentIndex: 0,
 			data: [],
-			diff: -1,
+			diff: -1
 		}
 
 		this.touch = {}
@@ -36,7 +37,7 @@ class ListView extends React.Component {
 		this.scroll = this.scroll.bind(this)
 		this.selectItem = this.selectItem.bind(this)
 	}
-	componentWillReceiveProps(props) {
+	UNSAFE_componentWillReceiveProps(props) {
 		this.setState({
 			data: props.data
 		})
@@ -47,6 +48,18 @@ class ListView extends React.Component {
 			shortCutList: list
 		})
 	}
+
+	// static getDerivedStateFromProps(props, state) {
+	// 	if (props.data !== state.data) {
+	// 		return {
+	// 			data: props.data,
+	// 			shortCutList:  props.data.map(group => {
+	// 				return group.title.substr(0, 1)
+	// 			})
+	// 		}
+	// 	}
+	// }
+
 	componentDidMount() {
 		setTimeout(() => {
 			this._calculateHeight()
@@ -54,9 +67,10 @@ class ListView extends React.Component {
 
 		this.fixedTitleDiv = this.fixedTitleRef.current
 		this._isMounted = true
+	
 	}
 
-	componentWillUpdate(nextProps, nextState) {
+	UNSAFE_componentWillUpdate(nextProps, nextState) {
 		let newVal = nextState.diff
 		let fixedTop = (newVal > 0 && newVal < this.TITLE_HEIGHT) ? newVal - this.TITLE_HEIGHT : 0
 		if (this.fixedTop === fixedTop) {
@@ -69,7 +83,7 @@ class ListView extends React.Component {
 	}
 
 	componentWillUnmount() {
-		this.scrollRef.current.destroy()
+		this._isMounted = false
 	}
 
 	render() {
@@ -158,6 +172,9 @@ class ListView extends React.Component {
  	}
 
  	scroll(pos) {
+		 if (!this._isMounted) {
+			 return
+		 }
 		const listHeight = this.listHeight
 		const { y } = pos
 		if (this.fixedTitleDiv) {
@@ -177,16 +194,16 @@ class ListView extends React.Component {
 						currentIndex: i + 1,
 						diff:  h2 + y
 					})	
-				}, 10);
+				}, 10)
 				
 				return
 			}
 		}
-		setTimeout(() => {
-			this.setState({
-				currentIndex: 0
-			})	
-		}, 10);
+		// setTimeout(() => {
+		// 	this.setState({
+		// 		currentIndex: 0
+		// 	})	
+		// }, 10);
  	}
 
  	_calculateHeight() {
