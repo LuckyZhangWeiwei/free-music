@@ -1,9 +1,19 @@
  @import "../../common/stylus/variable"
-.fade-enter
+.slide-enter
 		transform: translate3d(100%, 0, 0)
-.fade-enter-active
+.slide-enter-active
 		transition: transform 0.3s;
 		transform: translate3d(0, 0, 0)
+// .slide-enter-done
+//     transform: translate3d(0, 0, 0)
+.slide-exit
+		transform: translate3d(0, 0, 0)
+.slide-exit-active
+		transition: transform 0.3s
+		transform: translate3d(100%, 0, 0)
+// .slide-exit-done
+// 		transition: transform 0.3s;
+//   	transform: translate3d(100%, 0, 0)
 .singer-detail
 	position: fixed
 	top: 0

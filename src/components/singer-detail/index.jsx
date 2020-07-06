@@ -9,7 +9,7 @@ const SingerDetail = function(props) {
 	}, [])
 
 	return (
-		<CSSTransition timeout={300} classNames="fade" in={show}>
+		<CSSTransition timeout={300} classNames="slide" in={show}>
 			<div className="singer-detail">singer detail</div>
 		</CSSTransition>
 	)
