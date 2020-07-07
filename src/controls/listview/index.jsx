@@ -194,16 +194,15 @@ class ListView extends React.Component {
 						currentIndex: i + 1,
 						diff:  h2 + y
 					})	
-				}, 10)
-				
+				}, 20)
 				return
 			}
 		}
-		// setTimeout(() => {
-		// 	this.setState({
-		// 		currentIndex: 0
-		// 	})	
-		// }, 10);
+		setTimeout(() => {
+			this.setState({
+				currentIndex: 0
+			})	
+		}, 20)
  	}
 
  	_calculateHeight() {
