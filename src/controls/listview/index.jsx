@@ -207,7 +207,7 @@ class ListView extends React.Component {
 
  	_calculateHeight() {
  		  this.listHeight = []
-			const liList = this.listGroupRef.current.children
+			const liList = this.listGroupRef.current === null ? [] : this.listGroupRef.current.children
 		  const list = Array.from(liList)
 		  let height = 0
 			if (list.length > 0) {

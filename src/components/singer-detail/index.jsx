@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { getSingerDetail } from './../../api/singer'
 import { creatSong } from './../../common/js/models/song'
+import MusicList from '../../controls/music-list'
 
 import './index.stylus'
 import { ERR_OK } from '../../api/config'
@@ -28,7 +29,6 @@ const SingerDetail = function(props) {
 				if (ERR_OK === res.code) {
 					const data = res.data.list
 					const ret = _normalizeSongs(data)
-					console.log(ret)
 					setSong(ret)
 				}
 			})
@@ -47,10 +47,7 @@ const SingerDetail = function(props) {
 
 	return (
 		<CSSTransition timeout={300} classNames="slide" in={show}>
-			<div className="singer-detail">
-				singer detail
-				<p></p>
-			</div>
+			<MusicList song={song} title={props.singer.name} bgImage={props.singer.avatar} history={props.history} />
 		</CSSTransition>
 	)
 }
