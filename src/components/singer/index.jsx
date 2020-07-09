@@ -28,7 +28,7 @@ function Singer(props) {
 
   return (
 		<div className="singer">
-			<ListView data={singers} probeType={3} selectItem={onSelectItem} />
+			<ListView data={singers} probeType={3} selectItem={onSelectItem} listenScroll={true} />
 			{ renderRoutes(props.route.routes) }
 		</div>
   )
