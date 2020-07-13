@@ -43,13 +43,15 @@ const MusicList = function (props) {
 			if (playWrapperRef.current) {
 				playWrapperRef.current.style.display = "none"
 			}
+			bgImageRef.current.style.background = '#222'
 		} else {
-				bgImageRef.current.style.paddingTop = '70%'
-				bgImageRef.current.style.height = 0
-				zIndex = 0
-				if (playWrapperRef.current) {
-					playWrapperRef.current.style.display = "block"
-				}
+			bgImageRef.current.style.paddingTop = '70%'
+			bgImageRef.current.style.height = 0
+			zIndex = 0
+			if (playWrapperRef.current) {
+				playWrapperRef.current.style.display = "block"
+			}
+			bgImageRef.current.style.backgroundImage = `url(${props.bgImage})`
 		}
 		bgImageRef.current.style.zIndex = zIndex
 		
@@ -58,6 +60,7 @@ const MusicList = function (props) {
 			scale = 1 + percent
 			zIndex = 10
 		}
+		bgImageRef.current.style['background-size'] = 'cover'
 		bgImageRef.current.style[transform] = `scale(${scale})`
 		bgImageRef.current.style.zIndex = zIndex
 	}, [scrollY])
