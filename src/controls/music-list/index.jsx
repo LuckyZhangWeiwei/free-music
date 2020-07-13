@@ -2,6 +2,7 @@ import React, {memo, useRef, useEffect, useState} from 'react'
 import Scroll from '../scroll'
 import SongList from '../../controls/song-list'
 import Loading from '../../controls/loading'
+import { prefixStyle } from '../../common/js/dom'
 
 import './index.stylus'
 
@@ -11,12 +12,15 @@ const MusicList = function (props) {
 	const bgLayerRef = useRef()
 	const minTranslateYRef = useRef()
 	const imageHeightRef = useRef()
+	const playWrapperRef = useRef()
 
 	const [scrollY, setScrollY] = useState(0)
 	let minTranslateY
 	let zIndex = 0
 	let scale = 1
 	const RESERVE_HEIGHT = 40
+
+	const transform = prefixStyle('transform')
 	
 	useEffect(() => {
 		const scrollDom = scrollRef.current.wrapperRef.current
@@ -24,20 +28,28 @@ const MusicList = function (props) {
 		minTranslateY = -imageHeightRef.current + RESERVE_HEIGHT
 		minTranslateYRef.current = minTranslateY
 		scrollDom.style.top = `${imageHeightRef.current}px`
+		return () => {
+			scrollRef.current.destroy()
+		}
 	}, [])
 
 	useEffect(() => {
 		let translateY = Math.max(minTranslateYRef.current, scrollY)
-		bgLayerRef.current.style['transform'] = `translate3d(0, ${translateY}px, 0`
-		bgLayerRef.current.style['webkit-transform'] = `translate3d(0, ${translateY}px, 0`
+		bgLayerRef.current.style[transform] = `translate3d(0, ${translateY}px, 0`
 		if (scrollY < minTranslateYRef.current) {
 			zIndex = 10
 			bgImageRef.current.style.paddingTop = 0
 			bgImageRef.current.style.height = `${RESERVE_HEIGHT}px`
+			if (playWrapperRef.current) {
+				playWrapperRef.current.style.display = "none"
+			}
 		} else {
 				bgImageRef.current.style.paddingTop = '70%'
 				bgImageRef.current.style.height = 0
-				zIndex = 0 
+				zIndex = 0
+				if (playWrapperRef.current) {
+					playWrapperRef.current.style.display = "block"
+				}
 		}
 		bgImageRef.current.style.zIndex = zIndex
 		
@@ -46,8 +58,7 @@ const MusicList = function (props) {
 			scale = 1 + percent
 			zIndex = 10
 		}
-		bgImageRef.current.style['transform'] = `scale(${scale})`
-		bgImageRef.current.style['webkit-transform'] = `scale(${scale})`
+		bgImageRef.current.style[transform] = `scale(${scale})`
 		bgImageRef.current.style.zIndex = zIndex
 	}, [scrollY])
 
@@ -58,6 +69,17 @@ const MusicList = function (props) {
 			</div>
 			<h1 className="title">{props.title}</h1>
 			<div className="bg-image" style={{backgroundImage: `url(${props.bgImage})`}} ref={bgImageRef}>
+				{
+					props.song.length 
+					&&
+					<div className="play-wrapper" ref={playWrapperRef}>
+						<div className="play">
+							<i className="icon-play"></i>
+							<span className="text">随机播放全部</span>
+						</div>
+					</div>
+				}
+				
 				<div className="filter"></div>
 			</div>
 			<div className="bg-layer" ref={bgLayerRef}>
