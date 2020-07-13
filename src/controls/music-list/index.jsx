@@ -1,4 +1,4 @@
-import React, {memo, useRef, useEffect, useState} from 'react'
+import React, {memo, useRef, useEffect, useState, useCallback} from 'react'
 import Scroll from '../scroll'
 import SongList from '../../controls/song-list'
 import Loading from '../../controls/loading'
@@ -33,8 +33,9 @@ const MusicList = function (props) {
 		}
 	}, [])
 
-	useEffect(() => {
-		let translateY = Math.max(minTranslateYRef.current, scrollY)
+	
+ const handleScrollY = useCallback(function (scrollY) {
+	 	let translateY = Math.max(minTranslateYRef.current, scrollY)
 		bgLayerRef.current.style[transform] = `translate3d(0, ${translateY}px, 0`
 		if (scrollY < minTranslateYRef.current) {
 			zIndex = 10
@@ -63,7 +64,7 @@ const MusicList = function (props) {
 		bgImageRef.current.style['background-size'] = 'cover'
 		bgImageRef.current.style[transform] = `scale(${scale})`
 		bgImageRef.current.style.zIndex = zIndex
-	}, [scrollY])
+ }, []) 
 
 	return (
 		<div className="music-list">
@@ -104,7 +105,7 @@ const MusicList = function (props) {
 	)
 
 	function scroll (pos) {
-		setScrollY(pos.y)
+		handleScrollY(pos.y)
 	}
 }
 
