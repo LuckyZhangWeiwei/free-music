@@ -14,7 +14,6 @@ const MusicList = function (props) {
 	const imageHeightRef = useRef()
 	const playWrapperRef = useRef()
 
-	const [scrollY, setScrollY] = useState(0)
 	let minTranslateY
 	let zIndex = 0
 	let scale = 1
