@@ -1,4 +1,4 @@
-import React, {memo, useRef, useEffect, useState, useCallback} from 'react'
+import React, {memo, useRef, useEffect, useCallback} from 'react'
 import Scroll from '../scroll'
 import SongList from '../../controls/song-list'
 import Loading from '../../controls/loading'
