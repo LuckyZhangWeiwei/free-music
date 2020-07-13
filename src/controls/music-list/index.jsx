@@ -10,18 +10,20 @@ const MusicList = function (props) {
 	const bgImageRef = useRef()
 	const bgLayerRef = useRef()
 	const minTranslateYRef = useRef()
+	const imageHeightRef = useRef()
+
 	const [scrollY, setScrollY] = useState(0)
-	let imageHeight
 	let minTranslateY
 	let zIndex = 0
+	let scale = 1
 	const RESERVE_HEIGHT = 40
 	
 	useEffect(() => {
 		const scrollDom = scrollRef.current.wrapperRef.current
-		imageHeight = bgImageRef.current.clientHeight
-		minTranslateY = -imageHeight + RESERVE_HEIGHT
+		imageHeightRef.current = bgImageRef.current.clientHeight
+		minTranslateY = -imageHeightRef.current + RESERVE_HEIGHT
 		minTranslateYRef.current = minTranslateY
-		scrollDom.style.top = `${imageHeight}px`
+		scrollDom.style.top = `${imageHeightRef.current}px`
 	}, [])
 
 	useEffect(() => {
@@ -33,10 +35,19 @@ const MusicList = function (props) {
 			bgImageRef.current.style.paddingTop = 0
 			bgImageRef.current.style.height = `${RESERVE_HEIGHT}px`
 		} else {
-			bgImageRef.current.style.paddingTop = '70%'
-			bgImageRef.current.style.height = 0
-			zIndex = 0 
+				bgImageRef.current.style.paddingTop = '70%'
+				bgImageRef.current.style.height = 0
+				zIndex = 0 
 		}
+		bgImageRef.current.style.zIndex = zIndex
+		
+		const percent = Math.abs(scrollY / imageHeightRef.current)
+		if (scrollY > 0) {
+			scale = 1 + percent
+			zIndex = 10
+		}
+		bgImageRef.current.style['transform'] = `scale(${scale})`
+		bgImageRef.current.style['webkit-transform'] = `scale(${scale})`
 		bgImageRef.current.style.zIndex = zIndex
 	}, [scrollY])
 
@@ -68,9 +79,6 @@ const MusicList = function (props) {
 	)
 
 	function scroll (pos) {
-		// setTimeout(() => {
-		// 	setScrollY(pos.y)
-		// }, 20);
 		setScrollY(pos.y)
 	}
 }
