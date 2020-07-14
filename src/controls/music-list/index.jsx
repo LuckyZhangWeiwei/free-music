@@ -1,8 +1,10 @@
 import React, {memo, useRef, useEffect, useCallback} from 'react'
+import { connect } from 'react-redux'
 import Scroll from '../scroll'
 import SongList from '../../controls/song-list'
 import Loading from '../../controls/loading'
 import { prefixStyle } from '../../common/js/dom'
+import { selectPlay } from '../../store/actions'
 
 import './index.stylus'
 
@@ -31,7 +33,6 @@ const MusicList = function (props) {
 			scrollRef.current.destroy()
 		}
 	}, [])
-
 	
  const handleScrollY = useCallback(function (scrollY) {
 	 	let translateY = Math.max(minTranslateYRef.current, scrollY)
@@ -66,8 +67,8 @@ const MusicList = function (props) {
  }, [])
 
  	const selectItem = useCallback(function(item, index) {
-		 console.log(item, index)
-	}, [])
+		 props.dispatch(selectPlay(props.song, index))
+	}, [props.song])
 
 	return (
 		<div className="music-list">
@@ -90,7 +91,6 @@ const MusicList = function (props) {
 				<div className="filter"></div>
 			</div>
 			<div className="bg-layer" ref={bgLayerRef}>
-
 			</div>
 			<Scroll className="list" data={props.song} ref={scrollRef} probeType={3} listenScroll={true} scroll={scroll}>
 				<div className="song-list-wrapper">
@@ -112,4 +112,10 @@ const MusicList = function (props) {
 	}
 }
 
-export default memo(MusicList)
+export default connect(function mapStateToProps(state) {
+	return {...state}
+}, function mapDispatchToProps(dispatch) {
+	return {
+		dispatch
+	}
+})(memo(MusicList))

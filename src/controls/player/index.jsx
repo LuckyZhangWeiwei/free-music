@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {memo} from 'react'
 import { connect } from 'react-redux'
 
 import './index.stylus'
@@ -6,8 +6,16 @@ import './index.stylus'
 const player = function(props) {
 	return (
 		<div className="player">
-			<div className="normal-player">播放器</div>
-			<div className="mini-player"></div>
+			{
+				props.isFullScreen 
+				&&
+				<div className="normal-player">播放器</div>
+			}
+			{
+				!props.isFullScreen
+				&&
+				<div className="mini-player"></div>
+			}
 		</div>
 	)
 }
@@ -18,4 +26,4 @@ export default connect(function mapStateToProps(state) {
 	return {
 		dispatch
 	}
-})(player)
+})(memo(player))

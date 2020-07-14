@@ -7,7 +7,7 @@ const SongList = function(props) {
 
 	const selectItem = useCallback(function(song, index) {
 		props.select(song, index)
-	}, [])
+	}, [songs])
 
 	return (
 		<div className="song-list">

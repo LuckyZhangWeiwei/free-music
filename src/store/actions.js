@@ -61,6 +61,15 @@ export function setCurrentIndex(state) {
 	}
 }
 
+export function selectPlay(list, index) {
+	return (dispatch, getState) => {
+		dispatch(setPlayList(list))
+		dispatch(setCurrentIndex(index))
+		dispatch(setFullScreen(true))
+		dispatch(setPlayingState(true))
+	}
+}
+
 export function fetchSingerData() {
 	return (dispatch, getState) => {
 		
