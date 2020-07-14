@@ -63,7 +63,11 @@ const MusicList = function (props) {
 		bgImageRef.current.style['background-size'] = 'cover'
 		bgImageRef.current.style[transform] = `scale(${scale})`
 		bgImageRef.current.style.zIndex = zIndex
- }, []) 
+ }, [])
+
+ 	const selectItem = useCallback(function(item, index) {
+		 console.log(item, index)
+	}, [])
 
 	return (
 		<div className="music-list">
@@ -90,7 +94,7 @@ const MusicList = function (props) {
 			</div>
 			<Scroll className="list" data={props.song} ref={scrollRef} probeType={3} listenScroll={true} scroll={scroll}>
 				<div className="song-list-wrapper">
-					<SongList songs={props.song} />
+					<SongList songs={props.song} select={(item, index) => selectItem(item, index)} />
 				</div>
 				{
 					!props.song.length
