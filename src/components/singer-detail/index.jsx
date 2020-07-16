@@ -14,7 +14,7 @@ const SingerDetail = function(props) {
 	
 	useEffect(() => {
 		setShow(true)
-	}, [show])
+	}, [])
 
 	useEffect(() => {
 		if (!props.singer.id) {
