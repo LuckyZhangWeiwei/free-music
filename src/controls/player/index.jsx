@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, useRef} from 'react'
+import React, {memo, useState, useEffect, useRef, useCallback, useMemo} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -25,18 +25,18 @@ const Player = function(props) {
 		setShow(props.isFullScreen)
 	}, [props.isFullScreen])
 
-	const close = function() {
+	const close = useCallback(function() {
 		props.dispatch(setFullScreen(false))
 		setShow(false)
-	}
+	}, [props.isFullScreen]) 
 
-	const open = function() {
+	const open = useCallback(function() {
 		props.dispatch(setFullScreen(true))
 		setShow(true)
-	}
+	}, [props.isFullScreen])
 
-	const onEnter = function (el) {
-			const {x, y, scale} = _getPosAndScale()
+	const onEnter = useCallback(function (el) {
+			const {x, y, scale} = _getPosAndScale
 			let anim = {
 			0: {
 						transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
@@ -56,32 +56,32 @@ const Player = function(props) {
 					easing: 'linear',
 				}
 			})
-	}
+	}, [])
 
-	const onEntering = function (el) {
+	const onEntering = useCallback(function (el) {
 		animations.runAnimation(cdWrapperRef.current, 'move', null)
-	}
+	}, [])
 
-	const onEntered = function (el) {
+	const onEntered = useCallback(function (el) {
 		animations.unregisterAnimation('move')
 		cdWrapperRef.current.style.animation = ''
-	}
+	}, [])
 
 	const onExit = function(el) {}
 
-	const onExiting = function(el) {
+	const onExiting = useCallback(function(el) {
 		cdWrapperRef.current.style.transition = 'all 0.2s'
-    const {x, y, scale} = _getPosAndScale()
+    const {x, y, scale} = _getPosAndScale
     cdWrapperRef.current.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
     cdWrapperRef.current.addEventListener('transitionend', null)
-	}
+	}, [])
 
-	const onExited = function(el) {
+	const onExited = useCallback(function(el) {
 		cdWrapperRef.current.style.transition = ''
     cdWrapperRef.current.style[transform] = ''
-	}
+	}, [])
 
-	const _getPosAndScale = function () {
+	const _getPosAndScale = useMemo(() => {
 		const targetWidth = 40
 		const paddingLeft = 40
 		const paddingBottom = 30
@@ -93,7 +93,7 @@ const Player = function(props) {
 		return {
 			x, y, scale
 		}
-	}
+	}, [])
 
 	return (
 		<div className="player">
