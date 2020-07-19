@@ -155,7 +155,7 @@ const Player = function(props) {
 						<img width="40" height="40" src={props.currentSong.image} />
 					</div>
 					<div className="text">
-						<h2 className="name">{props.currentSong.title}</h2>
+						<h2 className="name">{props.currentSong.name}</h2>
 						<p className="desc">{props.currentSong.singer}</p>
 					</div>
 					<div className="control"></div>
