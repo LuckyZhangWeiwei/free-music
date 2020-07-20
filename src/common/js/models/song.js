@@ -1,3 +1,4 @@
+import axios from 'axios'
 export class Song {
 	constructor({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
@@ -33,4 +34,13 @@ function filterSinger(singer) {
     ret.push(s.name)
   })
   return ret.join('/')
+}
+
+export async function getSongUrl(songName) {
+	const res1 = await axios.get(`http://localhost:3000/search?keywords=${songName}`)
+  const songId = res1.data.result.songs[0].id
+  const res2 = await axios.get(`http://localhost:3000/song/url?id=${songId}`)
+  const url = res2.config.url
+  const res3 = await axios.get(url)
+  return res3.data.data[0].url
 }

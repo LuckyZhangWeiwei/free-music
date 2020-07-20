@@ -5,6 +5,8 @@ import animations from 'create-keyframe-animation'
 
 import { setFullScreen } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
+import { getSongUrl } from '../../common/js/models/song'
+import { setPlayingState } from '../../store/actions'
 
 import './index.stylus'
 import './index.css'
@@ -15,7 +17,11 @@ const transformDuration = prefixStyle('transformDuration')
 const Player = function(props) {
 	const [show, setShow] = useState(false)
 
+	const [currentSong, setCurrentSong] = useState(props.currentSong)
+
 	const cdWrapperRef = useRef()
+
+	const audioRef = useRef()
 
 	useEffect(() => {
 		setShow(true)
@@ -24,6 +30,28 @@ const Player = function(props) {
 	useEffect(() => {
 		setShow(props.isFullScreen)
 	}, [props.isFullScreen])
+
+	useEffect(() => {
+		getSongUrl(props.currentSong.name || props.currentSong.songname)
+		.then(songUrl => {
+			const song = {
+				...props.currentSong,
+				url: songUrl
+			}
+			setCurrentSong(song)
+			setTimeout(() => {
+				audioRef.current.play()
+			}, 20);
+		})
+	}, [props.currentSong.name, props.currentSong.url])
+
+	useEffect(() => {
+		const audio = audioRef.current
+		 setTimeout(() => {
+			props.playingState ? audio.play() : audio.pause()	 
+		 }, 20);
+		 
+	}, [props.playingState])
 
 	const close = useCallback(function() {
 		props.dispatch(setFullScreen(false))
@@ -34,6 +62,14 @@ const Player = function(props) {
 		props.dispatch(setFullScreen(true))
 		setShow(true)
 	}, [props.isFullScreen])
+
+	const playIcon = useMemo(() => {
+		return props.playingState ? 'icon-pause' : 'icon-play'
+	}, [props.playingState])
+
+	const playMniIcon = useMemo(() => {
+		return props.playingState ? 'icon-pause-mini' : 'icon-play-mini'
+	}, [props.playingState])
 
 	const onEnter = useCallback(function (el) {
 			const {x, y, scale} = _getPosAndScale
@@ -95,6 +131,15 @@ const Player = function(props) {
 		}
 	}, [])
 
+	const togglePlaying = useCallback(() => {
+		props.dispatch(setPlayingState(!props.playingState))
+	}, [props.playingState])
+
+	const cdCls = useMemo(() => {
+		return props.playingState ? 'play' : 'play pause'
+	}, [props.playingState])
+
+
 	return (
 		<div className="player">
 			<CSSTransition 
@@ -110,20 +155,20 @@ const Player = function(props) {
 				>
 				<div className="normal-player">
 					<div className="background">
-						<img width="100%" height="100%" src={props.currentSong.image} />
+						<img width="100%" height="100%" src={currentSong.image} />
 					</div>
 					<div className="top">
 						<div className="back" onClick={() => close()}>
 							<i className="icon-back"></i>
 						</div>
-						<h1 className="title">{props.currentSong.name}</h1>
-						<h2 className="subtitle">{props.currentSong.singer}</h2>
+						<h1 className="title">{currentSong.name}</h1>
+						<h2 className="subtitle">{currentSong.singer}</h2>
 					</div>
 					<div className="middle">
 						<div className="middle-l">
 							<div className="cd-wrapper" ref={cdWrapperRef}>
-								<div className="cd">
-									<img className="image" src={props.currentSong.image} />
+								<div className={`cd ${cdCls}`}>
+									<img className="image" src={currentSong.image} />
 								</div>
 							</div>
 						</div>
@@ -137,7 +182,7 @@ const Player = function(props) {
 								<i className="icon-prev"></i>
 							</div>
 							<div className="icon i-center">
-								<i className="icon-play"></i>
+								<i className={ playIcon } onClick={() => { togglePlaying() }}></i>
 							</div>
 							<div className="icon i-right">
 								<i className="icon-next"></i>
@@ -152,18 +197,19 @@ const Player = function(props) {
 			<CSSTransition timeout={200} in={!show} classNames="mini">
 				<div className="mini-player" onClick={() => open()}>
 					<div className="icon">
-						<img width="40" height="40" src={props.currentSong.image} />
+						<img width="40" height="40" src={currentSong.image} className={cdCls} />
 					</div>
 					<div className="text">
-						<h2 className="name">{props.currentSong.name}</h2>
-						<p className="desc">{props.currentSong.singer}</p>
+						<h2 className="name">{currentSong.name}</h2>
+						<p className="desc">{currentSong.singer}</p>
 					</div>
-					<div className="control"></div>
+					<div className="control" onClick={(e) => {e.stopPropagation(); togglePlaying() }}><i className={playMniIcon}></i></div>
 					<div className="control">
 						<i className="icon-playlist"></i>
 					</div>
 				</div>
 			</CSSTransition>
+			<audio src={currentSong.url} ref={audioRef}></audio>
 		</div>
 	)
 }
