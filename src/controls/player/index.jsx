@@ -21,6 +21,8 @@ const Player = function(props) {
 
 	const [songReady, setSongReady] = useState(false)
 
+	const [currentTime, setCurrentTime] = useState(0)
+
 	const cdWrapperRef = useRef()
 
 	const audioRef = useRef()
@@ -154,6 +156,29 @@ const Player = function(props) {
 		return songReady ? '' : 'disable'
 	}, [songReady])
 
+	// const formatTime = useMemo(() => {
+	//   let	interval = currentTime | 0
+	// 	const minute = interval / 60 | 0
+	// 	const second = interval % 60
+	// 	return `minute: ${minute}:${second}`
+	// }, [currentTime])
+
+	function formatTime(interval) {
+		interval = interval | 0
+		const minute = interval / 60 | 0
+		const second = _pad(interval % 60)
+		return `${minute}:${second}`
+	}
+
+	const _pad = (num, n=2) => {
+		let len = num.toString().length
+		while(len < n) {
+			num = '0' + num
+			len ++
+		}
+		return num
+	}
+
 	const next = useCallback(function() {
 		if (!songReady) {
 			return
@@ -185,6 +210,11 @@ const Player = function(props) {
 	const error = useCallback(() => {
 		setSongReady(true)
 	}, [songReady])
+
+	const updateTime = useCallback((e) => {
+		let currentTime = e.target.currentTime
+		setCurrentTime(currentTime)
+	}, [])
 
 	return (
 		<div className="player">
@@ -220,6 +250,11 @@ const Player = function(props) {
 						</div>
 					</div>
 					<div className="bottom">
+						<div className="progress-wrapper">
+							<span className="time time-l">{formatTime(currentTime)}</span>
+							<div className="progress-bar-wrapper"></div>
+							<span className="time time-r">{formatTime(currentSong.duration)}</span>
+						</div>
 						<div className="operators">
 							<div className="icon i-left">
 								<i className="icon-sequence"></i>
@@ -249,13 +284,19 @@ const Player = function(props) {
 						<h2 className="name">{currentSong.name}</h2>
 						<p className="desc">{currentSong.singer}</p>
 					</div>
-					<div className="control" onClick={(e) => {e.stopPropagation(); togglePlaying() }}><i className={playMniIcon}></i></div>
+					<div className="control" onClick={e => {e.stopPropagation(); togglePlaying() }}><i className={playMniIcon}></i></div>
 					<div className="control">
 						<i className="icon-playlist"></i>
 					</div>
 				</div>
 			</CSSTransition>
-			<audio src={currentSong.url} ref={audioRef} onCanPlay={() => ready()} onError={() => error()}></audio>
+			<audio 
+				src={currentSong.url} 
+				ref={audioRef} 
+				onCanPlay={() => ready()} 
+				onError={() => error()}
+				onTimeUpdate={e => updateTime(e)}
+			/>
 		</div>
 	)
 }
