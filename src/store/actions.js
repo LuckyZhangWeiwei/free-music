@@ -70,6 +70,14 @@ export function selectPlay(list, index) {
 	}
 }
 
+// export function setPlayPos(currentIndex) {
+// 	return (dispatch) => {
+// 		dispatch(setCurrentIndex(currentIndex)).then(() => {
+// 			dispatch(setPlayingState(true))
+// 		})
+// 	}
+// }
+
 export function fetchSingerData() {
 	return (dispatch, getState) => {
 		

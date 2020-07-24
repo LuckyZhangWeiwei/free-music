@@ -6,18 +6,20 @@ import animations from 'create-keyframe-animation'
 import { setFullScreen } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl } from '../../common/js/models/song'
-import { setPlayingState } from '../../store/actions'
+import { setPlayingState, setCurrentIndex } from '../../store/actions'
 
 import './index.stylus'
 import './index.css'
 
 const transform = prefixStyle('transform')
-const transformDuration = prefixStyle('transformDuration')
+// const transformDuration = prefixStyle('transformDuration')
 
 const Player = function(props) {
 	const [show, setShow] = useState(false)
 
 	const [currentSong, setCurrentSong] = useState(props.currentSong)
+
+	const [songReady, setSongReady] = useState(false)
 
 	const cdWrapperRef = useRef()
 
@@ -53,6 +55,12 @@ const Player = function(props) {
 		 
 	}, [props.playingState])
 
+	useEffect(() => {
+		if (!props.playingState) {
+			props.dispatch(setPlayingState(true))
+		}
+	}, [props.currentIndex])
+
 	const close = useCallback(function() {
 		props.dispatch(setFullScreen(false))
 		setShow(false)
@@ -64,8 +72,8 @@ const Player = function(props) {
 	}, [props.isFullScreen])
 
 	const playIcon = useMemo(() => {
-		return props.playingState ? 'icon-pause' : 'icon-play'
-	}, [props.playingState])
+		return songReady && props.playingState ? 'icon-pause' : 'icon-play'
+	}, [props.playingState, songReady])
 
 	const playMniIcon = useMemo(() => {
 		return props.playingState ? 'icon-pause-mini' : 'icon-play-mini'
@@ -132,13 +140,48 @@ const Player = function(props) {
 	}, [])
 
 	const togglePlaying = useCallback(() => {
-		props.dispatch(setPlayingState(!props.playingState))
-	}, [props.playingState])
+		if (!songReady) {
+			return
+		 }
+		 props.dispatch(setPlayingState(!props.playingState))
+		 setSongReady(false)
+	}, [props.playingState, props.currentIndex, songReady])
 
 	const cdCls = useMemo(() => {
 		return props.playingState ? 'play' : 'play pause'
 	}, [props.playingState])
 
+	const next = useCallback(function() {
+		if (!songReady) {
+			return
+		}
+		let index = props.currentIndex + 1
+		if (index === props.playList.length) {
+			index = 0
+		}
+	  props.dispatch(setCurrentIndex(index))
+		setSongReady(false)
+	}, [props.currentIndex, songReady])
+
+	const prev = useCallback(function() {
+		if (!songReady) {
+			return
+		}
+		let index = props.currentIndex - 1
+		if (index < 0) {
+			index = props.playList.length - 1
+		}
+		props.dispatch(setCurrentIndex(index))
+		setSongReady(false)
+	}, [props.currentIndex, songReady])
+
+	const ready = useCallback(() => {
+		setSongReady(true)
+	}, [songReady])
+
+	const error = useCallback(() => {
+		setSongReady(false)
+	}, [songReady])
 
 	return (
 		<div className="player">
@@ -179,13 +222,13 @@ const Player = function(props) {
 								<i className="icon-sequence"></i>
 							</div>
 							<div className="icon i-left">
-								<i className="icon-prev"></i>
+								<i className="icon-prev" onClick={() => prev()}></i>
 							</div>
 							<div className="icon i-center">
 								<i className={ playIcon } onClick={() => { togglePlaying() }}></i>
 							</div>
 							<div className="icon i-right">
-								<i className="icon-next"></i>
+								<i className="icon-next" onClick={() => { next()}}></i>
 							</div>
 							<div className="icon i-right">
 								<i className="icon icon-not-favorite"></i>
@@ -209,7 +252,7 @@ const Player = function(props) {
 					</div>
 				</div>
 			</CSSTransition>
-			<audio src={currentSong.url} ref={audioRef}></audio>
+			<audio src={currentSong.url} ref={audioRef} onCanPlay={() => ready()} onError={() => error()}></audio>
 		</div>
 	)
 }
