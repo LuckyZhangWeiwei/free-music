@@ -144,12 +144,15 @@ const Player = function(props) {
 			return
 		 }
 		 props.dispatch(setPlayingState(!props.playingState))
-		 setSongReady(false)
 	}, [props.playingState, props.currentIndex, songReady])
 
 	const cdCls = useMemo(() => {
 		return props.playingState ? 'play' : 'play pause'
 	}, [props.playingState])
+
+	const disableCls = useMemo(() => {
+		return songReady ? '' : 'disable'
+	}, [songReady])
 
 	const next = useCallback(function() {
 		if (!songReady) {
@@ -180,7 +183,7 @@ const Player = function(props) {
 	}, [songReady])
 
 	const error = useCallback(() => {
-		setSongReady(false)
+		setSongReady(true)
 	}, [songReady])
 
 	return (
@@ -221,13 +224,13 @@ const Player = function(props) {
 							<div className="icon i-left">
 								<i className="icon-sequence"></i>
 							</div>
-							<div className="icon i-left">
+							<div className={`icon i-left ${disableCls}`}>
 								<i className="icon-prev" onClick={() => prev()}></i>
 							</div>
-							<div className="icon i-center">
+							<div className={`icon i-center ${disableCls}`}>
 								<i className={ playIcon } onClick={() => { togglePlaying() }}></i>
 							</div>
-							<div className="icon i-right">
+							<div className={`icon i-right ${disableCls}`}>
 								<i className="icon-next" onClick={() => { next()}}></i>
 							</div>
 							<div className="icon i-right">
