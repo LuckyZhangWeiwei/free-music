@@ -12,7 +12,6 @@ import './index.stylus'
 import './index.css'
 
 const transform = prefixStyle('transform')
-// const transformDuration = prefixStyle('transformDuration')
 
 const Player = function(props) {
 	const [show, setShow] = useState(false)
@@ -156,28 +155,23 @@ const Player = function(props) {
 		return songReady ? '' : 'disable'
 	}, [songReady])
 
-	// const formatTime = useMemo(() => {
-	//   let	interval = currentTime | 0
-	// 	const minute = interval / 60 | 0
-	// 	const second = interval % 60
-	// 	return `minute: ${minute}:${second}`
-	// }, [currentTime])
-
-	function formatTime(interval) {
-		interval = interval | 0
+	const formatTime = useCallback(time => {
+	  let	interval = time | 0
 		const minute = interval / 60 | 0
 		const second = _pad(interval % 60)
 		return `${minute}:${second}`
-	}
+	}, [])
 
-	const _pad = (num, n=2) => {
+	const _pad = useCallback ((num, n=2) => {
 		let len = num.toString().length
 		while(len < n) {
 			num = '0' + num
 			len ++
 		}
 		return num
-	}
+	}, [])
+
+
 
 	const next = useCallback(function() {
 		if (!songReady) {
