@@ -174,8 +174,6 @@ const Player = function(props) {
 		return num
 	}, [])
 
-
-
 	const next = useCallback(function() {
 		if (!songReady) {
 			return
@@ -215,6 +213,13 @@ const Player = function(props) {
 		setPercentage(currentTime / currentSong.duration)
 	}, [])
 
+	const percentageChanged = useCallback(value => {
+		audioRef.current.currentTime = value * currentSong.duration
+		if (!props.playingState) {
+			props.dispatch(togglePlaying())
+		}
+	}, [])
+
 	return (
 		<div className="player">
 			<CSSTransition 
@@ -252,7 +257,7 @@ const Player = function(props) {
 						<div className="progress-wrapper">
 							<span className="time time-l">{formatTime(currentTime)}</span>
 							<div className="progress-bar-wrapper">
-								<ProgressBar percent={percentage}></ProgressBar>
+								<ProgressBar percent={percentage} percentageChanged={value => percentageChanged(value)}></ProgressBar>
 							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
