@@ -7,6 +7,7 @@ import { setFullScreen } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl } from '../../common/js/models/song'
 import { setPlayingState, setCurrentIndex } from '../../store/actions'
+import ProgressBar from './../progress-bar'
 
 import './index.stylus'
 import './index.css'
@@ -21,6 +22,8 @@ const Player = function(props) {
 	const [songReady, setSongReady] = useState(false)
 
 	const [currentTime, setCurrentTime] = useState(0)
+
+	const [percentage, setPercentage] = useState(0)
 
 	const cdWrapperRef = useRef()
 
@@ -208,6 +211,8 @@ const Player = function(props) {
 	const updateTime = useCallback((e) => {
 		let currentTime = e.target.currentTime
 		setCurrentTime(currentTime)
+
+		setPercentage(currentTime / currentSong.duration)
 	}, [])
 
 	return (
@@ -246,7 +251,9 @@ const Player = function(props) {
 					<div className="bottom">
 						<div className="progress-wrapper">
 							<span className="time time-l">{formatTime(currentTime)}</span>
-							<div className="progress-bar-wrapper"></div>
+							<div className="progress-bar-wrapper">
+								<ProgressBar percent={percentage}></ProgressBar>
+							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
 						<div className="operators">
