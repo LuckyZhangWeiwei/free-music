@@ -29,6 +29,8 @@ const Player = function(props) {
 
 	const audioRef = useRef()
 
+	const playingStateRef = useRef(props.playingState)
+
 	useEffect(() => {
 		setShow(true)
 	}, [])
@@ -144,10 +146,14 @@ const Player = function(props) {
 	}, [])
 
 	const togglePlaying = useCallback(() => {
-		if (!songReady) {
-			return
-		 }
-		 props.dispatch(setPlayingState(!props.playingState))
+		// if (!songReady) {
+		// 	return
+		//  }
+		//  playingStateRef.current = !props.playingState
+		//  props.dispatch(setPlayingState(!props.playingState))
+		playingStateRef.current = !playingStateRef.current
+		console.log('playingStateRef.current:', playingStateRef.current)
+		props.dispatch(setPlayingState(playingStateRef.current))
 	}, [props.playingState, props.currentIndex, songReady])
 
 	const cdCls = useMemo(() => {
@@ -215,8 +221,8 @@ const Player = function(props) {
 
 	const percentageChanged = useCallback(value => {
 		audioRef.current.currentTime = value * currentSong.duration
-		if (!props.playingState) {
-			props.dispatch(togglePlaying())
+		if (!playingStateRef.current) {
+			togglePlaying()
 		}
 	}, [])
 
@@ -257,7 +263,7 @@ const Player = function(props) {
 						<div className="progress-wrapper">
 							<span className="time time-l">{formatTime(currentTime)}</span>
 							<div className="progress-bar-wrapper">
-								<ProgressBar percent={percentage} percentageChanged={value => percentageChanged(value)}></ProgressBar>
+								<ProgressBar percent={percentage} percentageChanged={value => {percentageChanged(value)}}></ProgressBar>
 							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
@@ -290,7 +296,15 @@ const Player = function(props) {
 						<h2 className="name">{currentSong.name}</h2>
 						<p className="desc">{currentSong.singer}</p>
 					</div>
-					<div className="control" onClick={e => {e.stopPropagation(); togglePlaying() }}><i className={playMniIcon}></i></div>
+					<div className="control" 
+						onClick={
+							e => {
+								e.stopPropagation()
+								togglePlaying() 
+							}
+						}>
+							<i className={playMniIcon}></i>
+					</div>
 					<div className="control">
 						<i className="icon-playlist"></i>
 					</div>
