@@ -263,7 +263,7 @@ const Player = function(props) {
 						<div className="progress-wrapper">
 							<span className="time time-l">{formatTime(currentTime)}</span>
 							<div className="progress-bar-wrapper">
-								<ProgressBar percent={percentage} percentageChanged={value => {percentageChanged(value)}}></ProgressBar>
+								<ProgressBar percent={percentage} percentageChanged={value => {percentageChanged(value)}} />
 							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
