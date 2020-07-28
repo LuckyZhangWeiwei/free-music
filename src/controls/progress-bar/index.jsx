@@ -1,5 +1,6 @@
 import React, {memo, useEffect, useRef, useCallback} from 'react'
 import { prefixStyle } from '../../common/js/dom'
+import PropTypes from 'prop-types'
 
 import './index.stylus'
 
@@ -78,6 +79,11 @@ const ProgressBar = props => {
 			</div>
 		</div>
 	)
+}
+
+ProgressBar.propTypes = {
+	percentageChanged: PropTypes.func.isRequired,
+	percent: PropTypes.number.isRequired,
 }
 
 export default memo(ProgressBar)

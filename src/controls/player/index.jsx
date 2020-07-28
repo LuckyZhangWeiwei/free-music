@@ -8,6 +8,7 @@ import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl } from '../../common/js/models/song'
 import { setPlayingState, setCurrentIndex } from '../../store/actions'
 import ProgressBar from './../progress-bar'
+import ProgressCircle from './../progress-circle'
 
 import './index.stylus'
 import './index.css'
@@ -303,10 +304,12 @@ const Player = function(props) {
 								togglePlaying() 
 							}
 						}>
-							<i className={playMniIcon}></i>
+							<ProgressCircle radius={32} percentage={percentage}>
+								<i className={`icon-mini ${playMniIcon}`} />
+							</ProgressCircle>
 					</div>
 					<div className="control">
-						<i className="icon-playlist"></i>
+						<i className="icon-playlist" />
 					</div>
 				</div>
 			</CSSTransition>
