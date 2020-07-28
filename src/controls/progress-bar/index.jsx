@@ -52,6 +52,17 @@ const ProgressBar = props => {
 		progressBtnRef.current.style[transform] = `translate3d(${offsetWidth}px, 0 , 0)`
 	}, [])
 
+	/**
+	 * react no e.offsetX
+	 * 
+	 */
+	// const progressClick = useCallback(e => {
+	// 	e.stopPropagation()
+	// 	_offset(e.offsetX)
+	// 	const percentage = progressRef.current.clientWidth / (progressBarRef.current.clientWidth - 16)
+	// 	props.percentageChanged(percentage)
+	// }, [])
+
 	return (
 		<div className="progress-bar" ref={progressBarRef}>
 			<div className="bar-inner">

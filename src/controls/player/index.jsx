@@ -152,7 +152,7 @@ const Player = function(props) {
 		//  playingStateRef.current = !props.playingState
 		//  props.dispatch(setPlayingState(!props.playingState))
 		playingStateRef.current = !playingStateRef.current
-		console.log('playingStateRef.current:', playingStateRef.current)
+		// console.log('playingStateRef.current:', playingStateRef.current)
 		props.dispatch(setPlayingState(playingStateRef.current))
 	}, [props.playingState, props.currentIndex, songReady])
 
