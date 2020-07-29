@@ -59,8 +59,7 @@ const Player = function(props) {
 		const audio = audioRef.current
 		 setTimeout(() => {
 			props.playingState ? audio.play() : audio.pause()	 
-		 }, 20);
-		 
+		 }, 20)
 	}, [props.playingState])
 
 	useEffect(() => {
@@ -88,26 +87,26 @@ const Player = function(props) {
 	}, [props.playingState])
 
 	const onEnter = useCallback(function (el) {
-			const {x, y, scale} = _getPosAndScale
-			let anim = {
-			0: {
-						transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
-					},
-				50: {
-					transform: `translate3d(${x / 2}px, ${y / 2}px, 0) scale(0.5)`
+		const {x, y, scale} = _getPosAndScale
+		let anim = {
+		0: {
+					transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`
 				},
-				100: {
-					transform: 'translate3d(0, 0, 0) scale(1)'
-				}
+			50: {
+				transform: `translate3d(${x / 2}px, ${y / 2}px, 0) scale(0.5)`
+			},
+			100: {
+				transform: 'translate3d(0, 0, 0) scale(1)'
 			}
-			animations.registerAnimation({
-				name: 'move',
-				animation: anim,
-				presets: {
-					duration: 200,
-					easing: 'linear',
-				}
-			})
+		}
+		animations.registerAnimation({
+			name: 'move',
+			animation: anim,
+			presets: {
+				duration: 200,
+				easing: 'linear',
+			}
+		})
 	}, [])
 
 	const onEntering = useCallback(function (el) {
@@ -148,7 +147,7 @@ const Player = function(props) {
 	}, [])
 
 	const togglePlaying = useCallback((e) => {
-		e.stopPropagation()
+	  e && e.stopPropagation()
 		playingStateRef.current = !playingStateRef.current
 		props.dispatch(setPlayingState(playingStateRef.current))
 	}, [props.playingState, props.currentIndex, songReady])
@@ -178,7 +177,7 @@ const Player = function(props) {
 	}, [])
 
 	const next = useCallback(function(e) {
-		e.stopPropagation()
+		e && e.stopPropagation()
 		if (!songReady) {
 			return
 		}
@@ -191,7 +190,7 @@ const Player = function(props) {
 	}, [props.currentIndex, songReady])
 
 	const prev = useCallback(function(e) {
-		e.stopPropagation()
+		e && e.stopPropagation()
 		if (!songReady) {
 			return
 		}
@@ -230,7 +229,7 @@ const Player = function(props) {
 	}, [props.playMode])
 
 	const changePlayMode = useCallback((e) => {
-		e.stopPropagation()
+	  e && e.stopPropagation()
 		const mode = (props.playMode + 1) % 3
 		props.dispatch(setPlayMode(mode))
 	}, [props.playMode])
