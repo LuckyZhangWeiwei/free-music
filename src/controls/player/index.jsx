@@ -147,14 +147,9 @@ const Player = function(props) {
 		}
 	}, [])
 
-	const togglePlaying = useCallback(() => {
-		// if (!songReady) {
-		// 	return
-		//  }
-		//  playingStateRef.current = !props.playingState
-		//  props.dispatch(setPlayingState(!props.playingState))
+	const togglePlaying = useCallback((e) => {
+		e.stopPropagation()
 		playingStateRef.current = !playingStateRef.current
-		// console.log('playingStateRef.current:', playingStateRef.current)
 		props.dispatch(setPlayingState(playingStateRef.current))
 	}, [props.playingState, props.currentIndex, songReady])
 
@@ -182,7 +177,8 @@ const Player = function(props) {
 		return num
 	}, [])
 
-	const next = useCallback(function() {
+	const next = useCallback(function(e) {
+		e.stopPropagation()
 		if (!songReady) {
 			return
 		}
@@ -194,7 +190,8 @@ const Player = function(props) {
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
-	const prev = useCallback(function() {
+	const prev = useCallback(function(e) {
+		e.stopPropagation()
 		if (!songReady) {
 			return
 		}
@@ -232,7 +229,8 @@ const Player = function(props) {
 		return props.playMode === playMode.sequence ? 'icon-sequence' : props.playMode === playMode.loop ? 'icon-loop' : 'icon-random'
 	}, [props.playMode])
 
-	const changePlayMode = useCallback(() => {
+	const changePlayMode = useCallback((e) => {
+		e.stopPropagation()
 		const mode = (props.playMode + 1) % 3
 		props.dispatch(setPlayMode(mode))
 	}, [props.playMode])
@@ -248,8 +246,7 @@ const Player = function(props) {
 				onEntered={() => onEntered()}
 				onExit={() => onExit()}
 				onExiting={() => onExiting()}
-				onExited={() => onExited()}
-				>
+				onExited={() => onExited()}>
 				<div className="normal-player">
 					<div className="background">
 						<img width="100%" height="100%" src={currentSong.image} />
@@ -278,18 +275,18 @@ const Player = function(props) {
 							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
-						<div className="operators" onClick={() => { changePlayMode() }}>
+						<div className="operators" onClick={(e) => { changePlayMode(e) }}>
 							<div className="icon i-left">
 								<i className={iconMode}></i>
 							</div>
 							<div className={`icon i-left ${disableCls}`}>
-								<i className="icon-prev" onClick={() => prev()}></i>
+								<i className="icon-prev" onClick={(e) => prev(e)}></i>
 							</div>
 							<div className={`icon i-center ${disableCls}`}>
-								<i className={ playIcon } onClick={() => { togglePlaying() }}></i>
+								<i className={ playIcon } onClick={(e) => { togglePlaying(e) }}></i>
 							</div>
 							<div className={`icon i-right ${disableCls}`}>
-								<i className="icon-next" onClick={() => { next()}}></i>
+								<i className="icon-next" onClick={(e) => { next(e)}}></i>
 							</div>
 							<div className="icon i-right">
 								<i className="icon icon-not-favorite"></i>
