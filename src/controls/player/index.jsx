@@ -6,9 +6,10 @@ import animations from 'create-keyframe-animation'
 import { setFullScreen } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl } from '../../common/js/models/song'
-import { setPlayingState, setCurrentIndex } from '../../store/actions'
+import { setPlayingState, setCurrentIndex, setPlayMode } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import ProgressCircle from './../progress-circle'
+import { playMode } from '../../common/js/config'
 
 import './index.stylus'
 import './index.css'
@@ -227,6 +228,15 @@ const Player = function(props) {
 		}
 	}, [])
 
+	const iconMode = useMemo(() => {
+		return props.playMode === playMode.sequence ? 'icon-sequence' : props.playMode === playMode.loop ? 'icon-loop' : 'icon-random'
+	}, [props.playMode])
+
+	const changePlayMode = useCallback(() => {
+		const mode = (props.playMode + 1) % 3
+		props.dispatch(setPlayMode(mode))
+	}, [props.playMode])
+
 	return (
 		<div className="player">
 			<CSSTransition 
@@ -268,9 +278,9 @@ const Player = function(props) {
 							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
-						<div className="operators">
+						<div className="operators" onClick={() => { changePlayMode() }}>
 							<div className="icon i-left">
-								<i className="icon-sequence"></i>
+								<i className={iconMode}></i>
 							</div>
 							<div className={`icon i-left ${disableCls}`}>
 								<i className="icon-prev" onClick={() => prev()}></i>
