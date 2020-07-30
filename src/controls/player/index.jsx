@@ -274,18 +274,18 @@ const Player = function(props) {
 							</div>
 							<span className="time time-r">{formatTime(currentSong.duration)}</span>
 						</div>
-						<div className="operators" onClick={(e) => { changePlayMode(e) }}>
-							<div className="icon i-left">
+						<div className="operators">
+							<div className="icon i-left"  onClick={e => { changePlayMode(e) }}>
 								<i className={iconMode}></i>
 							</div>
 							<div className={`icon i-left ${disableCls}`}>
-								<i className="icon-prev" onClick={(e) => prev(e)}></i>
+								<i className="icon-prev" onClick={e => prev(e)}></i>
 							</div>
 							<div className={`icon i-center ${disableCls}`}>
-								<i className={ playIcon } onClick={(e) => { togglePlaying(e) }}></i>
+								<i className={ playIcon } onClick={e => { togglePlaying(e) }}></i>
 							</div>
 							<div className={`icon i-right ${disableCls}`}>
-								<i className="icon-next" onClick={(e) => { next(e)}}></i>
+								<i className="icon-next" onClick={e => { next(e)}}></i>
 							</div>
 							<div className="icon i-right">
 								<i className="icon icon-not-favorite"></i>
