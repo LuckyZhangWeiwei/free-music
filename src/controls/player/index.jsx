@@ -32,6 +32,8 @@ const Player = function(props) {
 
 	const playingStateRef = useRef(props.playingState)
 
+	const currentSongRef = useRef(props.currentSong)
+
 	useEffect(() => {
 		setShow(true)
 	}, [])
@@ -41,19 +43,21 @@ const Player = function(props) {
 	}, [props.isFullScreen])
 
 	useEffect(() => {
-		console.log('props.currentSong.name:', props.currentSong.name)
-		getSongUrl(props.currentSong.name || props.currentSong.songname)
+		getSongUrl(currentSongRef.current.name || currentSongRef.current.songname)
 		.then(songUrl => {
 			const song = {
-				...props.currentSong,
+				...currentSongRef.current,
 				url: songUrl
 			}
 		  props.dispatch(setCurrentSong(song))
+			currentSongRef.current = song
 			setTimeout(() => {
 				audioRef.current.play()
 			}, 20);
 		})
-	}, [props.currentSong.name, props.currentSong.url, props.currentIndex])
+	}, 
+	[currentSongRef.current.id, currentSongRef.current.url])
+	// [props.currentSong.name, props.currentSong.url, props.currentIndex])
 
 	useEffect(() => {
 		const audio = audioRef.current
@@ -187,7 +191,8 @@ const Player = function(props) {
 			index = 0
 		}
 	  props.dispatch(setCurrentIndex(index))
-		props.dispatch(setCurrentSong(props.playList[index]))
+		currentSongRef.current = props.playList[index]
+		props.dispatch(setCurrentSong(currentSongRef.current))
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
@@ -201,7 +206,8 @@ const Player = function(props) {
 			index = props.playList.length - 1
 		}
 		props.dispatch(setCurrentIndex(index))
-		props.dispatch(setCurrentSong(props.playList[index]))
+		currentSongRef.current = props.playList[index]
+		props.dispatch(setCurrentSong(currentSongRef.current))
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
@@ -246,17 +252,15 @@ const Player = function(props) {
 		}
 		resetCurrentList(list)
 		props.dispatch(setPlayList(list))
-	}, [props.playMode])
+	}, [props.playMode, props.currentIndex])
 
 	const resetCurrentList = useCallback(list => {
-		console.log('props.currentSong:', props.currentSong)
 		const index = list.findIndex(item => {
 			return item.id === props.currentSong.id
 		})
 		props.dispatch(setCurrentIndex(index))
-		console.log(list, index)
-		props.dispatch(setCurrentSong(list[index]))
-	}, [])
+		props.dispatch(setCurrentSong(currentSongRef.current))
+	}, [props.playMode, props.currentIndex])
 
 	return (
 		<div className="player">
