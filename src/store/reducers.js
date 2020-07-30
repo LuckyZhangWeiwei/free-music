@@ -42,7 +42,14 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_PLAYLIST:
-				return [...payload]
+				let obj = {}
+				Object.assign(obj, payload)
+				let array = new Array()
+				let list = {...obj}
+				for(let index in list) {
+					array.push(list[index])
+				}
+				return array
 			default:
 		}
 		return state
@@ -51,7 +58,14 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_SEQUENCE_LIST:
-				return [...payload]
+				let obj = {}
+				Object.assign(obj, payload)
+				let array = new Array()
+				let list = {...obj}
+				for(let index in list) {
+					array.push(list[index])
+				}
+				return array
 			default:
 		}
 		return state

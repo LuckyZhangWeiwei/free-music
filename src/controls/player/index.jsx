@@ -234,14 +234,19 @@ const Player = function(props) {
 	  e && e.stopPropagation()
 		const mode = (props.playMode + 1) % 3
 		props.dispatch(setPlayMode(mode))
-
+		let tempList = {}
+		Object.assign(tempList, props.sequenceList)
+		let array = new Array()
+		for (let index in tempList) {
+			array.push(tempList[index])
+		}
 		let list = null
 		if (mode === playMode.random) {
-			list = shuffle(props.sequenceList)
+			list = shuffle(array)
 		} else {
-			list = props.sequenceList
+			list = array
 		}
-		resetCurrentList(list)
+		// resetCurrentList(list)
 		props.dispatch(setPlayList(list))
 	}, [props.playMode])
 
