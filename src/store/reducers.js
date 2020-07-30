@@ -44,12 +44,7 @@ export default {
 			case SET_PLAYLIST:
 				let obj = {}
 				Object.assign(obj, payload)
-				let array = new Array()
-				let list = {...obj}
-				for(let index in list) {
-					array.push(list[index])
-				}
-				return array
+				return Object.values(obj)
 			default:
 		}
 		return state
@@ -60,12 +55,7 @@ export default {
 			case SET_SEQUENCE_LIST:
 				let obj = {}
 				Object.assign(obj, payload)
-				let array = new Array()
-				let list = {...obj}
-				for(let index in list) {
-					array.push(list[index])
-				}
-				return array
+				return Object.values(obj)
 			default:
 		}
 		return state
