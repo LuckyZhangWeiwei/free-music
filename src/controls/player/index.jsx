@@ -54,14 +54,14 @@ const Player = function(props) {
 				audioRef.current.play()
 			}, 20);
 		})
-	}, [props.currentSong.name, props.currentSong.url])
+	}, [props.currentSong.name, props.currentSong.url, props.currentIndex])
 
 	useEffect(() => {
 		const audio = audioRef.current
 		 setTimeout(() => {
-			props.playingState ? audio.play() : audio.pause()	 
+			playingStateRef.current ? audio.play() : audio.pause()	 
 		 }, 20)
-	}, [props.playingState])
+	}, [playingStateRef.current])
 
 	useEffect(() => {
 		if (!playingStateRef.current) {
