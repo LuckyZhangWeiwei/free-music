@@ -6,7 +6,7 @@ import animations from 'create-keyframe-animation'
 import { setFullScreen, setPlayList } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl } from '../../common/js/models/song'
-import { setPlayingState, setCurrentIndex, setPlayMode } from '../../store/actions'
+import { setPlayingState, setCurrentIndex, setPlayMode, setCurrentSong } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
@@ -19,8 +19,6 @@ const transform = prefixStyle('transform')
 
 const Player = function(props) {
 	const [show, setShow] = useState(false)
-
-	const [currentSong, setCurrentSong] = useState(props.currentSong)
 
 	const [songReady, setSongReady] = useState(false)
 
@@ -43,13 +41,14 @@ const Player = function(props) {
 	}, [props.isFullScreen])
 
 	useEffect(() => {
+		console.log('props.currentSong.name:', props.currentSong.name)
 		getSongUrl(props.currentSong.name || props.currentSong.songname)
 		.then(songUrl => {
 			const song = {
 				...props.currentSong,
 				url: songUrl
 			}
-			setCurrentSong(song)
+		  props.dispatch(setCurrentSong(song))
 			setTimeout(() => {
 				audioRef.current.play()
 			}, 20);
@@ -188,6 +187,7 @@ const Player = function(props) {
 			index = 0
 		}
 	  props.dispatch(setCurrentIndex(index))
+		props.dispatch(setCurrentSong(props.playList[index]))
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
@@ -201,6 +201,7 @@ const Player = function(props) {
 			index = props.playList.length - 1
 		}
 		props.dispatch(setCurrentIndex(index))
+		props.dispatch(setCurrentSong(props.playList[index]))
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
@@ -216,11 +217,11 @@ const Player = function(props) {
 		let currentTime = e.target.currentTime
 		setCurrentTime(currentTime)
 
-		setPercentage(currentTime / currentSong.duration)
+		setPercentage(currentTime / props.currentSong.duration)
 	}, [])
 
 	const percentageChanged = useCallback(value => {
-		audioRef.current.currentTime = value * currentSong.duration
+		audioRef.current.currentTime = value * props.currentSong.duration
 		if (!playingStateRef.current) {
 			togglePlaying()
 		}
@@ -248,10 +249,13 @@ const Player = function(props) {
 	}, [props.playMode])
 
 	const resetCurrentList = useCallback(list => {
+		console.log('props.currentSong:', props.currentSong)
 		const index = list.findIndex(item => {
 			return item.id === props.currentSong.id
 		})
 		props.dispatch(setCurrentIndex(index))
+		console.log(list, index)
+		props.dispatch(setCurrentSong(list[index]))
 	}, [])
 
 	return (
@@ -268,20 +272,20 @@ const Player = function(props) {
 				onExited={() => onExited()}>
 				<div className="normal-player">
 					<div className="background">
-						<img width="100%" height="100%" src={currentSong.image} />
+						<img width="100%" height="100%" src={props.currentSong.image} />
 					</div>
 					<div className="top">
 						<div className="back" onClick={() => close()}>
 							<i className="icon-back"></i>
 						</div>
-						<h1 className="title">{currentSong.name}</h1>
-						<h2 className="subtitle">{currentSong.singer}</h2>
+						<h1 className="title">{props.currentSong.name}</h1>
+						<h2 className="subtitle">{props.currentSong.singer}</h2>
 					</div>
 					<div className="middle">
 						<div className="middle-l">
 							<div className="cd-wrapper" ref={cdWrapperRef}>
 								<div className={`cd ${cdCls}`}>
-									<img className="image" src={currentSong.image} />
+									<img className="image" src={props.currentSong.image} />
 								</div>
 							</div>
 						</div>
@@ -292,7 +296,7 @@ const Player = function(props) {
 							<div className="progress-bar-wrapper">
 								<ProgressBar percent={percentage} percentageChanged={value => {percentageChanged(value)}} />
 							</div>
-							<span className="time time-r">{formatTime(currentSong.duration)}</span>
+							<span className="time time-r">{formatTime(props.currentSong.duration)}</span>
 						</div>
 						<div className="operators">
 							<div className="icon i-left"  onClick={e => { changePlayMode(e) }}>
@@ -317,11 +321,11 @@ const Player = function(props) {
 			<CSSTransition timeout={200} in={!show} classNames="mini">
 				<div className="mini-player" onClick={() => open()}>
 					<div className="icon">
-						<img width="40" height="40" src={currentSong.image} className={cdCls} />
+						<img width="40" height="40" src={props.currentSong.image} className={cdCls} />
 					</div>
 					<div className="text">
-						<h2 className="name">{currentSong.name}</h2>
-						<p className="desc">{currentSong.singer}</p>
+						<h2 className="name">{props.currentSong.name}</h2>
+						<p className="desc">{props.currentSong.singer}</p>
 					</div>
 					<div className="control" 
 						onClick={
@@ -340,7 +344,7 @@ const Player = function(props) {
 				</div>
 			</CSSTransition>
 			<audio 
-				src={currentSong.url} 
+				src={props.currentSong.url} 
 				ref={audioRef} 
 				onCanPlay={() => ready()} 
 				onError={() => error()}

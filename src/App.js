@@ -5,12 +5,11 @@ import { connect } from 'react-redux'
 import Tab from './components/tab'
 import MHeader from './components/m-header'
 import Player from './controls/player'
+import { setCurrentSong } from './store/actions'
 
 function App(props) {
-	const [currentSong, setCurrentSong] = useState()
- 
 	useEffect(() => {
-		setCurrentSong(props.playList[props.currentIndex])
+		props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
 	}, [props.playList, props.currentIndex])
   
 	return (
@@ -20,9 +19,9 @@ function App(props) {
 				<Tab />
 			</Router>
 			{
-				currentSong 
+				props.currentSong.id 
 				&&
-				<Player currentSong={currentSong} />
+				<Player />
 			}
 		</>
   )
