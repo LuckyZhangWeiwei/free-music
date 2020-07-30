@@ -42,7 +42,7 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_PLAYLIST:
-				return payload
+				return [...payload]
 			default:
 		}
 		return state
@@ -51,7 +51,7 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_SEQUENCE_LIST:
-				return payload
+				return [...payload]
 			default:
 		}
 		return state

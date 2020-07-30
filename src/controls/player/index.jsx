@@ -3,13 +3,14 @@ import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
 
-import { setFullScreen } from '../../store/actions'
+import { setFullScreen, setPlayList } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl } from '../../common/js/models/song'
 import { setPlayingState, setCurrentIndex, setPlayMode } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
+import { shuffle } from '../../common/js/util'
 
 import './index.stylus'
 import './index.css'
@@ -63,10 +64,11 @@ const Player = function(props) {
 	}, [props.playingState])
 
 	useEffect(() => {
-		if (!props.playingState) {
-			props.dispatch(setPlayingState(true))
+		if (!playingStateRef.current) {
+			playingStateRef.current = true
+			props.dispatch(setPlayingState(playingStateRef.current))
 		}
-	}, [props.currentIndex])
+	}, [props.currentSong.id])
 
 	const close = useCallback(function() {
 		props.dispatch(setFullScreen(false))
@@ -232,7 +234,23 @@ const Player = function(props) {
 	  e && e.stopPropagation()
 		const mode = (props.playMode + 1) % 3
 		props.dispatch(setPlayMode(mode))
+
+		let list = null
+		if (mode === playMode.random) {
+			list = shuffle(props.sequenceList)
+		} else {
+			list = props.sequenceList
+		}
+		resetCurrentList(list)
+		props.dispatch(setPlayList(list))
 	}, [props.playMode])
+
+	const resetCurrentList = useCallback(list => {
+		const index = list.findIndex(item => {
+			return item.id === props.currentSong.id
+		})
+		props.dispatch(setCurrentIndex(index))
+	}, [])
 
 	return (
 		<div className="player">

@@ -6,7 +6,6 @@ export function shuffle(arr) {
 		arr[j] = t
 	}
 	return arr
-	// return arr.reverse()
 }
 
 function getRandomInt(min, max) {
