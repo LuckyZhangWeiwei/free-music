@@ -61,25 +61,17 @@ export function setCurrentIndex(state) {
 	}
 }
 
-export function selectPlay(list, index) {
-	return (dispatch, getState) => {
+export function loadPlayList(list) {
+	return dispatch => {
 		dispatch(setPlayList(list))
-		dispatch(setCurrentIndex(index))
-		dispatch(setFullScreen(true))
-		dispatch(setPlayingState(true))
+		dispatch(setSequenceList(list))
 	}
 }
 
-// export function setPlayPos(currentIndex) {
-// 	return (dispatch) => {
-// 		dispatch(setCurrentIndex(currentIndex)).then(() => {
-// 			dispatch(setPlayingState(true))
-// 		})
-// 	}
-// }
-
-export function fetchSingerData() {
+export function selectPlay(list, index) {
 	return (dispatch, getState) => {
-		
+		dispatch(setCurrentIndex(index))
+		dispatch(setFullScreen(true))
+		dispatch(setPlayingState(true))
 	}
 }

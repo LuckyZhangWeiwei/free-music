@@ -7,6 +7,7 @@ import MusicList from '../../controls/music-list'
 
 import './index.stylus'
 import { ERR_OK } from '../../api/config'
+import { loadPlayList } from '../../store/actions'
 
 const SingerDetail = function(props) {
 	const [show, setShow] = useState(false)
@@ -30,6 +31,7 @@ const SingerDetail = function(props) {
 					const data = res.data.list
 					const ret = _normalizeSongs(data)
 					setSong(ret)
+					props.dispatch(loadPlayList(ret))
 				}
 			})
 	}, [props.singer.id, props.history]
