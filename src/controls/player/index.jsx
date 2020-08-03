@@ -311,7 +311,7 @@ const Player = function(props) {
 							</div>
 							{
 								audioRef.current &&
-								<span className="time time-r">{audioRef.current.duration && formatTime(audioRef.current.duration)}</span>
+								<span className="time time-r">{formatTime(audioRef.current.duration)}</span>
 							}
 							
 						</div>
