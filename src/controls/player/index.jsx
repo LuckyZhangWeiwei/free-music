@@ -14,6 +14,7 @@ import { shuffle } from '../../common/js/util'
 
 import './index.stylus'
 import './index.css'
+import { endsWith } from 'create-keyframe-animation/lib/animation-property'
 
 const transform = prefixStyle('transform')
 
@@ -262,6 +263,10 @@ const Player = function(props) {
 		props.dispatch(setCurrentSong(currentSongRef.current))
 	}, [props.playMode, props.currentIndex])
 
+	const end = ()=>{
+		next()
+	}
+
 	return (
 		<div className="player">
 			<CSSTransition 
@@ -353,6 +358,7 @@ const Player = function(props) {
 				onCanPlay={() => ready()} 
 				onError={() => error()}
 				onTimeUpdate={e => updateTime(e)}
+				onEnded={()=>{end()}}
 			/>
 		</div>
 	)
