@@ -14,7 +14,6 @@ import { shuffle } from '../../common/js/util'
 
 import './index.stylus'
 import './index.css'
-import { endsWith } from 'create-keyframe-animation/lib/animation-property'
 
 const transform = prefixStyle('transform')
 
@@ -33,8 +32,6 @@ const Player = function(props) {
 
 	const playingStateRef = useRef(props.playingState)
 
-	const currentSongRef = useRef(props.currentSong)
-
 	useEffect(() => {
 		setShow(true)
 	}, [])
@@ -44,20 +41,19 @@ const Player = function(props) {
 	}, [props.isFullScreen])
 
 	useEffect(() => {
-		getSongUrl(currentSongRef.current.name || currentSongRef.current.songname)
+		getSongUrl(props.currentSong.name || props.currentSong.songname)
 		.then(songUrl => {
 			const song = {
-				...currentSongRef.current,
+				...props.currentSong,
 				url: songUrl
 			}
 		  props.dispatch(setCurrentSong(song))
-			currentSongRef.current = song
 			setTimeout(() => {
 				audioRef.current.play()
 			}, 20);
 		})
 	}, 
-	[currentSongRef.current.id, currentSongRef.current.url])
+	[props.currentSong.id, props.currentSong.url])
 	// [props.currentSong.name, props.currentSong.url, props.currentIndex])
 
 	useEffect(() => {
@@ -156,7 +152,7 @@ const Player = function(props) {
 	  e && e.stopPropagation()
 		playingStateRef.current = !playingStateRef.current
 		props.dispatch(setPlayingState(playingStateRef.current))
-	}, [props.playingState, props.currentIndex, songReady])
+	}, [])
 
 	const cdCls = useMemo(() => {
 		return props.playingState ? 'play' : 'play pause'
@@ -192,8 +188,7 @@ const Player = function(props) {
 			index = 0
 		}
 	  props.dispatch(setCurrentIndex(index))
-		currentSongRef.current = props.playList[index]
-		props.dispatch(setCurrentSong(currentSongRef.current))
+		props.dispatch(setCurrentSong(props.currentSong))
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
@@ -207,8 +202,7 @@ const Player = function(props) {
 			index = props.playList.length - 1
 		}
 		props.dispatch(setCurrentIndex(index))
-		currentSongRef.current = props.playList[index]
-		props.dispatch(setCurrentSong(currentSongRef.current))
+		props.dispatch(setCurrentSong(props.currentSong))
 		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
@@ -238,8 +232,7 @@ const Player = function(props) {
 		return props.playMode === playMode.sequence ? 'icon-sequence' : props.playMode === playMode.loop ? 'icon-loop' : 'icon-random'
 	}, [props.playMode])
 
-	const changePlayMode = useCallback((e) => {
-	  e && e.stopPropagation()
+	const changePlayMode = useCallback(() => {
 		const mode = (props.playMode + 1) % 3
 		props.dispatch(setPlayMode(mode))
 		let tempList = {}
@@ -251,7 +244,7 @@ const Player = function(props) {
 		} else {
 			list = array
 		}
-		resetCurrentList(list)
+		// resetCurrentList(list)
 		props.dispatch(setPlayList(list))
 	}, [props.playMode, props.currentIndex])
 
@@ -260,7 +253,7 @@ const Player = function(props) {
 			return item.id === props.currentSong.id
 		})
 		props.dispatch(setCurrentIndex(index))
-		props.dispatch(setCurrentSong(currentSongRef.current))
+		props.dispatch(setCurrentSong(props.currentSong))
 	}, [props.playMode, props.currentIndex])
 
 	const end = ()=>{
