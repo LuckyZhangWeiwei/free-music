@@ -12,7 +12,7 @@ function App(props) {
 	// 	props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
 	// }, [props.playList, props.currentIndex])
 
-		useEffect(() => {
+	useEffect(() => {
 		props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
 	}, [props.currentIndex])
   

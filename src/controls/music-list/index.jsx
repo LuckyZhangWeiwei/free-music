@@ -4,7 +4,7 @@ import Scroll from '../scroll'
 import SongList from '../../controls/song-list'
 import Loading from '../../controls/loading'
 import { prefixStyle } from '../../common/js/dom'
-import { selectPlay } from '../../store/actions'
+import { selectPlay, random } from '../../store/actions'
 
 import './index.stylus'
 
@@ -70,6 +70,10 @@ const MusicList = function (props) {
 		 props.dispatch(selectPlay(props.song, index))
 	}, [props.song])
 
+	const randomPlay = useCallback(() => {
+		props.dispatch(random(props.sequenceList))
+	}, [props.sequenceList])
+
 	return (
 		<div className="music-list">
 			<div className="back" onClick={() => {props.history.goBack()}}>
@@ -81,7 +85,7 @@ const MusicList = function (props) {
 					props.song.length 
 					&&
 					<div className="play-wrapper" ref={playWrapperRef}>
-						<div className="play">
+						<div className="play" onClick={() => {randomPlay()}}>
 							<i className="icon-play"></i>
 							<span className="text">随机播放全部</span>
 						</div>

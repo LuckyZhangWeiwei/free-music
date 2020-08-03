@@ -1,3 +1,6 @@
+import { playMode } from "../common/js/config"
+import { shuffle } from "../common/js/util"
+
 export const SET_SINGER = 'SET_SINGER'
 
 export const SET_PLAYING_STATE = 'SET_PLAYING_STATE'
@@ -72,7 +75,15 @@ export function loadPlayList(list) {
 
 export function selectPlay(list, index) {
 	return (dispatch, getState) => {
-		dispatch(setCurrentIndex(index))
+		if(playMode.random === getState().playMode) {
+			const song = getState().sequenceList[index]
+			const changedIndex = getState().playList.findIndex(item => {
+				return item.id === song.id
+			})
+			dispatch(setCurrentIndex(changedIndex))	
+		} else {
+			dispatch(setCurrentIndex(index))
+		}
 		dispatch(setFullScreen(true))
 		dispatch(setPlayingState(true))
 	}
@@ -82,5 +93,17 @@ export function setCurrentSong(state) {
 	return {
 		type: SET_CURRENT_SONG,
 		payload: state
+	}
+}
+
+export function random(list) {
+	return (dispatch, getState) => {
+		dispatch(setPlayMode(playMode.random))
+		dispatch(setSequenceList(list))
+		let randomList = shuffle(list)
+		dispatch(setPlayList(randomList))
+		dispatch(setCurrentIndex(0))
+		dispatch(setFullScreen(true))
+		dispatch(setPlayingState(true))
 	}
 }

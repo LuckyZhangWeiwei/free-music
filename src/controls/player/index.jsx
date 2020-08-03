@@ -54,7 +54,6 @@ const Player = function(props) {
 		})
 	}, 
 	[props.currentSong.id, props.currentSong.url])
-	// [props.currentSong.name, props.currentSong.url, props.currentIndex])
 
 	useEffect(() => {
 		const audio = audioRef.current
@@ -248,17 +247,26 @@ const Player = function(props) {
 		props.dispatch(setPlayList(list))
 	}, [props.playMode, props.currentIndex])
 
-	const resetCurrentList = useCallback(list => {
-		const index = list.findIndex(item => {
-			return item.id === props.currentSong.id
-		})
-		props.dispatch(setCurrentIndex(index))
-		props.dispatch(setCurrentSong(props.currentSong))
-	}, [props.playMode, props.currentIndex])
+	// const resetCurrentList = useCallback(list => {
+	// 	const index = list.findIndex(item => {
+	// 		return item.id === props.currentSong.id
+	// 	})
+	// 	props.dispatch(setCurrentIndex(index))
+	// 	props.dispatch(setCurrentSong(props.currentSong))
+	// }, [props.playMode, props.currentIndex])
 
-	const end = ()=>{
-		next()
-	}
+	const end = useCallback(() => {
+		if (props.playMode === playMode.loop) {
+			loop()
+		} else {
+			next()
+		}
+	}, [props.playMode])
+
+	const loop = useCallback(() => {
+		audioRef.current.currentTime = 0
+		audioRef.current.play()
+	}, [])
 
 	return (
 		<div className="player">
