@@ -231,7 +231,13 @@ const Player = function(props) {
 	}, [])
 
 	const iconMode = useMemo(() => {
-		return props.playMode === playMode.sequence ? 'icon-sequence' : props.playMode === playMode.loop ? 'icon-loop' : 'icon-random'
+		return props.playMode 
+		=== playMode.sequence 
+		? 
+		'icon-sequence' 
+		: props.playMode === playMode.loop 
+		? 
+		'icon-loop' : 'icon-random'
 	}, [props.playMode])
 
 	const changePlayMode = useCallback(() => {
