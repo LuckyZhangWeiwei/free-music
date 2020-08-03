@@ -48,9 +48,10 @@ const Player = function(props) {
 				url: songUrl
 			}
 		  props.dispatch(setCurrentSong(song))
-			setTimeout(() => {
-				audioRef.current.play()
-			}, 20);
+			// setTimeout(() => {
+			// 	audioRef.current.play()
+			// }, 20);
+			audioRef.current.play()
 		})
 	}, 
 	[props.currentSong.id, props.currentSong.url])
@@ -178,7 +179,6 @@ const Player = function(props) {
 	}, [])
 
 	const next = useCallback(function(e) {
-		e && e.stopPropagation()
 		if (!songReady) {
 			return
 		}
@@ -216,12 +216,15 @@ const Player = function(props) {
 	const updateTime = useCallback((e) => {
 		let currentTime = e.target.currentTime
 		setCurrentTime(currentTime)
-
-		setPercentage(currentTime / props.currentSong.duration)
+	  if(audioRef.current.duration) {
+			setPercentage(currentTime / audioRef.current.duration)
+		} 
 	}, [])
 
 	const percentageChanged = useCallback(value => {
-		audioRef.current.currentTime = value * props.currentSong.duration
+	  if (audioRef.current.duration) {
+			audioRef.current.currentTime = value * audioRef.current.duration
+		}
 		if (!playingStateRef.current) {
 			togglePlaying()
 		}
@@ -261,7 +264,7 @@ const Player = function(props) {
 		} else {
 			next()
 		}
-	}, [props.playMode])
+	}, [props.playMode, songReady])
 
 	const loop = useCallback(() => {
 		audioRef.current.currentTime = 0
@@ -306,7 +309,11 @@ const Player = function(props) {
 							<div className="progress-bar-wrapper">
 								<ProgressBar percent={percentage} percentageChanged={value => {percentageChanged(value)}} />
 							</div>
-							<span className="time time-r">{formatTime(props.currentSong.duration)}</span>
+							{
+								audioRef.current &&
+								<span className="time time-r">{audioRef.current.duration && formatTime(audioRef.current.duration)}</span>
+							}
+							
 						</div>
 						<div className="operators">
 							<div className="icon i-left"  onClick={e => { changePlayMode(e) }}>
