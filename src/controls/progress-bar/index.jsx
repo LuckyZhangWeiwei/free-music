@@ -39,6 +39,9 @@ const ProgressBar = props => {
 		const deltaX = e.touches[0].pageX - touchRef.current.startX
 		const offsetWidth = Math.min(Math.max(0, touchRef.current.left + deltaX), barWidth)
 		_offset(offsetWidth)
+
+		const percentage = progressRef.current.clientWidth / (progressBarRef.current.clientWidth - 16)
+		props.percentageChanged(percentage)
 	}, [])
 
 	const progressTouchEnd = useCallback(function(e) {
