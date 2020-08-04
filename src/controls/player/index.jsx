@@ -58,9 +58,10 @@ const Player = function(props) {
 
 	useEffect(() => {
 		const audio = audioRef.current
-		 setTimeout(() => {
-			playingStateRef.current ? audio.play() : audio.pause()	 
-		 }, 20)
+		//  setTimeout(() => {
+		// 	playingStateRef.current ? audio.play() : audio.pause()	 
+		//  }, 20)
+		playingStateRef.current ? audio.play() : audio.pause()	 
 	}, [playingStateRef.current])
 
 	useEffect(() => {
@@ -221,13 +222,21 @@ const Player = function(props) {
 		} 
 	}, [])
 
-	const percentageChanged = useCallback(value => {
+	const percentageChanged = useCallback((value, isMoveAction) => {
 	  if (audioRef.current.duration) {
 			audioRef.current.currentTime = value * audioRef.current.duration
 		}
-		if (!playingStateRef.current) {
-			togglePlaying()
+
+		if (isMoveAction) {
+			playingStateRef.current = false
+			props.dispatch(setPlayingState(playingStateRef.current))
+		} else {
+			if (!playingStateRef.current) {
+				togglePlaying()
+			}
 		}
+
+		
 	}, [])
 
 	const iconMode = useMemo(() => {
@@ -313,7 +322,7 @@ const Player = function(props) {
 						<div className="progress-wrapper">
 							<span className="time time-l">{formatTime(currentTime)}</span>
 							<div className="progress-bar-wrapper">
-								<ProgressBar percent={percentage} percentageChanged={value => {percentageChanged(value)}} />
+								<ProgressBar percent={percentage} percentageChanged={ (value, isMoveAction) => {percentageChanged(value, isMoveAction)} } />
 							</div>
 							{
 								audioRef.current &&

@@ -29,7 +29,7 @@ const ProgressBar = props => {
 		touchRef.current.left = progressRef.current.clientWidth
 	}, [])
 
-	const progressTouchMove = useCallback(function(e) {
+	const progressTouchMove = useCallback(e => {
 		e.stopPropagation()
 
 		if (!touchRef.current.initiated) {
@@ -41,14 +41,14 @@ const ProgressBar = props => {
 		_offset(offsetWidth)
 
 		const percentage = progressRef.current.clientWidth / (progressBarRef.current.clientWidth - 16)
-		props.percentageChanged(percentage)
+		props.percentageChanged(percentage, true)
 	}, [])
 
-	const progressTouchEnd = useCallback(function(e) {
+	const progressTouchEnd = useCallback(e => {
 		e.stopPropagation()
 		touchRef.current.initiated = false
 		const percentage = progressRef.current.clientWidth / (progressBarRef.current.clientWidth - 16)
-		props.percentageChanged(percentage)
+		props.percentageChanged(percentage, false)
 	}, [])
 
 	const _offset = useCallback(offsetWidth => {
@@ -74,8 +74,8 @@ const ProgressBar = props => {
 				<div className="progress-btn-wrapper" 
 							ref={progressBtnRef}
 							onTouchStart={(e) => progressTouchStart(e)}
-							onTouchMove={(e) => progressTouchMove(e)}
-							onTouchEnd={(e) => progressTouchEnd(e)}
+							onTouchMove={(e) => progressTouchMove(e, true)}
+							onTouchEnd={(e) => progressTouchEnd(e, false)}
 							>
 					<div className="progress-btn"></div>
 				</div>
