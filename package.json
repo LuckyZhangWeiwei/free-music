@@ -73,7 +73,8 @@
     "redux": "^4.0.5",
     "react-redux": "^7.2.0",
     "redux-thunk": "^2.3.0",
-    "create-keyframe-animation": "^0.1.0"
+    "create-keyframe-animation": "^0.1.0",
+    "lyric-parser": "^1.0.1"
   },
   "scripts": {
     "start": "node scripts/start.js",

@@ -2,15 +2,18 @@ import React, {memo, useState, useEffect, useRef, useCallback, useMemo} from 're
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
+import classnames from 'classnames'
+import Lyric from 'lyric-parser'
 
 import { setFullScreen, setPlayList } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
-import { getSongUrl } from '../../common/js/models/song'
+import { getSongUrl, getLynic } from '../../common/js/models/song'
 import { setPlayingState, setCurrentIndex, setPlayMode, setCurrentSong } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
 import { shuffle } from '../../common/js/util'
+import Scroll from '../scroll'
 
 import './index.stylus'
 import './index.css'
@@ -26,11 +29,19 @@ const Player = function(props) {
 
 	const [percentage, setPercentage] = useState(0)
 
+	const currentLineNumRef = useRef(0)
+
 	const cdWrapperRef = useRef()
 
 	const audioRef = useRef()
 
 	const playingStateRef = useRef(props.playingState)
+
+	const lyricRef = useRef()
+
+	const lyricListRef = useRef()
+
+	const lyricLineRef = useRef()
 
 	useEffect(() => {
 		setShow(true)
@@ -52,9 +63,32 @@ const Player = function(props) {
 			// 	audioRef.current.play()
 			// }, 20);
 			audioRef.current.play()
+			currentLineNumRef.current = 0
 		})
 	}, 
-	[props.currentSong.id, props.currentSong.url])
+	[props.currentSong.url])
+	// [props.currentSong.id, props.currentSong.url])
+
+	useEffect(() => {
+		getLynic(props.currentSong.name || props.currentSong.songname).then(res => {
+			let currentLyric = new Lyric(res.lyric, ({lineNum, txt}) => handleLyric({lineNum, txt}))
+			lyricRef.current = currentLyric
+			if (playingStateRef.current) {
+				lyricRef.current.play()
+				currentLineNumRef.current = 0
+			}
+		})
+	}, [props.currentSong.id])
+
+	const handleLyric = ({lineNum, txt}) => {
+		currentLineNumRef.current = lineNum
+		if (lineNum > 5) {
+			let lineEl = lyricLineRef.current.children[lineNum - 5]
+			lyricListRef.current.scrollToElement(lineEl, 1000)
+		} else {
+			lyricListRef.current.scrollTo(0, 0, 1000)
+		}
+	}
 
 	useEffect(() => {
 		const audio = audioRef.current
@@ -235,8 +269,6 @@ const Player = function(props) {
 				togglePlaying()
 			}
 		}
-
-		
 	}, [])
 
 	const iconMode = useMemo(() => {
@@ -317,6 +349,18 @@ const Player = function(props) {
 								</div>
 							</div>
 						</div>
+						<Scroll className="middle-r" ref={lyricListRef} data={lyricRef.current && lyricRef.current.lines}>
+							<div className="lyric-wrapper" ref={lyricLineRef}>
+								{
+									lyricRef.current &&
+									lyricRef.current.lines.map((item,index) => {
+										return (
+											<p key={index} className={classnames('text', {'current': currentLineNumRef.current === index})}>{item.txt}</p>
+										)	
+									})
+								}
+							</div>
+						</Scroll>
 					</div>
 					<div className="bottom">
 						<div className="progress-wrapper">
