@@ -29,7 +29,7 @@ const Player = function(props) {
 
 	const [percentage, setPercentage] = useState(0)
 
-	const currentLineNumRef = useRef(0)
+	const currentLineNumRef = useRef(-1)
 
 	const cdWrapperRef = useRef()
 
@@ -59,28 +59,26 @@ const Player = function(props) {
 				url: songUrl
 			}
 		  props.dispatch(setCurrentSong(song))
-			// setTimeout(() => {
-			// 	audioRef.current.play()
-			// }, 20);
 			audioRef.current.play()
-			currentLineNumRef.current = 0
 		})
 	}, 
 	[props.currentSong.url])
-	// [props.currentSong.id, props.currentSong.url])
 
 	useEffect(() => {
-		getLynic(props.currentSong.name || props.currentSong.songname).then(res => {
-			let currentLyric = new Lyric(res.lyric, ({lineNum, txt}) => handleLyric({lineNum, txt}))
-			lyricRef.current = currentLyric
+		if (lyricRef.current) {
+			lyricRef.current.stop()
+		}
+		getLynic(props.currentSong.name || props.currentSong.songname)
+		.then(res => {
+			lyricRef.current = new Lyric(res.lyric, handleLyric)
 			if (playingStateRef.current) {
 				lyricRef.current.play()
-				currentLineNumRef.current = 0
 			}
 		})
 	}, [props.currentSong.id])
 
-	const handleLyric = ({lineNum, txt}) => {
+	const handleLyric = useCallback(({lineNum, txt}) => {
+		console.log(currentLineNumRef.current)
 		currentLineNumRef.current = lineNum
 		if (lineNum > 5) {
 			let lineEl = lyricLineRef.current.children[lineNum - 5]
@@ -88,13 +86,10 @@ const Player = function(props) {
 		} else {
 			lyricListRef.current.scrollTo(0, 0, 1000)
 		}
-	}
+	}, [props.currentSong.id])
 
 	useEffect(() => {
 		const audio = audioRef.current
-		//  setTimeout(() => {
-		// 	playingStateRef.current ? audio.play() : audio.pause()	 
-		//  }, 20)
 		playingStateRef.current ? audio.play() : audio.pause()	 
 	}, [playingStateRef.current])
 
@@ -154,8 +149,6 @@ const Player = function(props) {
 		animations.unregisterAnimation('move')
 		cdWrapperRef.current.style.animation = ''
 	}, [])
-
-	const onExit = function(el) {}
 
 	const onExiting = useCallback(function(el) {
 		cdWrapperRef.current.style.transition = 'all 0.2s'
@@ -293,17 +286,8 @@ const Player = function(props) {
 		} else {
 			list = array
 		}
-		// resetCurrentList(list)
 		props.dispatch(setPlayList(list))
 	}, [props.playMode, props.currentIndex])
-
-	// const resetCurrentList = useCallback(list => {
-	// 	const index = list.findIndex(item => {
-	// 		return item.id === props.currentSong.id
-	// 	})
-	// 	props.dispatch(setCurrentIndex(index))
-	// 	props.dispatch(setCurrentSong(props.currentSong))
-	// }, [props.playMode, props.currentIndex])
 
 	const end = useCallback(() => {
 		if (props.playMode === playMode.loop) {
@@ -327,7 +311,6 @@ const Player = function(props) {
 				onEnter={() => onEnter()}
 				onEntering={() => onEntering()}
 				onEntered={() => onEntered()}
-				onExit={() => onExit()}
 				onExiting={() => onExiting()}
 				onExited={() => onExited()}>
 				<div className="normal-player">
@@ -372,7 +355,6 @@ const Player = function(props) {
 								audioRef.current &&
 								<span className="time time-r">{formatTime(audioRef.current.duration)}</span>
 							}
-							
 						</div>
 						<div className="operators">
 							<div className="icon i-left"  onClick={e => { changePlayMode(e) }}>
@@ -425,8 +407,7 @@ const Player = function(props) {
 				onCanPlay={() => ready()} 
 				onError={() => error()}
 				onTimeUpdate={e => updateTime(e)}
-				onEnded={()=>{end()}}
-			/>
+				onEnded={()=>{end()}} />
 		</div>
 	)
 }
