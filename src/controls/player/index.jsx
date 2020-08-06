@@ -311,16 +311,16 @@ const Player = function(props) {
 		audioRef.current.play()
 	}, [])
 
-	const middleTouchStart = (e) => {
+	const middleTouchStart = useCallback((e) => {
 		e.stopPropagation()
 		if (!initTouch)
 			setInitTouch(true)
 		const touch = e.touches[0]
 		touchRef.current.startX = touch.pageX
 		touchRef.current.startY = touch.pageY
-	}
+	}, [initTouch, currentShow])
 
-	const middleTouchMove = (e) => {
+	const middleTouchMove = useCallback((e) => {
 		e.stopPropagation()
 		if (!touchRef.current) {
 			return
@@ -341,9 +341,9 @@ const Player = function(props) {
 		lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
 		middleLRef.current.style.opacity = 1 - touchRef.current.percentage
 		middleLRef.current.style[transitionDuration] = 0
-	}
+	}, [initTouch, currentShow])
 
-	const middleTouchEnd = (e) => {
+	const middleTouchEnd = useCallback((e) => {
 		e.stopPropagation()
 		let offsetWidth
 		let offsetOpacity
@@ -371,7 +371,7 @@ const Player = function(props) {
 		middleLRef.current.style.opacity = offsetOpacity
 		middleLRef.current.style[transitionDuration] = '300ms'
 		setInitTouch(false)
-	}
+	}, [initTouch, currentShow])
 
 	return (
 		<div className="player">
