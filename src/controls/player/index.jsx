@@ -35,6 +35,8 @@ const Player = function(props) {
 
 	const [initTouch, setInitTouch] = useState(false)
 
+	const [playingLyric, setPlayingLyric] = useState('')
+
 	const currentLineNumRef = useRef(-1)
 
 	const cdWrapperRef = useRef()
@@ -78,13 +80,19 @@ const Player = function(props) {
 		if (lyricRef.current) {
 			lyricRef.current.stop()
 		}
-		getLynic(props.currentSong.name || props.currentSong.songname)
-		.then(res => {
-			lyricRef.current = new Lyric(res.lyric, handleLyric)
-			if (playingStateRef.current) {
-				lyricRef.current.play()
-			}
-		})
+		setTimeout(() => {
+				getLynic(props.currentSong.name || props.currentSong.songname)
+				.then(res => {
+					lyricRef.current = new Lyric(res.lyric, handleLyric)
+					if (playingStateRef.current) {
+						lyricRef.current.play()
+					}
+				}).catch(() => {
+					lyricRef.current = null
+					setPlayingLyric('')
+					currentLineNumRef.current = 0
+				})
+		}, 1000)
 	}, [props.currentSong.id])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
@@ -95,6 +103,7 @@ const Player = function(props) {
 		} else {
 			lyricListRef.current.scrollTo(0, 0, 1000)
 		}
+		setPlayingLyric(txt)
 	}, [props.currentSong.id])
 
 	useEffect(() => {
@@ -107,6 +116,7 @@ const Player = function(props) {
 			playingStateRef.current = true
 			props.dispatch(setPlayingState(playingStateRef.current))
 		}
+		currentLineNumRef.current = 0
 	}, [props.currentSong.id])
 
 	const close = useCallback(function() {
@@ -189,6 +199,9 @@ const Player = function(props) {
 	  e && e.stopPropagation()
 		playingStateRef.current = !playingStateRef.current
 		props.dispatch(setPlayingState(playingStateRef.current))
+		if (lyricRef.current) {
+			lyricRef.current.togglePlay()
+		}
 	}, [])
 
 	const cdCls = useMemo(() => {
@@ -219,27 +232,34 @@ const Player = function(props) {
 		if (!songReady) {
 			return
 		}
-		let index = props.currentIndex + 1
-		if (index === props.playList.length) {
-			index = 0
+		if (props.playList.length === 1) {
+			loop()
+		} else {
+			let index = props.currentIndex + 1
+			if (index === props.playList.length) {
+				index = 0
+			}
+			props.dispatch(setCurrentIndex(index))
+			props.dispatch(setCurrentSong(props.currentSong))
+			setSongReady(false)
 		}
-	  props.dispatch(setCurrentIndex(index))
-		props.dispatch(setCurrentSong(props.currentSong))
-		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
 	const prev = useCallback(function(e) {
-		e && e.stopPropagation()
 		if (!songReady) {
 			return
 		}
-		let index = props.currentIndex - 1
-		if (index < 0) {
-			index = props.playList.length - 1
+		if (props.playList.length === 1) {
+			loop()
+		} else {
+			let index = props.currentIndex - 1
+			if (index < 0) {
+				index = props.playList.length - 1
+			}
+			props.dispatch(setCurrentIndex(index))
+			props.dispatch(setCurrentSong(props.currentSong))
+			setSongReady(false)
 		}
-		props.dispatch(setCurrentIndex(index))
-		props.dispatch(setCurrentSong(props.currentSong))
-		setSongReady(false)
 	}, [props.currentIndex, songReady])
 
 	const ready = useCallback(() => {
@@ -270,6 +290,10 @@ const Player = function(props) {
 			if (!playingStateRef.current) {
 				togglePlaying()
 			}
+		}
+
+		if (lyricRef.current) {
+			lyricRef.current.seek(audioRef.current.currentTime * 1000)
 		}
 	}, [])
 
@@ -309,10 +333,14 @@ const Player = function(props) {
 	const loop = useCallback(() => {
 		audioRef.current.currentTime = 0
 		audioRef.current.play()
+
+		if (lyricRef.current) {
+			lyricRef.current.seek(0)
+		}
 	}, [])
 
 	const middleTouchStart = useCallback((e) => {
-		e.stopPropagation()
+		// e.stopPropagation()
 		if (!initTouch)
 			setInitTouch(true)
 		const touch = e.touches[0]
@@ -321,7 +349,7 @@ const Player = function(props) {
 	}, [initTouch, currentShow])
 
 	const middleTouchMove = useCallback((e) => {
-		e.stopPropagation()
+		// e.stopPropagation()
 		if (!touchRef.current) {
 			return
 		}
@@ -344,7 +372,7 @@ const Player = function(props) {
 	}, [initTouch, currentShow])
 
 	const middleTouchEnd = useCallback((e) => {
-		e.stopPropagation()
+		// e.stopPropagation()
 		let offsetWidth
 		let offsetOpacity
 		if (currentShow === 'cd') {
@@ -405,6 +433,9 @@ const Player = function(props) {
 								<div className={`cd ${cdCls}`}>
 									<img className="image" src={props.currentSong.image} />
 								</div>
+							</div>
+							<div className="playing-lyric-wrapper">
+								<div className="playing-lyric">{playingLyric}</div>
 							</div>
 						</div>
 						<Scroll className="middle-r" ref={lyricListRef} data={lyricRef.current && lyricRef.current.lines}>
