@@ -93,6 +93,9 @@ const Player = function(props) {
 					currentLineNumRef.current = 0
 				})
 		}, 1000)
+		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(0, 0, 0)`
+		middleLRef.current.style.opacity = 1
+		lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
 	}, [props.currentSong.id])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
@@ -104,6 +107,7 @@ const Player = function(props) {
 			lyricListRef.current.scrollTo(0, 0, 1000)
 		}
 		setPlayingLyric(txt)
+		setCurrentShow('cd')
 	}, [props.currentSong.id])
 
 	useEffect(() => {
@@ -359,7 +363,9 @@ const Player = function(props) {
 		const touch = e.touches[0]
 		const deltaX = touch.pageX - touchRef.current.startX
 		const deltaY = touch.pageY - touchRef.current.startY
+		touchRef.current.shouldSlide = true
 		if (Math.abs(deltaY) > Math.abs(deltaX)) {
+			touchRef.current.shouldSlide = false
 			return
 		}
 		const left = currentShow === 'cd' ? 0 : -window.innerWidth
@@ -373,6 +379,9 @@ const Player = function(props) {
 
 	const middleTouchEnd = useCallback((e) => {
 		// e.stopPropagation()
+		if (!touchRef.current.shouldSlide) {
+			return
+		}
 		let offsetWidth
 		let offsetOpacity
 		if (currentShow === 'cd') {
