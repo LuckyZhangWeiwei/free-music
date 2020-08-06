@@ -20,6 +20,8 @@ import './index.css'
 
 const transform = prefixStyle('transform')
 
+const transitionDuration = prefixStyle('transitionDuration')
+
 const Player = function(props) {
 	const [show, setShow] = useState(false)
 
@@ -28,6 +30,10 @@ const Player = function(props) {
 	const [currentTime, setCurrentTime] = useState(0)
 
 	const [percentage, setPercentage] = useState(0)
+
+	const [currentShow, setCurrentShow] = useState('cd')
+
+	const [initTouch, setInitTouch] = useState(false)
 
 	const currentLineNumRef = useRef(-1)
 
@@ -42,6 +48,10 @@ const Player = function(props) {
 	const lyricListRef = useRef()
 
 	const lyricLineRef = useRef()
+
+	const touchRef = useRef({})
+
+	const middleLRef = useRef()
 
 	useEffect(() => {
 		setShow(true)
@@ -78,7 +88,6 @@ const Player = function(props) {
 	}, [props.currentSong.id])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
-		console.log(currentLineNumRef.current)
 		currentLineNumRef.current = lineNum
 		if (lineNum > 5) {
 			let lineEl = lyricLineRef.current.children[lineNum - 5]
@@ -302,6 +311,68 @@ const Player = function(props) {
 		audioRef.current.play()
 	}, [])
 
+	const middleTouchStart = (e) => {
+		e.stopPropagation()
+		if (!initTouch)
+			setInitTouch(true)
+		const touch = e.touches[0]
+		touchRef.current.startX = touch.pageX
+		touchRef.current.startY = touch.pageY
+	}
+
+	const middleTouchMove = (e) => {
+		e.stopPropagation()
+		if (!touchRef.current) {
+			return
+		}
+		if (!initTouch) {
+			return
+		}
+		const touch = e.touches[0]
+		const deltaX = touch.pageX - touchRef.current.startX
+		const deltaY = touch.pageY - touchRef.current.startY
+		if (Math.abs(deltaY) > Math.abs(deltaX)) {
+			return
+		}
+		const left = currentShow === 'cd' ? 0 : -window.innerWidth
+		const offsetWidth = Math.min(Math.max(-window.innerWidth, left + deltaX), 0)
+		touchRef.current.percentage = Math.abs(offsetWidth / window.innerWidth)
+		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
+		lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
+		middleLRef.current.style.opacity = 1 - touchRef.current.percentage
+		middleLRef.current.style[transitionDuration] = 0
+	}
+
+	const middleTouchEnd = (e) => {
+		e.stopPropagation()
+		let offsetWidth
+		let offsetOpacity
+		if (currentShow === 'cd') {
+			if (touchRef.current.percentage > 0.1) {
+				offsetWidth = -window.innerWidth
+				offsetOpacity = 0
+				setCurrentShow('lyric')
+			} else {
+				offsetWidth = 0
+				offsetOpacity = 1
+			}
+		} else {
+			if (touchRef.current.percentage < 0.9) {
+				offsetWidth = 0
+				offsetOpacity = 1
+				setCurrentShow('cd')
+			} else {
+				offsetWidth = -window.innerWidth
+				offsetOpacity = 0
+			}
+		}
+		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
+		lyricListRef.current.wrapperRef.current.style[transitionDuration] = '300ms'
+		middleLRef.current.style.opacity = offsetOpacity
+		middleLRef.current.style[transitionDuration] = '300ms'
+		setInitTouch(false)
+	}
+
 	return (
 		<div className="player">
 			<CSSTransition 
@@ -324,8 +395,12 @@ const Player = function(props) {
 						<h1 className="title">{props.currentSong.name}</h1>
 						<h2 className="subtitle">{props.currentSong.singer}</h2>
 					</div>
-					<div className="middle">
-						<div className="middle-l">
+					<div className="middle" 
+						onTouchStart={(e) => middleTouchStart(e)}
+						onTouchMove={(e) => middleTouchMove(e)}
+						onTouchEnd={(e) => middleTouchEnd(e)}
+						>
+						<div className="middle-l" ref={middleLRef}>
 							<div className="cd-wrapper" ref={cdWrapperRef}>
 								<div className={`cd ${cdCls}`}>
 									<img className="image" src={props.currentSong.image} />
@@ -346,6 +421,10 @@ const Player = function(props) {
 						</Scroll>
 					</div>
 					<div className="bottom">
+						<div className="dot-wrapper">
+							<span className={classnames('dot', {'active': currentShow === 'cd'})}></span>
+							<span className={classnames('dot', {'active': currentShow === 'lyric'})}></span>
+						</div>
 						<div className="progress-wrapper">
 							<span className="time time-l">{formatTime(currentTime)}</span>
 							<div className="progress-bar-wrapper">
