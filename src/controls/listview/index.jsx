@@ -176,6 +176,10 @@ const ListView = function(props) {
 	function selectItem(item) {
 		props.selectItem(item)
 	}
+
+	function refresh() {
+		scrollRef.current.refresh()
+	}
 }
 
 ListView.propTypes = {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
 import { getSingerList } from './../../api/singer'
@@ -15,6 +15,10 @@ const HOT_SINGER_LEN = 10
 
 function Singer(props) {
 	
+	const singerRef = useRef()
+
+	const listViewRef = useRef()
+
 	const [singers, setSingers] = useState([])
 
 	useEffect(()=> {
@@ -27,8 +31,8 @@ function Singer(props) {
 	},[])
 
   return (
-		<div className="singer">
-			<ListView data={singers} probeType={3} selectItem={onSelectItem} listenScroll={true} />
+		<div className="singer" ref={singerRef}>
+			<ListView data={singers} probeType={3} selectItem={onSelectItem} listenScroll={true} ref={listViewRef} />
 			{ renderRoutes(props.route.routes) }
 		</div>
   )
