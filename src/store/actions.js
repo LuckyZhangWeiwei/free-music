@@ -69,8 +69,13 @@ export function setCurrentIndex(state) {
 }
 
 export function loadPlayList(list) {
-	return dispatch => {
-		dispatch(setPlayList(list))
+	return (dispatch, getState) => {
+		if (playMode.random === getState().playMode) {
+			let randomList = shuffle(list)
+			dispatch(setPlayList(randomList))
+		} else {
+			dispatch(setPlayList(list))
+		}
 		dispatch(setSequenceList(list))
 	}
 }

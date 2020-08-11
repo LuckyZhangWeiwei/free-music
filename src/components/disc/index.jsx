@@ -6,7 +6,7 @@ import MusicList from '../../controls/music-list'
 import { getDiscDetail } from '../../api/recommend'
 import { getSongById } from '../../api/song'
 import { Song } from '../../common/js/models/song'
-
+import { loadPlayList } from '../../store/actions'
 
 import './index.stylus'
 
@@ -56,6 +56,7 @@ const Disc = function(props) {
 			return songs
 		}).then(songs => {
 			setSong(songs)
+			props.dispatch(loadPlayList(songs))
 		})
 	}, [props.disc.id])
 

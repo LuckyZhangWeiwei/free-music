@@ -24,7 +24,6 @@ const SongList = function(props) {
 									:
 									<p className="desc">{`${song.singer}`}</p>
 								}
-								
 							</div>
 						</li>
 						)
