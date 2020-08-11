@@ -17,6 +17,8 @@ export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'
 
 export const SET_CURRENT_SONG = 'SET_CURRENT_SONG'
 
+export const SET_DISC = 'SET_DISC'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -105,5 +107,12 @@ export function random(list) {
 		dispatch(setCurrentIndex(0))
 		dispatch(setFullScreen(true))
 		dispatch(setPlayingState(true))
+	}
+}
+
+export function setDisc(state) {
+	return {
+		type: SET_DISC,
+		payload: state
 	}
 }

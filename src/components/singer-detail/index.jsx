@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, memo} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { getSingerDetail } from './../../api/singer'
@@ -60,4 +60,4 @@ export default connect(
   },
 	function mapDispatchToProps(dispatch){
 		return { dispatch }
-})(SingerDetail)
+})(memo(SingerDetail))

@@ -1,17 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback, memo } from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { renderRoutes } from "react-router-config"
+import { connect } from 'react-redux'
 import { getRecommend, getDiscList } from '../../api/recommend'
 import { ERR_OK, ERR_OK_lOCAL } from '../../api/config'
 import Slider from '../../controls/slider'
 import Scroll from '../../controls/scroll'
 import Loading from '../../controls/loading'
+import { setDisc } from '../../store/actions'
+
 import './index.stylus'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 
-function Recommend() {
+function Recommend(props) {
 	
-	let checkLoaded = false
+	const checkLoadedRef = useRef(false)
+
 	const [slider, setSlider] = useState([])
+
 	const [discList, setDiscList] = useState([])
 
 	const scrollRef = useRef()
@@ -29,16 +35,30 @@ function Recommend() {
 			if (res.code === ERR_OK_lOCAL) {
 				const { playlists } = res
 				setDiscList(playlists)
-				// console.log(playlists)
 			}
 		})
+	}, [])
+
+	const loadImage = useCallback(function () {
+		if (!checkLoadedRef.current) {
+			scrollRef.current.refresh()
+			checkLoadedRef.current = true
+		}
+	}, [])
+
+	const selectItem = useCallback(function(item) {
+		const url = `${props.match.url + '/' + item.id}`
+ 		props.history.push({
+			pathname: url
+		})
+		props.dispatch(setDisc(item))
 	}, [])
 
   return (
 		<div className="recommend">
 			 <Scroll className="recommend-content" data={discList}  ref={scrollRef}>
 					<div>
-						<div className="slider-wrapper" style={{maxHeight:165, minHeight: 165}} >
+						<div className="slider-wrapper" style={{ maxHeight:165, minHeight: 165 }} >
 							<Slider loop={true} interval={4000} autoPlay={true}>
 								{
 									slider.length > 0 
@@ -63,7 +83,7 @@ function Recommend() {
 								{
 									discList.map((item, index) => {
 										return (
-											<li className="item" key={item.id}>
+											<li className="item" key={item.id} onClick={() => selectItem(item)}>
 													<div className="icon">
 														<LazyLoadImage
 															alt=""
@@ -91,15 +111,15 @@ function Recommend() {
 					</div>
 				}
 			</Scroll>
+			{ renderRoutes(props.route.routes) }
 		</div>
   )
-
-	function loadImage() {
-		if (!checkLoaded) {
-			scrollRef.current.refresh()
-			checkLoaded = true
-		}
-	}
 }
 
-export default Recommend
+export default connect(
+	function mapStateToProps(state) {
+    return state
+  },
+	function mapDispatchToProps(dispatch){
+		return { dispatch }
+})(memo(Recommend))

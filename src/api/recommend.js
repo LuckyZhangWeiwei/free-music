@@ -21,3 +21,10 @@ export function getDiscList() {
     return Promise.resolve(res.data)
   })
 }
+
+export function getDiscDetail(discId) {
+	const url = `http://localhost:3000/playlist/detail?id=${discId}`
+	return axios.get(url).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}

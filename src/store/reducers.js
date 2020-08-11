@@ -6,7 +6,8 @@ import {
 	SET_SEQUENCE_LIST,
 	SET_PLAY_MODE,
 	SET_CURRENT_INDEX,
-	SET_CURRENT_SONG
+	SET_CURRENT_SONG,
+	SET_DISC
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -83,6 +84,17 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_CURRENT_SONG:
+				let obj = {}
+				Object.assign(obj, payload)
+				return obj
+			default:
+		}
+		return state
+	},
+	disc(state={}, action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_DISC:
 				let obj = {}
 				Object.assign(obj, payload)
 				return obj

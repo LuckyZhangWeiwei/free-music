@@ -205,7 +205,8 @@ class Slider extends React.Component {
 		})
 
 		this.slider.on('scrollEnd', () => {
-			let pageIndex = this.slider.getCurrentPage().pageX
+			const currentPage = this.slider.getCurrentPage()
+			let pageIndex = currentPage === null ? 0 : currentPage.pageX
 		
 			this.setState({
 				currentPageIndex: pageIndex

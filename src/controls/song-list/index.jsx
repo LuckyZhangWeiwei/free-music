@@ -18,7 +18,13 @@ const SongList = function(props) {
 						<li className="item" key={song.id} onClick={() => selectItem(song, index)}>
 							<div className="content">
 								<h2 className="name">{song.name}</h2>
-								<p className="desc">{`${song.singer} . ${song.album}`}</p>
+								{
+									song.album ?
+									<p className="desc">{`${song.singer} . ${song.album}`}</p>
+									:
+									<p className="desc">{`${song.singer}`}</p>
+								}
+								
 							</div>
 						</li>
 						)

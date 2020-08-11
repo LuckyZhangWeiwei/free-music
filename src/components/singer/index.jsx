@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useRef } from 'react'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
 import { getSingerList } from './../../api/singer'
