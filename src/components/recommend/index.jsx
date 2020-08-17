@@ -16,6 +16,8 @@ function Recommend(props) {
 	
 	const checkLoadedRef = useRef(false)
 
+	const recommendlistRef = useRef()
+
 	const [slider, setSlider] = useState([])
 
 	const [discList, setDiscList] = useState([])
@@ -39,6 +41,16 @@ function Recommend(props) {
 		})
 	}, [])
 
+	/********************************************* */
+	useEffect(() => {
+		if (!props.playList.length) {
+			return
+		}
+		recommendlistRef.current.style['margin-bottom'] = '60px'
+		scrollRef.current.refresh()
+	}, [props.playList])
+	/********************************************* */
+
 	const loadImage = useCallback(function () {
 		if (!checkLoadedRef.current) {
 			scrollRef.current.refresh()
@@ -55,7 +67,7 @@ function Recommend(props) {
 	}, [])
 
   return (
-		<div className="recommend">
+		<div className="recommend" ref={recommendlistRef}>
 			 <Scroll className="recommend-content" data={discList}  ref={scrollRef}>
 					<div>
 						<div className="slider-wrapper" style={{ maxHeight:165, minHeight: 165 }} >
