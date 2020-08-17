@@ -19,6 +19,8 @@ export const SET_CURRENT_SONG = 'SET_CURRENT_SONG'
 
 export const SET_DISC = 'SET_DISC'
 
+export const SET_TOPLIST = 'SET_TOPLIST'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -118,6 +120,13 @@ export function random(list) {
 export function setDisc(state) {
 	return {
 		type: SET_DISC,
+		payload: state
+	}
+}
+
+export function setTopList(state) {
+	return {
+		type: SET_TOPLIST,
 		payload: state
 	}
 }

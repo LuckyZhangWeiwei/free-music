@@ -16,6 +16,7 @@ export default createStore(
 		mode: playMode.sequence,
 		currentIndex: -1,
 		currentSong: {},
-		disc: {}
+		disc: {},
+		topList: {}
 	},
 	composeEnhancers(applyMiddleware(thunk)))

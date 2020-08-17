@@ -7,7 +7,8 @@ import {
 	SET_PLAY_MODE,
 	SET_CURRENT_INDEX,
 	SET_CURRENT_SONG,
-	SET_DISC
+	SET_DISC,
+	SET_TOPLIST
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -95,6 +96,17 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_DISC:
+				let obj = {}
+				Object.assign(obj, payload)
+				return obj
+			default:
+		}
+		return state
+	},
+	topList(state={}, action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_TOPLIST:
 				let obj = {}
 				Object.assign(obj, payload)
 				return obj

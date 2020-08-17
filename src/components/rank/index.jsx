@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo, useCallback } from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { renderRoutes } from "react-router-config"
+import { connect } from 'react-redux'
 import { getTopList } from '../../api/rank'
 import { ERR_OK } from '../../api/config'
 import Scroll from '../../controls/scroll'
 import Loading from '../../controls/loading'
+import { setTopList } from '../../store/actions'
 
 import './index.stylus'
 
@@ -20,6 +23,14 @@ function Rank(props) {
 		})
 	}, [])
 
+	const selectItem = useCallback((item) => {
+		const url = `${props.match.url + '/' + item.id}`
+ 		props.history.push({
+			pathname: url
+		})
+		props.dispatch(setTopList(item))
+	}, [])
+
   return (
     <div className="rank">
 			{
@@ -29,7 +40,7 @@ function Rank(props) {
 							{
 								topicList.map((item, index) => {
 									return (
-												<li className="item" key={item.id}>
+												<li className="item" key={item.id} onClick={() => {selectItem(item)}}>
 													<div className="icon">
 														<LazyLoadImage
 																src={item.picUrl} 
@@ -61,8 +72,15 @@ function Rank(props) {
 				<Loading title="正在加载..."/>
 			</div>
 			}
+			{ renderRoutes(props.route.routes) }
 		</div>
   )
 }
 
-export default Rank
+export default connect(
+	function mapStateToProps(state) {
+    return state
+  },
+	function mapDispatchToProps(dispatch){
+		return { dispatch }
+})(memo(Rank))
