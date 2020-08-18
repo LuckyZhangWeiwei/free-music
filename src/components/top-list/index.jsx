@@ -44,7 +44,13 @@ const TopList = function (props) {
 
 	return (
 		<CSSTransition timeout={300} classNames="slide" in={show}>
-			<MusicList song={song} title={props.topList.topTitle} bgImage={props.topList.picUrl} history={props.history} />
+			<MusicList 
+				song={song} 
+				title={props.topList.topTitle} 
+				bgImage={props.topList.picUrl} 
+				history={props.history} 
+				rank={true} 
+			/>
 		</CSSTransition>
 	)
 }

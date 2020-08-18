@@ -98,7 +98,7 @@ const MusicList = function (props) {
 			</div>
 			<Scroll className="list" data={props.song} ref={scrollRef} probeType={3} listenScroll={true} scroll={scroll}>
 				<div className="song-list-wrapper">
-					<SongList songs={props.song} select={(item, index) => selectItem(item, index)} />
+					<SongList songs={props.song} select={(item, index) => selectItem(item, index)} rank={props.rank}/>
 				</div>
 				{
 					!props.song.length

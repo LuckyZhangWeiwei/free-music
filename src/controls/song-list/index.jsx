@@ -1,4 +1,5 @@
 import React, {useCallback, memo} from 'react'
+import PropTypes from 'prop-types'
 
 import './index.stylus'
 
@@ -9,13 +10,34 @@ const SongList = function(props) {
 		props.select(song, index)
 	}, [songs])
 
+	const getRankCls = (index) => {
+		if (index <= 2) {
+			return ''
+		} else {
+			return 'text'
+		}
+	}
+
+	const getRankText = (index) => {
+		if (index > 2) {
+			return index + 1
+		}
+	}
+
 	return (
 		<div className="song-list">
 			<ul>
 				{
 					songs.map((song, index) => {
 					  return(
-						<li className="item" key={song.id} onClick={() => selectItem(song, index)}>
+						<li className="item" key={song.id} onClick={index => selectItem(song, index)}>
+							{/* {
+								props.rank 
+								&&
+								<div className="rank">
+									<span className={getRankCls(index)}>{getRankText(index)}</span>
+								</div>
+							} */}
 							<div className="content">
 								<h2 className="name">{song.name}</h2>
 								{
@@ -33,5 +55,16 @@ const SongList = function(props) {
 		</div>
 	)
 }
+
+SongList.defaultProps = {
+	rank: false
+}
+
+SongList.propTypes = {
+	songs: PropTypes.array.isRequired,
+	rank: PropTypes.bool
+}
+
+
 
 export default memo(SongList)
