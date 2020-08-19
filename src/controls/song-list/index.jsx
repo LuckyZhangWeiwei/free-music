@@ -12,7 +12,7 @@ const SongList = function(props) {
 
 	const getRankCls = (index) => {
 		if (index <= 2) {
-			return ''
+			return `icon icon${index}`
 		} else {
 			return 'text'
 		}
@@ -30,25 +30,25 @@ const SongList = function(props) {
 				{
 					songs.map((song, index) => {
 					  return(
-						<li className="item" key={song.id} onClick={index => selectItem(song, index)}>
-							{/* {
-								props.rank 
-								&&
-								<div className="rank">
-									<span className={getRankCls(index)}>{getRankText(index)}</span>
-								</div>
-							} */}
-							<div className="content">
-								<h2 className="name">{song.name}</h2>
-								{
-									song.album ?
-									<p className="desc">{`${song.singer} . ${song.album}`}</p>
-									:
-									<p className="desc">{`${song.singer}`}</p>
-								}
-							</div>
-						</li>
-						)
+									<li className="item" key={song.id} onClick={() => selectItem(song, index)}>
+										{
+											props.rank 
+											&&
+											<div className="rank">
+												<span className={getRankCls(index)}>{getRankText(index)}</span>
+											</div>
+										}
+										<div className="content">
+											<h2 className="name">{song.name}</h2>
+											{
+												song.album ?
+												<p className="desc">{`${song.singer} . ${song.album}`}</p>
+												:
+												<p className="desc">{`${song.singer}`}</p>
+											}
+										</div>
+									</li>
+								)
 					})
 				}
 			</ul>
