@@ -5,7 +5,7 @@ import './index.stylus'
 
 const SearchBox = (props) => {
 
-	const [textValue, setTextValue] = useState('')
+	const [textValue, setTextValue] = useState(props.selectedHotKey || '')
 
 	const textChange =useCallback(function (e) {
 		setTextValue(e.target.value)
@@ -18,6 +18,10 @@ const SearchBox = (props) => {
 	useEffect(() => {
 		props.searchChanged(textValue)
 	}, [textValue])
+
+	useEffect(() => {
+		setTextValue(props.selectedHotKey)
+	}, [props.selectedHotKey])
 
 	return (
 		<div className="search-box">
