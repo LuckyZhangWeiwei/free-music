@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback, memo} from 'react'
-import { getHotSearchTag } from '../../api/search'
-import { ERR_OK_lOCAL } from '../../api/config'
+import { getHotSearchTag } from '../../../api/search'
+import { ERR_OK_lOCAL } from '../../../api/config'
 
 const HotSearch = function (props) {
 

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback} from 'react'
+import React, { useState, useCallback} from 'react'
 import SearchBox from '../../controls/search-box'
-import HotSearch from './hot-search'
+import HotSearch from './controls/hot-search'
 
 import './index.stylus'
 
