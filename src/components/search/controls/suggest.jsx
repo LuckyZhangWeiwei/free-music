@@ -1,15 +1,18 @@
 import React, {useState, useEffect, useCallback, memo} from 'react'
 import PropTypes from 'prop-types'
+import { search } from '../../../api/search'
 
 import './suggest.stylus'
 
 const Suggest = props => {
 	useEffect(() => {
-		search(props.query)
+		searchSong(props.query)
 	}, [props.query])
 
-	const search = useCallback(value => {
-		
+	const searchSong = useCallback(value => {
+		search('邓丽君', 1, true, 10).then(res => {
+			console.log('res:', res)
+		})
 	}, [props.query])
 
 	return (

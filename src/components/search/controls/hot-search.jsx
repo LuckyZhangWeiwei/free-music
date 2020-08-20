@@ -25,7 +25,7 @@ const HotSearch = function (props) {
 				<h1 className="title">{props.title}</h1>
 				<ul>
 					{
-						tags.map((item) => {
+						tags.map(item => {
 						 return	<li className="item" key={item.first} onClick={() => onHotKeyClicked(item)} >{item.first}</li>
 						})
 					}
