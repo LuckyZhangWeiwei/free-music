@@ -6,7 +6,7 @@ import './suggest.stylus'
 
 const Suggest = props => {
 	useEffect(() => {
-		searchSong(props.query)
+		// searchSong(props.query)
 	}, [props.query])
 
 	const searchSong = useCallback(value => {
