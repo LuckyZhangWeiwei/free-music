@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useCallback, memo} from 'react'
+import PropTypes from 'prop-types'
 import { getHotSearchTag } from '../../../api/search'
 import { ERR_OK_lOCAL } from '../../../api/config'
 
@@ -32,6 +33,11 @@ const HotSearch = function (props) {
 			</div>
 		</div>
 	)
+}
+
+HotSearch.propTypes = {
+	title: PropTypes.string,
+	hotKeyClicked: PropTypes.func.isRequired
 }
 
 export default memo(HotSearch)
