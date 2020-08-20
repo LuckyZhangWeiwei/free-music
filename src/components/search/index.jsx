@@ -15,19 +15,24 @@ function Search() {
 
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
-	}, [])
+		setSelectedHotKey(value)
+	}, [selectedHotKey])
 
 	const onHotKeyClicked = useCallback(value => {
-		setSelectedHotKey(value.first)
-	}, [])
+		setSelectedHotKey(value)
+	}, [selectedHotKey])
 
   return (
     <div className="search">
 			<div className="search-box-wrapper">
-				<SearchBox placeholder="搜索歌曲、歌手" selectedHotKey={selectedHotKey} searchChanged={value => onSearchChanged(value)} />
+				<SearchBox 
+					placeholder="搜索歌曲、歌手" 
+					selectedHotKey={selectedHotKey} 
+					searchChanged={value => onSearchChanged(value)} 
+				/>
 			</div>
 			<div className="shortcut-wrapper">
-				<HotSearch title="热门搜索" hotKeyClicked={hotKey => onHotKeyClicked(hotKey)}></HotSearch>
+				<HotSearch title="热门搜索" hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}} />
 			</div>
 			{
 				query
