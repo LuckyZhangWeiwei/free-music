@@ -55,6 +55,14 @@ class Scroll extends React.Component {
 					me.props.scrollEnd(x, y)
 				})
 			}
+
+			if (this.props.pullUp) {
+				this.scroll.on('scrollEnd', () => {
+					if (this.scroll.y <= this.scroll.maxScrollY + 50) {
+						this.props.scrollToEnd()
+					}
+				})
+			}
 		}
 
 	refresh() {
@@ -78,12 +86,15 @@ Scroll.propTypes = {
 	scrollStart: PropTypes.func,
 	scroll: PropTypes.func,
 	scrollEnd: PropTypes.func,
+	pullUp: PropTypes.bool,
+	scrollToEnd: PropTypes.func
 }
 
 Scroll.defaultProps = {
 	probeType: 1,
 	click: true,
 	data: null,
+	pullUp: false
 }
 
 export default Scroll

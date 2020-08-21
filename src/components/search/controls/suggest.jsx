@@ -4,10 +4,12 @@ import { search } from '../../../api/search'
 import { ERR_OK } from '../../../api/config'
 import { creatSong } from '../../../common/js/models/song'
 import Scroll from '../../../controls/scroll'
+import Loading from '../../../controls/loading'
 
 import './suggest.stylus'
 
 const TYPE_SINGER = 'singer'
+const PAGE_SIZE = 25
 
 const Suggest = props => {
 
@@ -15,17 +17,49 @@ const Suggest = props => {
 
 	const scrollRef = useRef()
 
+	const pageRef = useRef(1)
+
+	const [hasMore, setHasMore] = useState(true)
+
+	const [pageObj, setPageObj] = useState({})
+
+
 	useEffect(() => {
-		searchSong(props.query)
+		searchSong(true)
 	}, [props.query])
 
-	const searchSong = useCallback(value => {
-		search(value, 1, true, 20).then(res => {
+	useEffect(() => {
+		_checkMore()
+	}, [data])
+
+	const searchSong = useCallback((isInit = true) => {
+		setHasMore(true)
+		search(props.query, pageRef.current, true, PAGE_SIZE).then(res => {
 			if (res.code === ERR_OK) {
-				setData(_genResult(res.data))
+				const resData = res.data
+				setPageObj(resData)
+				const list = _genResult(resData)
+				if (!isInit) {
+					console.log(data)
+					setData(data.concat(list))
+				} else {
+					scrollRef.current.scrollTo(0, 0)
+					pageRef.current = 1
+					setData(list)
+				}
 			}
 		})
-	}, [props.query])
+	}, [data])
+
+	const _checkMore = () => {
+		if (!pageObj.song || pageObj.song.list.length <= 0) {
+			return
+		}
+		const song = pageObj.song
+		if (!song.list.length || (song.curnum + song.curpage * PAGE_SIZE) > song.totalnum) {
+			setHasMore(false)
+		}
+	}
 
 	const _genResult = useCallback(data => {
 		let ret = []
@@ -67,13 +101,29 @@ const Suggest = props => {
 		}
 	}
 
+	const onScrollToEnd = useCallback(() => {
+		searchMore()
+	}, [pageRef.current])
+
+	const searchMore = useCallback(() => {
+		if (!hasMore) {
+			return
+		}
+		pageRef.current = pageRef.current + 1
+		searchSong(false)
+	}, [props.query, pageRef.current])
+
 	return (
-		<Scroll className="suggest" data={data} ref={scrollRef}>
+		<Scroll className="suggest"
+		 data={data} 
+		 ref={scrollRef} 
+		 scrollToEnd={() => onScrollToEnd()} 
+		 pullUp={true}>
 			<ul className="suggest-list">
 				{
 					data.map((item, index) => {
 						return (
-								<li className="suggest-item" key={item.songid}>
+								<li className="suggest-item" key={item.id}>
 									<div className="icon">
 										<i className={getIconCls(item)} />
 									</div>
@@ -83,6 +133,10 @@ const Suggest = props => {
 								</li>
 						)
 					})
+				}
+				{
+					hasMore &&
+					<Loading />
 				}
 			</ul>
 		</Scroll>
