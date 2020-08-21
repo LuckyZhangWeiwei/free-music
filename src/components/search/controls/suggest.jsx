@@ -30,7 +30,7 @@ const Suggest = props => {
 
 	useEffect(() => {
 		_checkMore()
-	}, [data])
+	}, [data, props.query])
 
 	const searchSong = useCallback((isInit = true) => {
 		setHasMore(true)
@@ -40,10 +40,13 @@ const Suggest = props => {
 				setPageObj(resData)
 				const list = _genResult(resData)
 				if (!isInit) {
-					console.log(data)
 					setData(data.concat(list))
 				} else {
-					scrollRef.current.scrollTo(0, 0)
+					if(list.length === 0) {
+						console.log(list)
+						setHasMore(false)
+					}
+				  scrollRef.current &&	scrollRef.current.scrollTo(0, 0)
 					pageRef.current = 1
 					setData(list)
 				}
@@ -61,7 +64,7 @@ const Suggest = props => {
 		}
 	}
 
-	const _genResult = useCallback(data => {
+	const _genResult = data => {
 		let ret = []
 		
 		if (data.zhida && data.zhida.singerid) {
@@ -73,7 +76,7 @@ const Suggest = props => {
 		}
 		
 		return ret
-	}, [props.query])
+	}
 
 	const _normalizeSongs = list => {
 		let ret = []
@@ -101,17 +104,25 @@ const Suggest = props => {
 		}
 	}
 
-	const onScrollToEnd = useCallback(() => {
+	const onScrollToEnd = () => {
 		searchMore()
-	}, [pageRef.current])
+	}
 
-	const searchMore = useCallback(() => {
+	// const searchMore = useCallback(() => {
+	// 	if (!hasMore) {
+	// 		return
+	// 	}
+	// 	pageRef.current = pageRef.current + 1
+	// 	searchSong(false)
+	// }, [props.query, pageRef.current])
+
+	const searchMore = () => {
 		if (!hasMore) {
 			return
 		}
 		pageRef.current = pageRef.current + 1
 		searchSong(false)
-	}, [props.query, pageRef.current])
+	}
 
 	return (
 		<Scroll className="suggest"
