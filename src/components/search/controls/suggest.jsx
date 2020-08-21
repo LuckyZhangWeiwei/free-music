@@ -1,15 +1,20 @@
-import React, {useState, useEffect, useCallback, memo} from 'react'
+import React, {useState, useEffect, useRef, useCallback, memo} from 'react'
 import PropTypes from 'prop-types'
 import { search } from '../../../api/search'
+import { ERR_OK } from '../../../api/config'
+import { creatSong } from '../../../common/js/models/song'
+import Scroll from '../../../controls/scroll'
 
 import './suggest.stylus'
-import { ERR_OK } from '../../../api/config'
-import { filterSinger } from '../../../common/js/models/song'
 
 const TYPE_SINGER = 'singer'
 
 const Suggest = props => {
+
 	const [data, setData] = useState([])
+
+	const scrollRef = useRef()
+
 	useEffect(() => {
 		searchSong(props.query)
 	}, [props.query])
@@ -30,11 +35,21 @@ const Suggest = props => {
 		}
 
 		if (data.song) {
-			ret = ret.concat(data.song.list)
+			ret = ret.concat(_normalizeSongs(data.song.list))
 		}
 		
 		return ret
 	}, [props.query])
+
+	const _normalizeSongs = list => {
+		let ret = []
+		list.forEach(item => {
+			if (item.songid && item.albumid) {
+				ret.push(creatSong(item))
+			}
+		})
+		return ret
+	}
 
 	const getIconCls = item => {
 		if (item.type === TYPE_SINGER) {
@@ -48,12 +63,12 @@ const Suggest = props => {
 		if (item.type === TYPE_SINGER) {
 			return item.singername
 		} else {
-			return `${item.songname} - ${filterSinger(item.singer)}`
+			return `${item.name} - ${item.singer}`
 		}
 	}
 
 	return (
-		<div className="suggest">
+		<Scroll className="suggest" data={data} ref={scrollRef}>
 			<ul className="suggest-list">
 				{
 					data.map((item, index) => {
@@ -70,7 +85,7 @@ const Suggest = props => {
 					})
 				}
 			</ul>
-		</div>
+		</Scroll>
 	)
 }
 
