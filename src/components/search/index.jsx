@@ -31,9 +31,13 @@ function Search() {
 					searchChanged={value => onSearchChanged(value)} 
 				/>
 			</div>
-			<div className="shortcut-wrapper">
-				<HotSearch title="热门搜索" hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}} />
-			</div>
+			{
+				!query 
+				&&
+				<div className="shortcut-wrapper">
+					<HotSearch title="热门搜索" hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}} />
+				</div>
+			}
 			{
 				query
 				&&
