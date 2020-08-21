@@ -54,7 +54,7 @@ const Suggest = props => {
 		})
 	}, [data])
 
-	const _checkMore = () => {
+	const _checkMore = useCallback(() => {
 		if (!pageObj.song || pageObj.song.list.length <= 0) {
 			return
 		}
@@ -62,9 +62,9 @@ const Suggest = props => {
 		if (!song.list.length || (song.curnum + song.curpage * PAGE_SIZE) > song.totalnum) {
 			setHasMore(false)
 		}
-	}
+	}, [data, pageRef.current])
 
-	const _genResult = data => {
+	const _genResult = useCallback(data => {
 		let ret = []
 		
 		if (data.zhida && data.zhida.singerid) {
@@ -76,9 +76,9 @@ const Suggest = props => {
 		}
 		
 		return ret
-	}
+	}, [data])
 
-	const _normalizeSongs = list => {
+	const _normalizeSongs = useCallback(list => {
 		let ret = []
 		list.forEach(item => {
 			if (item.songid && item.albumid) {
@@ -86,7 +86,7 @@ const Suggest = props => {
 			}
 		})
 		return ret
-	}
+	}, [data])
 
 	const getIconCls = item => {
 		if (item.type === TYPE_SINGER) {
