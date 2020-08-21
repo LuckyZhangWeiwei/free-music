@@ -11,6 +11,36 @@ import './suggest.stylus'
 const TYPE_SINGER = 'singer'
 const PAGE_SIZE = 25
 
+const SuggestItem = memo(props => {
+
+	const getIconCls = item => {
+		if (item.type === TYPE_SINGER) {
+			return 'icon-mine'
+		} else {
+			return 'icon-music'
+		}
+	}
+
+	const getDisplayName = item => {
+		if (item.type === TYPE_SINGER) {
+			return item.singername
+		} else {
+			return `${item.name} - ${item.singer}`
+		}
+	}
+
+	return (
+			<li className="suggest-item" key={props.item.id}>
+				<div className="icon">
+					<i className={getIconCls(props.item)} />
+				</div>
+				<div className="name">
+					<p className="text">{getDisplayName(props.item)}</p>
+				</div>
+			</li>
+	)
+})
+
 const Suggest = props => {
 
 	const [data, setData] = useState([])
@@ -88,22 +118,6 @@ const Suggest = props => {
 		return ret
 	}, [data])
 
-	const getIconCls = item => {
-		if (item.type === TYPE_SINGER) {
-			return 'icon-mine'
-		} else {
-			return 'icon-music'
-		}
-	}
-
-	const getDisplayName = item => {
-		if (item.type === TYPE_SINGER) {
-			return item.singername
-		} else {
-			return `${item.name} - ${item.singer}`
-		}
-	}
-
 	const onScrollToEnd = () => {
 		searchMore()
 	}
@@ -132,22 +146,14 @@ const Suggest = props => {
 		 pullUp={true}>
 			<ul className="suggest-list">
 				{
-					data.map((item, index) => {
+					data.map(item => {
 						return (
-								<li className="suggest-item" key={item.id}>
-									<div className="icon">
-										<i className={getIconCls(item)} />
-									</div>
-									<div className="name">
-										<p className="text">{getDisplayName(item)}</p>
-									</div>
-								</li>
+							<SuggestItem item={item} />
 						)
 					})
 				}
 				{
-					hasMore &&
-					<Loading />
+					hasMore && <Loading />
 				}
 			</ul>
 		</Scroll>
