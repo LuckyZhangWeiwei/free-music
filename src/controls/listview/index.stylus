@@ -28,7 +28,7 @@
 				font-size: $font-size-medium
 	.list-shortcut
 		position: absolute
-		z-index: 30
+		// z-index: 30
 		right: 0
 		top: 50%
 		transform: translateY(-50%)
