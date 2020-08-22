@@ -74,7 +74,7 @@ const Player = function(props) {
 			audioRef.current.play()
 		})
 	}, 
-	[props.currentSong.url])
+	[props.currentSong.url, props.currentSong.id])
 
 	useEffect(() => {
 		if (lyricRef.current) {
