@@ -53,7 +53,7 @@ const SuggestItem = memo(props => {
 	}, [])
 
 	return (
-			<li className="suggest-item" key={props.item.id} onClick={() => {selectItem(props.item)}}>
+			<li className="suggest-item" onClick={() => {selectItem(props.item)}}>
 				<div className="icon">
 					<i className={getIconCls(props.item)} />
 				</div>
@@ -103,7 +103,7 @@ const Suggest = props => {
 				}
 			}
 		})
-	}, [data])
+	}, [data, props.query])
 
 	const _checkMore = useCallback(() => {
 		if (!pageObj.song || pageObj.song.list.length <= 0) {
@@ -167,9 +167,9 @@ const Suggest = props => {
 		 pullUp={true}>
 			<ul className="suggest-list">
 				{
-					data.map(item => {
+					data.map((item, index) => {
 						return (
-							<SuggestItem item={item} {...props} />
+							<SuggestItem key={index} item={item} {...props} />
 						)
 					})
 				}

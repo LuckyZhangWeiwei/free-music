@@ -40,7 +40,7 @@ function Rank(props) {
 							{
 								topicList.map((item, index) => {
 									return (
-												<li className="item" key={item.id} onClick={() => {selectItem(item)}}>
+												<li className="item" key={index} onClick={() => {selectItem(item)}}>
 													<div className="icon">
 														<LazyLoadImage
 																src={item.picUrl} 
@@ -53,7 +53,7 @@ function Rank(props) {
 														{
 															item.songList.map((song, songIndex) => {
 																return (
-																		<li className="song" key={song.songname}>
+																		<li className="song" key={songIndex}>
 																			<span>{songIndex + 1}</span>
 																			<span>{song.songname} - {song.singername}</span>
 																		</li>

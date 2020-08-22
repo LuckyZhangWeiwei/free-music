@@ -30,7 +30,7 @@ const SongList = function(props) {
 				{
 					songs.map((song, index) => {
 					  return(
-									<li className="item" key={song.id} onClick={() => selectItem(song, index)}>
+									<li className="item" key={index} onClick={() => selectItem(song, index)}>
 										{
 											props.rank 
 											&&

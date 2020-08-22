@@ -17,7 +17,7 @@ function Search(props) {
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
 		setSelectedHotKey(value)
-	}, [selectedHotKey])
+	}, [selectedHotKey, query])
 
 	const onHotKeyClicked = useCallback(value => {
 		setSelectedHotKey(value)
