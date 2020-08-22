@@ -1,10 +1,13 @@
 import React, {useState, useEffect, useRef, useCallback, memo} from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { search } from '../../../api/search'
 import { ERR_OK } from '../../../api/config'
 import { creatSong } from '../../../common/js/models/song'
 import Scroll from '../../../controls/scroll'
 import Loading from '../../../controls/loading'
+import Singer from '../../../common/js/models/singer'
+import { setSinger } from '../../../store/actions'
 
 import './suggest.stylus'
 
@@ -29,8 +32,28 @@ const SuggestItem = memo(props => {
 		}
 	}
 
+	const selectItem = useCallback(item => {
+		if (item.type === TYPE_SINGER) {
+			const singer = new Singer({
+				id: item.singermid,
+				name: item.singername
+			})
+			
+			const url = `${props.match.url + '/' + singer.id}`
+
+			props.history.push({
+				pathname: url
+			})
+
+			props.dispatch(setSinger(singer))
+
+		} else {
+
+		}
+	}, [])
+
 	return (
-			<li className="suggest-item" key={props.item.id}>
+			<li className="suggest-item" key={props.item.id} onClick={() => {selectItem(props.item)}}>
 				<div className="icon">
 					<i className={getIconCls(props.item)} />
 				</div>
@@ -53,7 +76,6 @@ const Suggest = props => {
 
 	const [pageObj, setPageObj] = useState({})
 
-
 	useEffect(() => {
 		searchSong(true)
 	}, [props.query])
@@ -73,7 +95,6 @@ const Suggest = props => {
 					setData(data.concat(list))
 				} else {
 					if(list.length === 0) {
-						console.log(list)
 						setHasMore(false)
 					}
 				  scrollRef.current &&	scrollRef.current.scrollTo(0, 0)
@@ -148,7 +169,7 @@ const Suggest = props => {
 				{
 					data.map(item => {
 						return (
-							<SuggestItem item={item} />
+							<SuggestItem item={item} {...props} />
 						)
 					})
 				}
@@ -164,4 +185,10 @@ Suggest.propTypes = {
 	query: PropTypes.string.isRequired,
 }
 
-export default memo(Suggest)
+export default connect(
+	function mapStateToProps(state) {
+    return state
+  },
+	function mapDispatchToProps(dispatch){
+		return { dispatch }
+})(memo(Suggest))

@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useRef} from 'react'
+import { renderRoutes } from "react-router-config"
 import SearchBox from '../../controls/search-box'
 import HotSearch from './controls/hot-search'
 import Suggest from './controls/suggest'
 
 import './index.stylus'
 
-function Search() {
+function Search(props) {
 
 	const [selectedHotKey, setSelectedHotKey] = useState('')
 
@@ -42,9 +43,10 @@ function Search() {
 				query
 				&&
 				<div className="search-result" ref={searchResultRef}>
-					<Suggest query={query} />
+					<Suggest query={query} {...props} />
 				</div>
 			}
+			{ renderRoutes(props.route.routes) }
 		</div>
   )
 }

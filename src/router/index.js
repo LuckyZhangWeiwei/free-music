@@ -42,7 +42,11 @@ const router = [
 	},
 	{
 		path: "/search",
-    component: Search
+    component: Search,
+		routes: [{
+			path: '/search/:id',
+			component: SingerDetail
+		}]
 	},
 	{
 		path: "/user",
