@@ -344,16 +344,14 @@ const Player = function(props) {
 	}, [])
 
 	const middleTouchStart = useCallback((e) => {
-		// e.stopPropagation()
 		if (!initTouch)
 			setInitTouch(true)
-		const touch = e.touches[0]
-		touchRef.current.startX = touch.pageX
-		touchRef.current.startY = touch.pageY
+			const touch = e.touches[0]
+			touchRef.current.startX = touch.pageX
+			touchRef.current.startY = touch.pageY
 	}, [initTouch, currentShow])
 
 	const middleTouchMove = useCallback((e) => {
-		// e.stopPropagation()
 		if (!touchRef.current) {
 			return
 		}
@@ -378,7 +376,6 @@ const Player = function(props) {
 	}, [initTouch, currentShow])
 
 	const middleTouchEnd = useCallback((e) => {
-		// e.stopPropagation()
 		if (!touchRef.current.shouldSlide) {
 			return
 		}
