@@ -245,13 +245,13 @@ const Player = function(props) {
 				index = 0
 			}
 			props.dispatch(setCurrentIndex(index))
-			// props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
+			props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
 			props.dispatch(setCurrentSong(props.playList[index]))
 			setSongReady(false)
 		}
 	},
-	// [props.currentIndex, songReady]
-	[songReady]
+	[props.currentIndex, songReady]
+	// [songReady]
 	)
 
 	const prev = useCallback(function(e) {
@@ -267,13 +267,13 @@ const Player = function(props) {
 				index = props.playList.length - 1
 			}
 			props.dispatch(setCurrentIndex(index))
-			// props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
-			props.dispatch(setCurrentSong(props.playList[index]))
+			props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
+			// props.dispatch(setCurrentSong(props.playList[index]))
 			setSongReady(false)
 		}
 	}, 
-	// [props.currentIndex, songReady]
-	[songReady]
+	[props.currentIndex, songReady]
+	// [songReady]
 	)
 
 	const ready = useCallback(() => {
