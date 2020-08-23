@@ -17,6 +17,7 @@ export default createStore(
 		currentIndex: -1,
 		currentSong: {},
 		disc: {},
-		topList: {}
+		topList: {},
+		currentSelectedTab: 0
 	},
 	composeEnhancers(applyMiddleware(thunk)))

@@ -1,8 +1,10 @@
-import React, { useState, useCallback, useRef} from 'react'
+import React, { useState, useEffect, useCallback, useRef, memo} from 'react'
 import { renderRoutes } from "react-router-config"
+import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import HotSearch from './controls/hot-search'
 import Suggest from './controls/suggest'
+import { setCurrentTab } from '../../store/actions'
 
 import './index.stylus'
 
@@ -22,6 +24,12 @@ function Search(props) {
 	const onHotKeyClicked = useCallback(value => {
 		setSelectedHotKey(value)
 	}, [selectedHotKey])
+
+	useEffect(() => {
+		if (props.location.pathname === '/search') {
+			props.dispatch(setCurrentTab(3))
+		}
+	}, [])
 
   return (
     <div className="search">
@@ -51,4 +59,10 @@ function Search(props) {
   )
 }
 
-export default Search
+export default connect(function mapStateToProps(state) {
+	return state
+}, function mapDispatchToProps(dispatch) {
+	return {
+		dispatch
+	}
+})(memo(Search))

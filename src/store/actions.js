@@ -21,6 +21,8 @@ export const SET_DISC = 'SET_DISC'
 
 export const SET_TOPLIST = 'SET_TOPLIST'
 
+export const SET_CURRENT_TAB = 'SET_CURRENT_TAB'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -127,6 +129,13 @@ export function setDisc(state) {
 export function setTopList(state) {
 	return {
 		type: SET_TOPLIST,
+		payload: state
+	}
+}
+
+export function setCurrentTab(state) {
+	return {
+		type: SET_CURRENT_TAB,
 		payload: state
 	}
 }

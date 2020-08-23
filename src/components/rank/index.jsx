@@ -6,14 +6,16 @@ import { getTopList } from '../../api/rank'
 import { ERR_OK } from '../../api/config'
 import Scroll from '../../controls/scroll'
 import Loading from '../../controls/loading'
-import { setTopList } from '../../store/actions'
+import { setTopList, setCurrentTab } from '../../store/actions'
 
 import './index.stylus'
 
 function Rank(props) {
+	
 	const [topicList, setTopicList] = useState([])
 
 	useEffect(() => {
+		
 		getTopList().then(res => {
 			if (res.code === ERR_OK) {
 				return res.data.topList
@@ -21,6 +23,10 @@ function Rank(props) {
 		}).then(data => {
 			setTopicList(data)
 		})
+
+		if (props.location.pathname === '/rank') {
+			props.dispatch(setCurrentTab(2))
+		}
 	}, [])
 
 	const selectItem = useCallback((item) => {

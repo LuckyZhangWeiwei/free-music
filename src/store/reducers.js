@@ -8,7 +8,8 @@ import {
 	SET_CURRENT_INDEX,
 	SET_CURRENT_SONG,
 	SET_DISC,
-	SET_TOPLIST
+	SET_TOPLIST,
+	SET_CURRENT_TAB
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -113,5 +114,13 @@ export default {
 			default:
 		}
 		return state
+	},
+	currentSelectedTab(state=0, action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_CURRENT_TAB:
+				return payload
+		}
+		return state 
 	}
 }
