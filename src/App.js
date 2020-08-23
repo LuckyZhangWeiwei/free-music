@@ -11,10 +11,6 @@ function App(props) {
 	// useEffect(() => {
 	// 	props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
 	// }, [props.playList, props.currentIndex])
-
-	useEffect(() => { // has bug when change to different group and the same index, need to be fixed 
-		props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
-	}, [props.currentIndex])
   
 	return (
 		<>

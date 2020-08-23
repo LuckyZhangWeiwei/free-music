@@ -95,6 +95,7 @@ export function selectPlay(list, index) {
 		} else {
 			dispatch(setCurrentIndex(index))
 		}
+		dispatch(setCurrentSong(getState().playList[index]))
 		dispatch(setFullScreen(true))
 		dispatch(setPlayingState(true))
 	}
