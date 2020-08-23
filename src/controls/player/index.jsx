@@ -236,6 +236,7 @@ const Player = function(props) {
 		if (!songReady) {
 			return
 		}
+
 		if (props.playList.length === 1) {
 			loop()
 		} else {
@@ -244,15 +245,20 @@ const Player = function(props) {
 				index = 0
 			}
 			props.dispatch(setCurrentIndex(index))
-			props.dispatch(setCurrentSong(props.currentSong))
+			// props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
+			props.dispatch(setCurrentSong(props.playList[index]))
 			setSongReady(false)
 		}
-	}, [props.currentIndex, songReady])
+	},
+	// [props.currentIndex, songReady]
+	[songReady]
+	)
 
 	const prev = useCallback(function(e) {
 		if (!songReady) {
 			return
 		}
+
 		if (props.playList.length === 1) {
 			loop()
 		} else {
@@ -261,10 +267,14 @@ const Player = function(props) {
 				index = props.playList.length - 1
 			}
 			props.dispatch(setCurrentIndex(index))
-			props.dispatch(setCurrentSong(props.currentSong))
+			// props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
+			props.dispatch(setCurrentSong(props.playList[index]))
 			setSongReady(false)
 		}
-	}, [props.currentIndex, songReady])
+	}, 
+	// [props.currentIndex, songReady]
+	[songReady]
+	)
 
 	const ready = useCallback(() => {
 		setSongReady(true)
@@ -420,7 +430,7 @@ const Player = function(props) {
 				onExited={() => onExited()}>
 				<div className="normal-player">
 					<div className="background">
-						<img width="100%" height="100%" src={props.currentSong.image} />
+						<img width="100%" height="100%" src={props.currentSong.image} alt="" />
 					</div>
 					<div className="top">
 						<div className="back" onClick={() => close()}>
@@ -437,7 +447,7 @@ const Player = function(props) {
 						<div className="middle-l" ref={middleLRef}>
 							<div className="cd-wrapper" ref={cdWrapperRef}>
 								<div className={`cd ${cdCls}`}>
-									<img className="image" src={props.currentSong.image} />
+									<img className="image" src={props.currentSong.image} alt="" />
 								</div>
 							</div>
 							<div className="playing-lyric-wrapper">
