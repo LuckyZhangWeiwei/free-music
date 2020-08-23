@@ -64,6 +64,7 @@ const Player = function(props) {
 	}, [props.isFullScreen])
 
 	useEffect(() => {
+		console.log(11111111)
 		getSongUrl(props.currentSong.name || props.currentSong.songname)
 		.then(songUrl => {
 			const song = {
@@ -73,8 +74,10 @@ const Player = function(props) {
 		  props.dispatch(setCurrentSong(song))
 			audioRef.current.play()
 		})
-	}, 
-	[props.currentSong.url, props.currentSong.id])
+	},
+	[props.currentSong.id] 
+	// [props.currentSong.url, props.currentSong.id]
+	)
 
 	useEffect(() => {
 		if (lyricRef.current) {
@@ -108,8 +111,8 @@ const Player = function(props) {
 		}
 		setPlayingLyric(txt)
 		setCurrentShow('cd')
-		if (props.resetLyricLine)
-			props.dispatch(setLyricLine(false))
+		// if (props.resetLyricLine)
+		// 	props.dispatch(setLyricLine(false))
 	}, [props.currentSong.id])
 
 	useEffect(() => {
@@ -125,12 +128,12 @@ const Player = function(props) {
 		currentLineNumRef.current = 0
 	}, [props.currentSong.id])
 
-	useEffect(() => {
-		if (props.resetLyricLine) {
-			lyricListRef.current.scrollTo(0, 0, 0)
-			currentLineNumRef.current = 0
-		}
-	}, [props.resetLyricLine])
+	// useEffect(() => {
+	// 	if (props.resetLyricLine) {
+	// 		lyricListRef.current.scrollTo(0, 0, 0)
+	// 		currentLineNumRef.current = 0
+	// 	}
+	// }, [props.resetLyricLine])
 
 	const close = useCallback(function() {
 		props.dispatch(setFullScreen(false))
