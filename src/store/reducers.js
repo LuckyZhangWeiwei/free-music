@@ -9,7 +9,8 @@ import {
 	SET_CURRENT_SONG,
 	SET_DISC,
 	SET_TOPLIST,
-	SET_CURRENT_TAB
+	SET_CURRENT_TAB,
+	SET_LYRIC_LINE
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -115,10 +116,18 @@ export default {
 		}
 		return state
 	},
-	currentSelectedTab(state=0, action) {
+	currentSelectedTab(state = 0, action) {
 		const { type, payload } = action
 		switch (type) {
 			case SET_CURRENT_TAB:
+				return payload
+		}
+		return state
+	},
+	resetLyricLine(state = false, action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_LYRIC_LINE:
 				return payload
 		}
 		return state 

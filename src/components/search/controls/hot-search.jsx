@@ -13,6 +13,9 @@ const HotSearch = function (props) {
 				setTags(res.result.hots)
 			}
 		})
+		return () => {
+			setTags([])
+		}
 	}, [])
 
 	const onHotKeyClicked = useCallback(item => {

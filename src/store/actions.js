@@ -23,6 +23,8 @@ export const SET_TOPLIST = 'SET_TOPLIST'
 
 export const SET_CURRENT_TAB = 'SET_CURRENT_TAB'
 
+export const SET_LYRIC_LINE = 'SET_LYRIC_LINE'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -95,7 +97,8 @@ export function selectPlay(list, index) {
 		} else {
 			dispatch(setCurrentIndex(index))
 		}
-		// dispatch(setCurrentSong(getState().playList[index]))
+		dispatch(setLyricLine(true))
+		dispatch(setCurrentSong(list[index]))
 		dispatch(setFullScreen(true))
 		dispatch(setPlayingState(true))
 	}
@@ -104,6 +107,13 @@ export function selectPlay(list, index) {
 export function setCurrentSong(state) {
 	return {
 		type: SET_CURRENT_SONG,
+		payload: state
+	}
+}
+
+export function setLyricLine(state) {
+	return {
+		type: SET_LYRIC_LINE,
 		payload: state
 	}
 }

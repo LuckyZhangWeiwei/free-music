@@ -10,11 +10,7 @@ import { setCurrentSong } from './store/actions'
 function App(props) {
 	// useEffect(() => {
 	// 	props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
-	// }, [props.playList, props.currentIndex])
-
-	useEffect(() => {
-		props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
-	}, [props.currentIndex])
+	// }, [props.currentIndex])
   
 	return (
 		<>
