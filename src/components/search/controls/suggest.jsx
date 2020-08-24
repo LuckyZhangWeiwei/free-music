@@ -7,7 +7,7 @@ import { creatSong } from '../../../common/js/models/song'
 import Scroll from '../../../controls/scroll'
 import Loading from '../../../controls/loading'
 import Singer from '../../../common/js/models/singer'
-import { setSinger } from '../../../store/actions'
+import { setSinger, insertSong } from '../../../store/actions'
 
 import './suggest.stylus'
 
@@ -48,7 +48,7 @@ const SuggestItem = memo(props => {
 			props.dispatch(setSinger(singer))
 
 		} else {
-
+			props.dispatch(insertSong(item))
 		}
 	}, [])
 
