@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, useCallback} from 'react'
+import React, {memo, useState, useEffect, useCallback, useRef} from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from '../../common/js/util'
 
@@ -7,6 +7,8 @@ import './index.stylus'
 const SearchBox = (props) => {
 
 	const [textValue, setTextValue] = useState(props.selectedHotKey || '')
+
+	const timer = useRef()
 
 	const textChange =useCallback(function (e) {
 		setTextValue(e.target.value)
@@ -17,11 +19,9 @@ const SearchBox = (props) => {
 	}, [])
 
 	useEffect(() => {
-	//  debounce(
-	// 	 () => props.searchChanged(textValue),
-	//    200
-	//  )
-		props.searchChanged(textValue)
+		debounce(function () {
+			props.searchChanged(textValue)
+		}, timer, 500)()
 	}, [textValue])
 
 	useEffect(() => {
