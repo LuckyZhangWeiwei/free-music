@@ -8,7 +8,7 @@ import Lyric from 'lyric-parser'
 import { setFullScreen, setPlayList } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl, getLynic } from '../../common/js/models/song'
-import { setPlayingState, setCurrentIndex, setPlayMode, setCurrentSong, setLyricLine } from '../../store/actions'
+import { setPlayingState, setCurrentIndex, setPlayMode, setCurrentSong } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
@@ -111,8 +111,6 @@ const Player = function(props) {
 		}
 		setPlayingLyric(txt)
 		setCurrentShow('cd')
-		// if (props.resetLyricLine)
-		// 	props.dispatch(setLyricLine(false))
 	}, [props.currentSong.id])
 
 	useEffect(() => {
@@ -127,13 +125,6 @@ const Player = function(props) {
 		}
 		currentLineNumRef.current = 0
 	}, [props.currentSong.id])
-
-	// useEffect(() => {
-	// 	if (props.resetLyricLine) {
-	// 		lyricListRef.current.scrollTo(0, 0, 0)
-	// 		currentLineNumRef.current = 0
-	// 	}
-	// }, [props.resetLyricLine])
 
 	const close = useCallback(function() {
 		props.dispatch(setFullScreen(false))

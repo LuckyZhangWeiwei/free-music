@@ -115,21 +115,5 @@ export default {
 			default:
 		}
 		return state
-	},
-	currentSelectedTab(state = 0, action) {
-		const { type, payload } = action
-		switch (type) {
-			case SET_CURRENT_TAB:
-				return payload
-		}
-		return state
-	},
-	resetLyricLine(state = false, action) {
-		const { type, payload } = action
-		switch (type) {
-			case SET_LYRIC_LINE:
-				return payload
-		}
-		return state 
 	}
 }

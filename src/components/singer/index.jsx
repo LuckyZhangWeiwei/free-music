@@ -6,7 +6,7 @@ import { ERR_OK } from '../../api/config'
 import SingerModel from '../../common/js/models/singer'
 import ListView from '../../controls/listview'
 
-import { setSinger, setCurrentTab } from './../../store/actions'
+import { setSinger } from './../../store/actions'
 
 import './index.stylus'
 
@@ -28,9 +28,6 @@ function Singer(props) {
 				setSingers(list)
 			}
 		})
-		if (props.location.pathname === '/singer') {
-			props.dispatch(setCurrentTab(1))
-		}
 	},[])
 
   return (
