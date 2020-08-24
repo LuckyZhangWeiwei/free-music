@@ -13,7 +13,7 @@ function Search(props) {
 
 	const [query, setQuery] = useState('')
 
-	const searchResultRef = useRef()
+	const searchBoxRef = useRef()
 
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
@@ -24,10 +24,15 @@ function Search(props) {
 		setSelectedHotKey(value)
 	}, [selectedHotKey])
 
+	const onScroll = useCallback(() => {
+		searchBoxRef.current.blur()
+	}, [])
+
   return (
     <div className="search">
 			<div className="search-box-wrapper">
-				<SearchBox 
+				<SearchBox
+				  myRef={searchBoxRef}
 					placeholder="搜索歌曲、歌手" 
 					selectedHotKey={selectedHotKey} 
 					searchChanged={value => onSearchChanged(value)} 
@@ -43,8 +48,8 @@ function Search(props) {
 			{
 				query
 				&&
-				<div className="search-result" ref={searchResultRef}>
-					<Suggest query={query} {...props} />
+				<div className="search-result">
+					<Suggest query={query} {...props} onScroll={() => onScroll()} />
 				</div>
 			}
 			{ renderRoutes(props.route.routes) }

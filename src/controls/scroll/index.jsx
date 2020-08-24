@@ -63,6 +63,12 @@ class Scroll extends React.Component {
 					}
 				})
 			}
+
+			if (this.props.beforeScroll) {
+				this.scroll.on('beforeScrollStart', () => {
+					this.props.onBeforeScroll()
+				})
+			}
 		}
 
 	refresh() {
@@ -87,7 +93,8 @@ Scroll.propTypes = {
 	scroll: PropTypes.func,
 	scrollEnd: PropTypes.func,
 	pullUp: PropTypes.bool,
-	scrollToEnd: PropTypes.func
+	scrollToEnd: PropTypes.func,
+	beforeScroll: PropTypes.bool
 }
 
 Scroll.defaultProps = {

@@ -5,6 +5,7 @@ import { search } from '../../../api/search'
 import { ERR_OK } from '../../../api/config'
 import { creatSong } from '../../../common/js/models/song'
 import Scroll from '../../../controls/scroll'
+import NoResult from '../../../controls/no-result'
 import Loading from '../../../controls/loading'
 import Singer from '../../../common/js/models/singer'
 import { setSinger, insertSong } from '../../../store/actions'
@@ -159,12 +160,18 @@ const Suggest = props => {
 		searchSong(false)
 	}
 
+	const beforeScroll = () => {
+		props.onScroll()
+	}
+
 	return (
 		<Scroll className="suggest"
 		 data={data} 
 		 ref={scrollRef} 
 		 scrollToEnd={() => onScrollToEnd()} 
-		 pullUp={true}>
+		 pullUp={true}
+		 beforeScroll={true}
+		 onBeforeScroll= {() => beforeScroll()}>
 			<ul className="suggest-list">
 				{
 					data.map((item, index) => {
@@ -177,6 +184,13 @@ const Suggest = props => {
 					hasMore && <Loading />
 				}
 			</ul>
+			<div className="no-result-wrapper">
+				{
+					(data.length === 0 && !hasMore)
+					&&
+					<NoResult title="暂无搜索结果" />
+				}
+			</div>
 		</Scroll>
 	)
 }

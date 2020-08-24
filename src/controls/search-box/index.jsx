@@ -1,5 +1,6 @@
 import React, {memo, useState, useEffect, useCallback} from 'react'
 import PropTypes from 'prop-types'
+import { debounce } from '../../common/js/util'
 
 import './index.stylus'
 
@@ -16,6 +17,10 @@ const SearchBox = (props) => {
 	}, [])
 
 	useEffect(() => {
+	//  debounce(
+	// 	 () => props.searchChanged(textValue),
+	//    200
+	//  )
 		props.searchChanged(textValue)
 	}, [textValue])
 
@@ -31,6 +36,7 @@ const SearchBox = (props) => {
 			 value={textValue} 
 			 placeholder={props.placeholder} 
 			 onChange={e => textChange(e)}
+			 ref={props.myRef}
 			/>
 			{
 				textValue && <i className="icon-dismiss" onClick={() => clearTextBox()} />
