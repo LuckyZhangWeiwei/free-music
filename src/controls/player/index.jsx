@@ -64,7 +64,6 @@ const Player = function(props) {
 	}, [props.isFullScreen])
 
 	useEffect(() => {
-		console.log(11111111)
 		getSongUrl(props.currentSong.name || props.currentSong.songname)
 		.then(songUrl => {
 			const song = {

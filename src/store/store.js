@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import reducers from './reducers'
 import thunk from 'redux-thunk'
 import { playMode } from '../common/js/config'
+import { loadSearch } from '../common/js/cache'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
@@ -17,6 +18,7 @@ export default createStore(
 		currentIndex: -1,
 		currentSong: {},
 		disc: {},
-		topList: {}
+		topList: {},
+		searchHistory: loadSearch()
 	},
 	composeEnhancers(applyMiddleware(thunk)))

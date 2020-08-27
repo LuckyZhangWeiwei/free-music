@@ -1,5 +1,6 @@
-import { playMode } from "../common/js/config"
-import { shuffle } from "../common/js/util"
+import { playMode } from '../common/js/config'
+import { shuffle } from '../common/js/util'
+import { saveSearch } from '../common/js/cache'
 
 export const SET_SINGER = 'SET_SINGER'
 
@@ -20,6 +21,8 @@ export const SET_CURRENT_SONG = 'SET_CURRENT_SONG'
 export const SET_DISC = 'SET_DISC'
 
 export const SET_TOPLIST = 'SET_TOPLIST'
+
+export const SET_SEARCHHISTORY = 'SET_SEARCHHISTORY'
 
 export function setSinger(singer) {
 	return {
@@ -179,4 +182,11 @@ function findIndex(list, song) {
 	return list.findIndex(item => {
 		return item.id === song.id
 	})
+}
+
+export function setSearchHistory(state) {
+	return {
+		type: SET_SEARCHHISTORY,
+		payload: saveSearch(state)
+	}
 }

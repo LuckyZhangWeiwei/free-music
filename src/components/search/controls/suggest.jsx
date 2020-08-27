@@ -15,9 +15,7 @@ import './suggest.stylus'
 const TYPE_SINGER = 'singer'
 const PAGE_SIZE = 25
 
-const SuggestItem = memo(props => {
-
-	const getIconCls = item => {
+const getIconCls = item => {
 		if (item.type === TYPE_SINGER) {
 			return 'icon-mine'
 		} else {
@@ -25,13 +23,15 @@ const SuggestItem = memo(props => {
 		}
 	}
 
-	const getDisplayName = item => {
-		if (item.type === TYPE_SINGER) {
-			return item.singername
-		} else {
-			return `${item.name} - ${item.singer}`
-		}
+const getDisplayName = item => {
+	if (item.type === TYPE_SINGER) {
+		return item.singername
+	} else {
+		return `${item.name} - ${item.singer}`
 	}
+}
+
+const SuggestItem = memo(props => {
 
 	const selectItem = useCallback(item => {
 		if (item.type === TYPE_SINGER) {
@@ -51,6 +51,7 @@ const SuggestItem = memo(props => {
 		} else {
 			props.dispatch(insertSong(item))
 		}
+		props.select(item)
 	}, [])
 
 	return (
@@ -64,6 +65,10 @@ const SuggestItem = memo(props => {
 			</li>
 	)
 })
+
+SuggestItem.propTypes = {
+	query: PropTypes.func
+}
 
 const Suggest = props => {
 

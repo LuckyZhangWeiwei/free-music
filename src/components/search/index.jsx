@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import HotSearch from './controls/hot-search'
 import Suggest from './controls/suggest'
+import { setSearchHistory } from '../../store/actions'
 
 import './index.stylus'
 
@@ -28,6 +29,10 @@ function Search(props) {
 		searchBoxRef.current.blur()
 	}, [])
 
+	const setToSearchHistory = item => {
+		props.dispatch(setSearchHistory(query))
+	}
+
   return (
     <div className="search">
 			<div className="search-box-wrapper">
@@ -49,7 +54,7 @@ function Search(props) {
 				query
 				&&
 				<div className="search-result">
-					<Suggest query={query} {...props} onScroll={() => onScroll()} />
+					<Suggest query={query} {...props} onScroll={() => onScroll()} select={item => {setToSearchHistory(item)}} />
 				</div>
 			}
 			{ renderRoutes(props.route.routes) }

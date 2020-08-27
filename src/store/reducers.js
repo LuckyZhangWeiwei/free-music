@@ -9,8 +9,7 @@ import {
 	SET_CURRENT_SONG,
 	SET_DISC,
 	SET_TOPLIST,
-	SET_CURRENT_TAB,
-	SET_LYRIC_LINE
+	SET_SEARCHHISTORY
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -109,6 +108,17 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_TOPLIST:
+				let obj = {}
+				Object.assign(obj, payload)
+				return obj
+			default:
+		}
+		return state
+	},
+	searchHistory(state = [], action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_SEARCHHISTORY:
 				let obj = {}
 				Object.assign(obj, payload)
 				return obj
