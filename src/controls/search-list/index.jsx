@@ -3,23 +3,29 @@ import { connect } from 'react-redux'
 
 import './index.stylus'
 
-const SearchList = memo(props => {
-
+const ItemLine = memo(props => {
 	const select = e => {
 		e.stopPropagation()
 		console.log('e', e)
 	}
+
 	return (
-		<div class="search-list">
+		<li className="search-item">
+			<span className="text">{props.item}</span>
+			<span className="icon" onClick={e => select(e)}>
+				<i className="icon-delete" />
+			</span>
+		</li>
+	)
+})
+
+const SearchList = memo(props => {
+	return (
+		<div className="search-list">
 			{
 				props.searchHistory.map((item, index) => {
 					return (
-							<li class="search-item" key={item}>
-								<span class="text">{item}</span>
-								<span class="icon">
-									<i class="icon-delete" onClick={e => select(e)} />
-								</span>
-							</li>
+						<ItemLine key={item} item={item} />
 					)
 				})
 			}
@@ -34,5 +40,3 @@ export default connect(function mapStateToProps(state) {
 		dispatch
 	}
 })(SearchList)
-
-// export default SearchList

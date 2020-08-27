@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo } from 'react'
 import { connect } from 'react-redux'
 
 import SearchList from '../../../controls/search-list'
@@ -30,5 +30,3 @@ export default connect(function mapStateToProps(state) {
 		dispatch
 	}
 })(SearchHistory)
-
-// export default SearchHistory

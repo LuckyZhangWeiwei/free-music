@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef, memo} from 'react'
+import React, { useState, useCallback, useRef, memo} from 'react'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
@@ -31,10 +31,9 @@ function Search(props) {
 		searchBoxRef.current.blur()
 	}, [])
 
-	const setToSearchHistory = item => {
+	const setToSearchHistory = useCallback(() => {
 		props.dispatch(setSearchHistory(query))
-		console.log(props.searchHistory)
-	}
+	}, [])
 
   return (
     <div className="search">
