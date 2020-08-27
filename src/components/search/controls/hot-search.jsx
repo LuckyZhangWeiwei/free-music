@@ -34,6 +34,9 @@ const HotSearch = function (props) {
 					}
 				</ul>
 			</div>
+			{
+				props.children
+			}
 		</div>
 	)
 }

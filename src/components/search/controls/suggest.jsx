@@ -33,6 +33,8 @@ const getDisplayName = item => {
 
 const SuggestItem = memo(props => {
 
+	const [selectedItem, setSelectedItem] = useState()
+
 	const selectItem = useCallback(item => {
 		if (item.type === TYPE_SINGER) {
 			const singer = new Singer({
@@ -52,7 +54,8 @@ const SuggestItem = memo(props => {
 			props.dispatch(insertSong(item))
 		}
 		props.select(item)
-	}, [])
+		setSelectedItem(item)
+	}, [selectedItem])
 
 	return (
 			<li className="suggest-item" onClick={() => {selectItem(props.item)}}>

@@ -13,6 +13,7 @@ import {
 } from './actions'
 
 import { playMode } from '../common/js/config'
+import { loadSearch } from '../common/js/cache'
 
 export default {
 	singer(state=null, action) {
@@ -115,12 +116,11 @@ export default {
 		}
 		return state
 	},
-	searchHistory(state = [], action) {
+	searchHistory(state = loadSearch(), action) {
 		const { type, payload } = action
 		switch (type) {
 			case SET_SEARCHHISTORY:
-				let obj = {}
-				Object.assign(obj, payload)
+				let obj = [...payload]
 				return obj
 			default:
 		}

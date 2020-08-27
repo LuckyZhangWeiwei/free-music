@@ -1,10 +1,11 @@
-import React, { useState, useCallback, useRef, memo} from 'react'
+import React, { useState, useEffect, useCallback, useRef, memo} from 'react'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import HotSearch from './controls/hot-search'
 import Suggest from './controls/suggest'
 import { setSearchHistory } from '../../store/actions'
+import SearchHistory from './controls/search-history'
 
 import './index.stylus'
 
@@ -15,6 +16,7 @@ function Search(props) {
 	const [query, setQuery] = useState('')
 
 	const searchBoxRef = useRef()
+	
 
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
@@ -31,6 +33,7 @@ function Search(props) {
 
 	const setToSearchHistory = item => {
 		props.dispatch(setSearchHistory(query))
+		console.log(props.searchHistory)
 	}
 
   return (
@@ -47,7 +50,13 @@ function Search(props) {
 				!query 
 				&&
 				<div className="shortcut-wrapper">
-					<HotSearch title="热门搜索" hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}} />
+					<HotSearch title="热门搜索" hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}}>
+						{
+							props.searchHistory.length > 0
+							&&
+							<SearchHistory title="搜索历史" />
+						}
+					</HotSearch>
 				</div>
 			}
 			{
