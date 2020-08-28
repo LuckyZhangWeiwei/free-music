@@ -120,7 +120,6 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_SEARCHHISTORY:
-				console.log('payload', payload)
 				let obj = [...payload]
 				return obj
 			default:
