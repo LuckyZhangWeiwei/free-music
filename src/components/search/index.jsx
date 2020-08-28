@@ -34,17 +34,17 @@ function Search(props) {
 		props.dispatch(setSearchHistory(query))
 	}, [query])
 
-	const delAllHistory = () => {
+	const delAllHistory = useCallback(() => {
 		console.log('delAllHistory')
-	}
+	}, [])
 
-	const searchListItemClick = item => {
+	const searchListItemClick = useCallback(item => {
 		console.log('onSearchListItemClick:', item)
-	}
+	}, [])
 
-	const searchListIconClick = item => {
+	const searchListIconClick = useCallback(item => {
 		console.log('onSearchListIconClick:', item)
-	}
+	}, [])
 
   return (
     <div className="search">

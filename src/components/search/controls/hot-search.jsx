@@ -8,6 +8,12 @@ const HotSearch = function (props) {
 
 	const [tags, setTags] = useState([])
 
+	const [data, setData] = useState([])
+
+	useEffect(() => {
+		setData(data.concat(tags).concat(props.searchHistory))
+	}, [tags])
+
 	useEffect(() => {
 		getHotSearchTag().then(res => {
 			if (res.code === ERR_OK_lOCAL) {
@@ -24,20 +30,27 @@ const HotSearch = function (props) {
 	}, [])
 
 	return (
-		<Scroll className="shortcut" data={tags}>
-			<div className="hot-key">
-				<h1 className="title">{props.title}</h1>
-				<ul>
+		<Scroll className="shortcut" data={data}>
+			<div>
+					<div className="hot-key">
+						<h1 className="title">{props.title}</h1>
+						<ul>
+							{
+								tags.map(item => {
+								return	<li 
+													className="item" 
+													key={item.first} 
+													onClick={() => onHotKeyClicked(item)}>
+														{item.first}
+												</li>
+								})
+							}
+						</ul>
+					</div>
 					{
-						tags.map(item => {
-						 return	<li className="item" key={item.first} onClick={() => onHotKeyClicked(item)} >{item.first}</li>
-						})
+						props.children
 					}
-				</ul>
 			</div>
-			{
-				props.children
-			}
 		</Scroll>
 	)
 }
