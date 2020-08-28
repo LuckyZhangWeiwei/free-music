@@ -32,7 +32,7 @@ function Search(props) {
 
 	const setToSearchHistory = useCallback(() => {
 		props.dispatch(setSearchHistory(query))
-	}, [])
+	}, [query])
 
 	const delAllHistory = () => {
 		console.log('delAllHistory')
