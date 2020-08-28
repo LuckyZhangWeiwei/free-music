@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback, memo} from 'react'
 import PropTypes from 'prop-types'
 import { getHotSearchTag } from '../../../api/search'
 import { ERR_OK_lOCAL } from '../../../api/config'
+import { Scroll } from '../../../controls/scroll'
 
 const HotSearch = function (props) {
 

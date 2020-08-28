@@ -1,18 +1,24 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 
 import './index.stylus'
 
 const ItemLine = memo(props => {
-	const select = e => {
+	
+	const clickIcon = useCallback(e => {
 		e.stopPropagation()
-		console.log('e', e)
-	}
+		props.onIconClick(props.item)
+	}, [props.item])
+
+	const itemLineClick = useCallback((e) => {
+		props.onItemclick(props.item)
+	}, [props.item])
+
 
 	return (
-		<li className="search-item">
+		<li className="search-item" onClick={e => {itemLineClick(e)}}>
 			<span className="text">{props.item}</span>
-			<span className="icon" onClick={e => select(e)}>
+			<span className="icon" onClick={e => clickIcon(e)}>
 				<i className="icon-delete" />
 			</span>
 		</li>
@@ -25,7 +31,12 @@ const SearchList = memo(props => {
 			{
 				props.searchHistory.map((item, index) => {
 					return (
-						<ItemLine key={item} item={item} />
+						<ItemLine 
+							key={item} 
+							item={item} 
+							onItemclick={item => props.itemClick(item)} 
+							onIconClick={item => props.iconClick(item)} 
+						/>
 					)
 				})
 			}

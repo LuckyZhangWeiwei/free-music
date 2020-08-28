@@ -16,7 +16,6 @@ function Search(props) {
 	const [query, setQuery] = useState('')
 
 	const searchBoxRef = useRef()
-	
 
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
@@ -35,6 +34,18 @@ function Search(props) {
 		props.dispatch(setSearchHistory(query))
 	}, [])
 
+	const delAllHistory = () => {
+		console.log('delAllHistory')
+	}
+
+	const searchListItemClick = item => {
+		console.log('onSearchListItemClick:', item)
+	}
+
+	const searchListIconClick = item => {
+		console.log('onSearchListIconClick:', item)
+	}
+
   return (
     <div className="search">
 			<div className="search-box-wrapper">
@@ -49,11 +60,19 @@ function Search(props) {
 				!query 
 				&&
 				<div className="shortcut-wrapper">
-					<HotSearch title="热门搜索" hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}}>
+					<HotSearch 
+						title="热门搜索" 
+						hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}}
+					>
 						{
 							props.searchHistory.length > 0
 							&&
-							<SearchHistory title="搜索历史" />
+							<SearchHistory 
+								title="搜索历史"
+								onSearchListDelAll={() => delAllHistory()}
+								onSearchListItemClick={item => searchListItemClick(item)}
+								onSearchListIconClick={item => searchListIconClick(item)}
+							/>
 						}
 					</HotSearch>
 				</div>
@@ -62,7 +81,12 @@ function Search(props) {
 				query
 				&&
 				<div className="search-result">
-					<Suggest query={query} {...props} onScroll={() => onScroll()} select={item => {setToSearchHistory(item)}} />
+					<Suggest 
+						query={query} 
+						{...props} 
+						onScroll={() => onScroll()} 
+						select={item => {setToSearchHistory(item)}} 
+					/>
 				</div>
 			}
 			{ renderRoutes(props.route.routes) }

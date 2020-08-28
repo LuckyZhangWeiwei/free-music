@@ -7,7 +7,15 @@ const SearchHistory = memo(props => {
 
 	const click = e => {
 		e.stopPropagation()
-		console.log('e', e)
+		props.onSearchListDelAll()
+	}
+
+	const onItemClick = item => {
+		props.onSearchListItemClick(item)
+	}
+
+	const onIconClick = item => {
+		props.onSearchListIconClick(item)
 	}
 
 	return (
@@ -18,7 +26,10 @@ const SearchHistory = memo(props => {
 					<i className="icon-clear" />
 				</span>
 			</h1>
-			<SearchList />
+			<SearchList 
+				itemClick={item => onItemClick(item)}
+				iconClick={item => onIconClick(item)}
+			/>
 		</div>
 	)
 })
