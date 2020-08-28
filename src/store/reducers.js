@@ -9,7 +9,9 @@ import {
 	SET_CURRENT_SONG,
 	SET_DISC,
 	SET_TOPLIST,
-	SET_SEARCHHISTORY
+	SET_SEARCHHISTORY,
+	SET_DEL_HISTORY_ITEM,
+	SET_DEL_HISTORY_ALL
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -122,6 +124,10 @@ export default {
 			case SET_SEARCHHISTORY:
 				let obj = [...payload]
 				return obj
+				case SET_DEL_HISTORY_ITEM:
+					return [...payload]
+				case SET_DEL_HISTORY_ALL:
+					return []
 			default:
 		}
 		return state

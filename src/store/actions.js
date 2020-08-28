@@ -1,6 +1,6 @@
 import { playMode } from '../common/js/config'
 import { shuffle } from '../common/js/util'
-import { saveSearch } from '../common/js/cache'
+import { saveSearch, deleteSearch, clearSearch, loadSearch } from '../common/js/cache'
 
 export const SET_SINGER = 'SET_SINGER'
 
@@ -23,6 +23,10 @@ export const SET_DISC = 'SET_DISC'
 export const SET_TOPLIST = 'SET_TOPLIST'
 
 export const SET_SEARCHHISTORY = 'SET_SEARCHHISTORY'
+
+export const SET_DEL_HISTORY_ITEM = 'SET_DEL_HISTORY_ITEM'
+
+export const SET_DEL_HISTORY_ALL = 'SET_DEL_HISTORY_ALL'
 
 export function setSinger(singer) {
 	return {
@@ -188,5 +192,21 @@ export function setSearchHistory(state) {
 	return {
 		type: SET_SEARCHHISTORY,
 		payload: saveSearch(state)
+	}
+}
+
+export function delSearchHistoryItem(state) {
+	deleteSearch(state)
+	return {
+		type: SET_DEL_HISTORY_ITEM,
+		payload: loadSearch()
+	}
+}
+
+export function delSearchHistoryAll() {
+	clearSearch()
+	return {
+		type: SET_DEL_HISTORY_ALL,
+		payload: null
 	}
 }

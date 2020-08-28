@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import HotSearch from './controls/hot-search'
 import Suggest from './controls/suggest'
-import { setSearchHistory } from '../../store/actions'
+import { setSearchHistory, delSearchHistoryItem, delSearchHistoryAll } from '../../store/actions'
 import SearchHistory from './controls/search-history'
 
 import './index.stylus'
@@ -35,15 +35,15 @@ function Search(props) {
 	}, [query])
 
 	const delAllHistory = useCallback(() => {
-		console.log('delAllHistory')
+		props.dispatch(delSearchHistoryAll())
 	}, [])
 
 	const searchListItemClick = useCallback(item => {
-		console.log('onSearchListItemClick:', item)
-	}, [])
+		setSelectedHotKey(item)
+	}, [selectedHotKey])
 
 	const searchListIconClick = useCallback(item => {
-		console.log('onSearchListIconClick:', item)
+		props.dispatch(delSearchHistoryItem(item))
 	}, [])
 
   return (
@@ -57,12 +57,10 @@ function Search(props) {
 				/>
 			</div>
 			{
-				!query 
-				&&
-				<div className="shortcut-wrapper">
+				<div className="shortcut-wrapper" style={{display: !query ? "block":"none"}}>
 					<HotSearch 
 						title="热门搜索" 
-						hotKeyClicked={hotKey => {onHotKeyClicked(hotKey.first)}}
+						hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}
 					>
 						{
 							props.searchHistory.length > 0

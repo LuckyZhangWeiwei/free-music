@@ -4,7 +4,7 @@ import { getHotSearchTag } from '../../../api/search'
 import { ERR_OK_lOCAL } from '../../../api/config'
 import Scroll from '../../../controls/scroll'
 
-const HotSearch = function (props) {
+const HotSearch = props => {
 
 	const [tags, setTags] = useState([])
 
@@ -60,4 +60,6 @@ HotSearch.propTypes = {
 	hotKeyClicked: PropTypes.func.isRequired
 }
 
-export default memo(HotSearch)
+export default memo(HotSearch, (preProps, nextProps) => {
+	return true
+})
