@@ -70,8 +70,9 @@ function Search(props) {
 			</div>
 			{
 				<div className="shortcut-wrapper" style={{display: !query ? "block":"none"}}>
-					<HotSearch 
-						title="热门搜索" 
+					<HotSearch
+						title="热门搜索"
+						selectedHotKey={selectedHotKey}
 						hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}>
 						{
 						  props.searchHistory.length ?
