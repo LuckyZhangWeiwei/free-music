@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Switch, Redirect } from "react-router-dom"
+import { NavLink, Switch, Redirect, HashRouter } from "react-router-dom"
 import { renderRoutes } from "react-router-config"
 import router from './../../router'
 
@@ -7,7 +7,7 @@ import "./index.stylus"
 
 function Tab() {
 	return (
-		<>
+		<HashRouter>
 			<div className="tab">
 				<NavLink activeClassName="router-link-active" className="tab-item" to="/recommend">
 					<span className="tab-link">推荐</span>
@@ -29,7 +29,7 @@ function Tab() {
 						{ renderRoutes(router) }
 					</Switch>
 			</div>
-		</>
+		</HashRouter>
 	)
 } 
 
