@@ -6,6 +6,7 @@ import HotSearch from './controls/hot-search'
 import Suggest from './controls/suggest'
 import { setSearchHistory, delSearchHistoryItem, delSearchHistoryAll } from '../../store/actions'
 import SearchHistory from './controls/search-history'
+import Confirm from '../../controls/confirm'
 
 import './index.stylus'
 
@@ -15,7 +16,9 @@ function Search(props) {
 
 	const [query, setQuery] = useState('')
 
-	const searchBoxRef = useRef()
+	const [showConfirm, setShowConfirm] = useState(false)
+
+	const searchBoxRef = useRef(null)
 
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
@@ -32,11 +35,11 @@ function Search(props) {
 
 	const setToSearchHistory = useCallback(() => {
 		props.dispatch(setSearchHistory(query))
-	}, [query])
+	}, [query, props.searchHistory])
 
-	const delAllHistory = useCallback(() => {
-		props.dispatch(delSearchHistoryAll())
-	}, [])
+	const delAllHistory = () => {
+		setShowConfirm(true)
+	}
 
 	const searchListItemClick = useCallback(item => {
 		setSelectedHotKey(item)
@@ -44,6 +47,15 @@ function Search(props) {
 
 	const searchListIconClick = useCallback(item => {
 		props.dispatch(delSearchHistoryItem(item))
+	}, [])
+
+	const confrimCancel = useCallback(() => {
+		setShowConfirm(false)
+	}, [])
+
+	const confirmOk = useCallback(() => {
+		props.dispatch(delSearchHistoryAll())
+		setShowConfirm(false)
 	}, [])
 
   return (
@@ -60,8 +72,7 @@ function Search(props) {
 				<div className="shortcut-wrapper" style={{display: !query ? "block":"none"}}>
 					<HotSearch 
 						title="热门搜索" 
-						hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}
-					>
+						hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}>
 						{
 							props.searchHistory.length > 0
 							&&
@@ -86,6 +97,13 @@ function Search(props) {
 						select={item => {setToSearchHistory(item)}} 
 					/>
 				</div>
+			}
+			{
+				showConfirm &&
+				<Confirm text="确定删除所有的历史记录吗？"
+					onClickCancel={() => confrimCancel()}
+					onClickOk={() => confirmOk()}
+				/>
 			}
 			{ renderRoutes(props.route.routes) }
 		</div>
