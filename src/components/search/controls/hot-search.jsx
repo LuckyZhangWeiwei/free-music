@@ -15,6 +15,7 @@ const HotSearch = props => {
 	}, [tags])
 
 	useEffect(() => {
+		console.log('props.searchHistory:', props.searchHistory)
 		getHotSearchTag().then(res => {
 			if (res.code === ERR_OK_lOCAL) {
 				setTags(res.result.hots)
@@ -60,6 +61,4 @@ HotSearch.propTypes = {
 	hotKeyClicked: PropTypes.func.isRequired
 }
 
-export default memo(HotSearch, (preProps, nextProps) => {
-	return true
-})
+export default memo(HotSearch)

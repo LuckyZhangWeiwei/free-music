@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback } from 'react'
+import React, { memo, useCallback } from 'react'
 import { connect } from 'react-redux'
 
 import './index.stylus'
@@ -16,7 +16,7 @@ const ItemLine = memo(props => {
 
 
 	return (
-		<li className="search-item" onClick={e => {itemLineClick(e)}}>
+		<li className="search-item" onClick={e => itemLineClick(e)}>
 			<span className="text">{props.item}</span>
 			<span className="icon" onClick={e => clickIcon(e)}>
 				<i className="icon-delete" />

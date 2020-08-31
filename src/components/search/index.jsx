@@ -53,10 +53,10 @@ function Search(props) {
 		setShowConfirm(false)
 	}, [])
 
-	const confirmOk = useCallback(() => {
+	const confirmOk = () => {
 		props.dispatch(delSearchHistoryAll())
 		setShowConfirm(false)
-	}, [])
+	}
 
   return (
     <div className="search">
@@ -74,14 +74,15 @@ function Search(props) {
 						title="热门搜索" 
 						hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}>
 						{
-							props.searchHistory.length > 0
-							&&
+						  props.searchHistory.length ?
 							<SearchHistory 
 								title="搜索历史"
 								onSearchListDelAll={() => delAllHistory()}
 								onSearchListItemClick={item => searchListItemClick(item)}
 								onSearchListIconClick={item => searchListIconClick(item)}
 							/>
+							:
+							null
 						}
 					</HotSearch>
 				</div>

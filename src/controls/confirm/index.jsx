@@ -21,9 +21,9 @@ const Confirm = memo(props => {
 	}
 
 	return (
-		<CSSTransition timeout={300} classNames="confirm-fadein" in={true}>
+		<CSSTransition timeout={300} classNames="fadein" in={show}>
 			<div className="confirm">
-					<div className="confirm-wrapper">
+					<div className="confirm-wrapper confirm-zoom">
 						<div className="confirm-content">
 						<p className="text">{props.text}</p>
 						<div className="operate">
