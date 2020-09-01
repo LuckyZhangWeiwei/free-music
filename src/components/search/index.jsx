@@ -62,7 +62,7 @@ function Search(props) {
     <div className="search">
 			<div className="search-box-wrapper">
 				<SearchBox
-				  myRef={searchBoxRef}
+					ref={searchBoxRef}
 					placeholder="搜索歌曲、歌手" 
 					selectedHotKey={selectedHotKey} 
 					searchChanged={value => onSearchChanged(value)} 

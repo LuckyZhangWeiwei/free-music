@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, useCallback, useRef} from 'react'
+import React, {memo, useState, useEffect, useCallback, useRef, forwardRef} from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from '../../common/js/util'
 
@@ -50,4 +50,6 @@ SearchBox.propTypes = {
 	searchChanged: PropTypes.func
 }
 
-export default memo(SearchBox)
+export default memo(forwardRef((props, ref) => {
+	return <SearchBox {...props} myRef={ref} />
+}))
