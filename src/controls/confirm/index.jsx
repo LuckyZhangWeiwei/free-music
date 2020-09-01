@@ -53,4 +53,4 @@ Confirm.propTypes = {
 	onClickOk: PropTypes.func.isRequired,
 }
 
-export default Confirm
+export default memo(Confirm)
