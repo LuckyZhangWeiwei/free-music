@@ -103,10 +103,11 @@ function Search(props) {
 			{
 				showConfirm &&
 				<Confirm text="确定删除所有的历史记录吗？"
+					show={showConfirm}
 					onClickCancel={() => confrimCancel()}
-					onClickOk={() => confirmOk()}
-				/>
+					onClickOk={() => confirmOk()} />
 			}
+			
 			{ renderRoutes(props.route.routes) }
 		</div>
   )
