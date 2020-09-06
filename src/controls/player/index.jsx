@@ -14,6 +14,8 @@ import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
 import { shuffle } from '../../common/js/util'
 import Scroll from '../scroll'
+import PlayList from '../playlist'
+
 
 import './index.stylus'
 import './index.css'
@@ -36,6 +38,8 @@ const Player = function(props) {
 	const [initTouch, setInitTouch] = useState(false)
 
 	const [playingLyric, setPlayingLyric] = useState('')
+
+	const [showPlayList, setShowPlayList] = useState(false)
 
 	const currentLineNumRef = useRef(-1)
 
@@ -524,11 +528,16 @@ const Player = function(props) {
 								<i className={`icon-mini ${playMniIcon}`} />
 							</ProgressCircle>
 					</div>
-					<div className="control">
+					<div className="control" onClick={e => {e.stopPropagation(); setShowPlayList(!showPlayList)}}>
 						<i className="icon-playlist" />
 					</div>
 				</div>
 			</CSSTransition>
+			{
+				!!showPlayList &&
+				<PlayList hidePlayList = {() => {setShowPlayList(!showPlayList)}}></PlayList>
+			}
+			
 			<audio 
 				src={props.currentSong.url} 
 				ref={audioRef} 
