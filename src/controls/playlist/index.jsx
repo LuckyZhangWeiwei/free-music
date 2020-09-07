@@ -70,7 +70,6 @@ const PlayList = props => {
 		scrollToCurrent()
 	}, [props.currentSong.id])
 
-
 	const hidePlaylist = useCallback(e => {
 		e.stopPropagation()
 		props.hidePlayList()
@@ -80,7 +79,10 @@ const PlayList = props => {
 		const index = props.sequenceList.findIndex(song => {
 			return props.currentSong.id === song.id
 		})
-		scrollRef.current.scrollToElement(listRef.current.children[index], 300)
+		
+		setTimeout(() => {
+				scrollRef.current.scrollToElement(listRef.current.children[index], 300)
+		}, 200)
 	}
 
 	return (
