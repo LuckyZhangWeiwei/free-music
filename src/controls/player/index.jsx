@@ -105,6 +105,8 @@ const Player = function(props) {
 	}, [props.currentSong.id])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
+		if (!props.sequenceList.length) return
+		
 		currentLineNumRef.current = lineNum
 		if (lineNum > 5) {
 			let lineEl = lyricLineRef.current.children[lineNum - 5]

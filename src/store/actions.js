@@ -234,6 +234,7 @@ export function delSong(song) {
 		}
 
 		if (!playList.length) {
+			currentIndex = -1
 			dispatch(setPlayingState(false))
 		} else {
 			dispatch(setPlayingState(true))
