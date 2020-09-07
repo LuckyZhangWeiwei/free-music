@@ -72,6 +72,7 @@ const MusicList = function (props) {
 
 	const randomPlay = useCallback(() => {
 		props.dispatch(random(props.sequenceList))
+		props.dispatch(selectPlay(props.song, props.currentIndex + 1))
 	}, [props.sequenceList])
 
 	return (
