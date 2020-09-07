@@ -28,6 +28,8 @@ export const SET_DEL_HISTORY_ITEM = 'SET_DEL_HISTORY_ITEM'
 
 export const SET_DEL_HISTORY_ALL = 'SET_DEL_HISTORY_ALL'
 
+export const SET_DEL_SONG = 'SET_DEL_SONG'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -209,4 +211,38 @@ export function delSearchHistoryAll() {
 		type: SET_DEL_HISTORY_ALL,
 		payload: null
 	}
+}
+
+export function delSong(song) {
+	return (dispatch, getState) => {
+		let playList = getState().playList
+		let sequenceList = getState().sequenceList
+		let currentIndex = getState().currentIndex
+
+		let pIndex = findIndex(playList, song)
+		playList.splice(pIndex, 1)
+
+		let sIndex = findIndex(sequenceList, song)
+		sequenceList.splice(sIndex, 1)
+
+		if (currentIndex > pIndex || currentIndex === playList.length - 1) {
+			currentIndex--
+		}
+
+		if (currentIndex !== currentIndex === playList.length - 1 && currentIndex === pIndex) {
+			currentIndex++
+		}
+
+		if (!playList.length) {
+			dispatch(setPlayingState(false))
+		} else {
+			dispatch(setPlayingState(true))
+		}
+
+		dispatch(setCurrentIndex(currentIndex))
+		dispatch(setPlayList(playList))
+		dispatch(setSequenceList(sequenceList))
+		dispatch(setCurrentSong(playList[currentIndex]))
+	}
+	
 }

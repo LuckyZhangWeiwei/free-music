@@ -2,22 +2,14 @@ import React, {memo, useEffect, useState, useRef, useCallback} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import classnames from 'classnames'
 import Scroll from '../../controls/scroll'
-import { setCurrentIndex, setCurrentSong } from '../../store/actions'
+import { setCurrentIndex, setCurrentSong, delSong } from '../../store/actions'
 import { playMode } from '../../common/js/config'
 
 import './index.stylus'
 
 const MusicListItem = props => {
-
-	const getCurrentIcon = useCallback(item => {
-		const currentSong = props.currentSong
-		if (currentSong.id === item.id) {
-			return 'icon-play'
-		} else {
-			return ''
-		}
-	}, [props.currentIndex])
 
 	const selectItem = useCallback((e, item, index) => {
 		e.stopPropagation()
@@ -30,14 +22,19 @@ const MusicListItem = props => {
 		props.dispatch(setCurrentSong(props.playList[index]))
 	}, [])
 
+	const deleteItem = useCallback((e, item) => {
+		e.stopPropagation()
+		props.dispatch(delSong(item))
+	}, [])
+
 	return (
 			<li className="item" onClick={e => selectItem(e, props.item, props.index)}>
-				<i className={`current ${getCurrentIcon(props.item)}`}></i>
+				<i className={classnames('current', {'icon-play': props.currentSong.id === props.item.id})} />
 				<span className="text">{props.item.name}</span>
 				<span className="like">
 					<i className="icon-not-favorite"></i>
 				</span>
-				<span className="delete">
+				<span className="delete" onClick={e => deleteItem(e, props.item)}>
 					<i className="icon-delete"></i>
 				</span>
 			</li>
@@ -52,7 +49,6 @@ const MusicListItemWithConnect = connect(
 		dispatch
 	}
 })(memo(MusicListItem))
-
 
 const PlayList = props => {
 	
@@ -111,7 +107,6 @@ const PlayList = props => {
 									)
 								})
 							}
-						
 						</ul>
 					</Scroll>
 					<div className="list-operate">
