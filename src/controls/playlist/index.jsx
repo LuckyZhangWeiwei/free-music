@@ -85,6 +85,17 @@ const CloseButton = memo(props => {
 	)
 })
 
+const ListOperater = memo(props => {
+	return (
+		<div className="list-operate">
+			<div className="add">
+				<i className="icon-add"></i>
+				<span className="text">{props.text}</span>
+			</div>
+		</div>
+	)
+})
+
 
 const PlayList = props => {
 	
@@ -157,12 +168,7 @@ const PlayList = props => {
 								}
 							</ul>
 						</Scroll>
-						<div className="list-operate">
-							<div className="add">
-								<i className="icon-add"></i>
-								<span className="text">添加歌曲到队列</span>
-							</div>
-						</div>
+						<ListOperater text="添加歌曲到队列" />
 				  	<CloseButton text="关闭" hidePlaylist={() => hidePlaylist()} />
 					</div>
 				</div>
