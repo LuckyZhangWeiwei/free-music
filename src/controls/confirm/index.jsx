@@ -23,7 +23,7 @@ const Confirm = props => {
 
 	return (
 		<CSSTransition in={show} timeout={300} classNames="fade">
-			<div className="confirm">
+			<div className="confirm" onClick={e => e.stopPropagation()}>
 				<div className="confirm-wrapper confirm-zoom">
 					<div className="confirm-content">
 					<p className="text">{props.text}</p>

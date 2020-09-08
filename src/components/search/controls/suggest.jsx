@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef, useCallback, memo} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import classnames from 'classnames'
 import { search } from '../../../api/search'
 import { ERR_OK } from '../../../api/config'
 import { creatSong } from '../../../common/js/models/song'

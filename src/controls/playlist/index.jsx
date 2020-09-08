@@ -6,6 +6,8 @@ import classnames from 'classnames'
 import Scroll from '../../controls/scroll'
 import { setCurrentIndex, setCurrentSong, delSong } from '../../store/actions'
 import { playMode } from '../../common/js/config'
+import Confirm from '../../controls/confirm'
+import { clearList } from '../../store/actions'
 
 import './index.stylus'
 
@@ -50,9 +52,45 @@ const MusicListItemWithConnect = connect(
 	}
 })(memo(MusicListItem))
 
+const ListHeader = memo(props => {
+
+	const clearAll = useCallback(e => {
+		e.stopPropagation()
+		props.showConfirm()
+	}, [])
+
+	return (
+			<div className="list-header">
+				<h1 className="title">
+					<i className="icon">
+						<span className="text"></span>
+						<span className="clear" onClick={e => clearAll(e)}><i className="icon-clear" /></span>
+					</i>
+				</h1>
+			</div>
+	)
+})
+
+const CloseButton = memo(props => {
+	
+	const hidePlaylist = useCallback(e => {
+		e.stopPropagation()
+		props.hidePlaylist()
+	}, [])
+
+	return (
+		<div className="list-close" onClick={e => hidePlaylist(e)}>
+			<span>{props.text}</span>
+		</div>
+	)
+})
+
+
 const PlayList = props => {
 	
 	const [show, setShow] = useState(false)
+
+	const [showConfirm, setShowConfirm] = useState(false)
 
 	const scrollRef = useRef(null)
 
@@ -66,8 +104,7 @@ const PlayList = props => {
 		scrollToCurrent()
 	}, [props.currentSong.id])
 
-	const hidePlaylist = useCallback(e => {
-		e.stopPropagation()
+	const hidePlaylist = useCallback(() => {
 		props.hidePlayList()
 	}, [])
 
@@ -77,50 +114,68 @@ const PlayList = props => {
 		})
 		
 		setTimeout(() => {
+			!!scrollRef.current &&
 				scrollRef.current.scrollToElement(listRef.current.children[index], 300)
 		}, 200)
 	}
 
+	const onShowConfirm = useCallback(() => {
+		setShowConfirm(true)
+	}, [])
+
+	const confrimCancel = useCallback(() => {
+		setShowConfirm(false)
+	}, [])
+
+	const confirmOk = useCallback(() => {
+	 props.dispatch(clearList())
+		setShowConfirm(false)
+	}, [])
+
 	return (
-		<CSSTransition timeout={300} classNames="list-fade" in={show}>
-			<div className="playlist" onClick={e => hidePlaylist(e)}>
-				<div className="list-wrapper" onClick={e => {e.stopPropagation()}}>
-					<div className="list-header">
-						<h1 className="title">
-							<i className="icon">
-								<span className="text"></span>
-								<span className="clear"><i className="icon-clear"></i></span>
-							</i>
-						</h1>
-					</div>
-					<Scroll className="list-content" data={props.sequenceList} ref={scrollRef}>
-						<ul ref={listRef}>
-							{
-								props.sequenceList.map((item, index) => {
-									return (
-										<MusicListItemWithConnect 
-											key={index} 
-											item={item} 
-											index={index}
-											scrollToCurrent = {() => scrollToCurrent()}
-										/>
-									)
-								})
-							}
-						</ul>
-					</Scroll>
-					<div className="list-operate">
-						<div className="add">
-							<i className="icon-add"></i>
-							<span className="text">添加歌曲到队列</span>
+		<>
+			<CSSTransition timeout={300} classNames="list-fade" in={show}>
+				<div className="playlist" onClick={e => hidePlaylist(e)}>
+					<div className="list-wrapper" onClick={e => {e.stopPropagation()}}>
+						<ListHeader showConfirm={() => onShowConfirm()} />
+						<Scroll 
+							className="list-content" 
+							data={props.sequenceList} 
+							ref={scrollRef}>
+							<ul ref={listRef}>
+								{
+									props.sequenceList.map((item, index) => {
+										return (
+											<MusicListItemWithConnect 
+												key={index} 
+												item={item} 
+												index={index}
+												scrollToCurrent = {() => scrollToCurrent()}
+											/>
+										)
+									})
+								}
+							</ul>
+						</Scroll>
+						<div className="list-operate">
+							<div className="add">
+								<i className="icon-add"></i>
+								<span className="text">添加歌曲到队列</span>
+							</div>
 						</div>
-					</div>
-					<div className="list-close" onClick={e => hidePlaylist(e)}>
-						<span>关闭</span>
+				  	<CloseButton text="关闭" hidePlaylist={() => hidePlaylist()} />
 					</div>
 				</div>
-			</div>
-		</CSSTransition>
+			</CSSTransition>
+			{
+			  !!showConfirm &&
+				<Confirm 
+					text="确定删除所有的记录吗？"
+					show={showConfirm}
+					onClickCancel={() => confrimCancel()}
+					onClickOk={() => confirmOk()}/>
+			}
+		</>
 	)
 }
 

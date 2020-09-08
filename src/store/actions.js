@@ -30,6 +30,8 @@ export const SET_DEL_HISTORY_ALL = 'SET_DEL_HISTORY_ALL'
 
 export const SET_DEL_SONG = 'SET_DEL_SONG'
 
+export const SET_CLEAR_LIST = 'SET_CLEAR_LIST'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -245,5 +247,14 @@ export function delSong(song) {
 		dispatch(setSequenceList(sequenceList))
 		dispatch(setCurrentSong(playList[currentIndex]))
 	}
-	
+}
+
+export function clearList() {
+	return (dispatch, getState) => {
+		dispatch(setPlayList([]))
+		dispatch(setSequenceList([]))
+		dispatch(setCurrentIndex(-1))
+		dispatch(setPlayingState(false))
+		dispatch(setCurrentSong(null))
+	}
 }
