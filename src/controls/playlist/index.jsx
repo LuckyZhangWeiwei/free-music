@@ -66,7 +66,7 @@ const ListHeader = memo(props => {
 					<i className="icon">
 						<PlayMode />
 					</i>
-					<span className="text"></span>
+					<span className="text">{props.currentSongName}</span>
 					<span className="clear" onClick={e => clearAll(e)}><i className="icon-clear" /></span>
 				</h1>
 			</div>
@@ -150,7 +150,7 @@ const PlayList = props => {
 			<CSSTransition timeout={300} classNames="list-fade" in={show}>
 				<div className="playlist" onClick={e => hidePlaylist(e)}>
 					<div className="list-wrapper" onClick={e => {e.stopPropagation()}}>
-						<ListHeader showConfirm={() => onShowConfirm()} />
+						<ListHeader showConfirm={() => onShowConfirm()} currentSongName={props.currentSong.name} />
 						<Scroll 
 							className="list-content" 
 							data={props.sequenceList} 
