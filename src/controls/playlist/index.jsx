@@ -1,6 +1,6 @@
 import React, {memo, useEffect, useState, useRef, useCallback} from 'react'
 import { CSSTransition } from 'react-transition-group'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import classnames from 'classnames'
 import Scroll from '../../controls/scroll'
@@ -8,6 +8,7 @@ import { setCurrentIndex, setCurrentSong, delSong } from '../../store/actions'
 import { playMode } from '../../common/js/config'
 import Confirm from '../../controls/confirm'
 import { clearList } from '../../store/actions'
+import PlayMode from '../../controls/playmode'
 
 import './index.stylus'
 
@@ -63,9 +64,10 @@ const ListHeader = memo(props => {
 			<div className="list-header">
 				<h1 className="title">
 					<i className="icon">
-						<span className="text"></span>
-						<span className="clear" onClick={e => clearAll(e)}><i className="icon-clear" /></span>
+						<PlayMode />
 					</i>
+					<span className="text"></span>
+					<span className="clear" onClick={e => clearAll(e)}><i className="icon-clear" /></span>
 				</h1>
 			</div>
 	)

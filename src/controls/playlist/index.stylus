@@ -37,6 +37,8 @@
 					margin-right: 10px
 					font-size: 30px
 					color: $color-theme-d
+					.i-left
+						font-size 18px
 				.text
 					flex: 1
 					font-size: $font-size-medium

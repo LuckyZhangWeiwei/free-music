@@ -5,16 +5,15 @@ import animations from 'create-keyframe-animation'
 import classnames from 'classnames'
 import Lyric from 'lyric-parser'
 
-import { setFullScreen, setPlayList } from '../../store/actions'
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl, getLynic } from '../../common/js/models/song'
-import { setPlayingState, setCurrentIndex, setPlayMode, setCurrentSong } from '../../store/actions'
+import { setPlayingState, setCurrentIndex, setCurrentSong, setFullScreen } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
-import { shuffle } from '../../common/js/util'
 import Scroll from '../scroll'
 import PlayList from '../playlist'
+import PlayMode from '../../controls/playmode'
 
 
 import './index.stylus'
@@ -319,31 +318,6 @@ const Player = function(props) {
 		}
 	}, [])
 
-	const iconMode = useMemo(() => {
-		return props.playMode 
-		=== playMode.sequence 
-		? 
-		'icon-sequence' 
-		: props.playMode === playMode.loop 
-		? 
-		'icon-loop' : 'icon-random'
-	}, [props.playMode])
-
-	const changePlayMode = useCallback(() => {
-		const mode = (props.playMode + 1) % 3
-		props.dispatch(setPlayMode(mode))
-		let tempList = {}
-		Object.assign(tempList, props.sequenceList)
-		let array = Object.values(tempList)
-		let list = null
-		if (mode === playMode.random) {
-			list = shuffle(array)
-		} else {
-			list = array
-		}
-		props.dispatch(setPlayList(list))
-	}, [props.playMode, props.currentIndex])
-
 	const end = useCallback(() => {
 		if (props.playMode === playMode.loop) {
 			loop()
@@ -491,9 +465,7 @@ const Player = function(props) {
 							}
 						</div>
 						<div className="operators">
-							<div className="icon i-left"  onClick={e => { changePlayMode(e) }}>
-								<i className={iconMode}></i>
-							</div>
+							<PlayMode />
 							<div className={`icon i-left ${disableCls}`}>
 								<i className="icon-prev" onClick={e => prev(e)}></i>
 							</div>
