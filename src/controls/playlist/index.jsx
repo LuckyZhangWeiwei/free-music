@@ -9,6 +9,7 @@ import { playMode } from '../../common/js/config'
 import Confirm from '../../controls/confirm'
 import { clearList } from '../../store/actions'
 import PlayMode from '../../controls/playmode'
+import AddSong from '../../controls/add-song'
 
 import './index.stylus'
 
@@ -88,9 +89,15 @@ const CloseButton = memo(props => {
 })
 
 const ListOperater = memo(props => {
+	
+	const show = useCallback(e => {
+		e.stopPropagation()
+		props.showAddSong()
+	}, [])
+
 	return (
 		<div className="list-operate">
-			<div className="add">
+			<div className="add" onClick={e => show(e)}>
 				<i className="icon-add"></i>
 				<span className="text">{props.text}</span>
 			</div>
@@ -104,6 +111,8 @@ const PlayList = props => {
 	const [show, setShow] = useState(false)
 
 	const [showConfirm, setShowConfirm] = useState(false)
+
+	const [showAddSong, setShowAddSong] = useState(false)
 
 	const scrollRef = useRef(null)
 
@@ -145,6 +154,14 @@ const PlayList = props => {
 		setShowConfirm(false)
 	}, [])
 
+	const showAddSongLayer = useCallback(() => {
+		setShowAddSong(true)
+	}, [])
+
+	const closeAddSong = useCallback(() => {
+		setShowAddSong(false)
+	}, [])
+
 	return (
 		<>
 			<CSSTransition timeout={300} classNames="list-fade" in={show}>
@@ -170,7 +187,10 @@ const PlayList = props => {
 								}
 							</ul>
 						</Scroll>
-						<ListOperater text="添加歌曲到队列" />
+						<ListOperater 
+							text="添加歌曲到队列" 
+							showAddSong={() => {showAddSongLayer()}}
+						/>
 				  	<CloseButton text="关闭" hidePlaylist={() => hidePlaylist()} />
 					</div>
 				</div>
@@ -182,6 +202,10 @@ const PlayList = props => {
 					show={showConfirm}
 					onClickCancel={() => confrimCancel()}
 					onClickOk={() => confirmOk()}/>
+			}
+			{
+				!!showAddSong && 
+				<AddSong 	closeAddSong={() => closeAddSong()}	/>
 			}
 		</>
 	)
