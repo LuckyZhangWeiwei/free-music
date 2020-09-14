@@ -23,7 +23,7 @@ const transform = prefixStyle('transform')
 
 const transitionDuration = prefixStyle('transitionDuration')
 
-const Player = function(props) {
+const Player = props => {
 	const [show, setShow] = useState(false)
 
 	const [songReady, setSongReady] = useState(false)
@@ -39,6 +39,8 @@ const Player = function(props) {
 	const [playingLyric, setPlayingLyric] = useState('')
 
 	const [showPlayList, setShowPlayList] = useState(false)
+
+	const [lastAction, setLastAction] = useState(null)
 
 	const currentLineNumRef = useRef(-1)
 
@@ -69,16 +71,31 @@ const Player = function(props) {
 	useEffect(() => {
 		getSongUrl(props.currentSong.name || props.currentSong.songname)
 		.then(songUrl => {
-			const song = {
-				...props.currentSong,
-				url: songUrl
+			if (songUrl) {
+				const song = {
+					...props.currentSong,
+					url: songUrl
+				}
+				props.dispatch(setCurrentSong(song))
+				audioRef.current.play()
+			} else {
+				alert('music error, play next...')
+				if (props.playList.length === 1) {
+					loop()
+				} else {
+					let index = props.currentIndex + 1
+					if (index === props.playList.length) {
+						index = 0
+					}
+					props.dispatch(setCurrentIndex(index))
+					props.dispatch(setCurrentSong(props.playList[index]))
+					setSongReady(false)
+				}
 			}
-		  props.dispatch(setCurrentSong(song))
-			audioRef.current.play()
 		})
 	},
+	// [props.currentSong.id, props.currentIndex]
 	[props.currentSong.id] 
-	// [props.currentSong.url, props.currentSong.id]
 	)
 
 	useEffect(() => {
@@ -239,7 +256,9 @@ const Player = function(props) {
 		return num
 	}, [])
 
-	const next = useCallback(function(e) {
+	const next = useCallback(e => {
+		setLastAction('next')
+
 		if (!songReady) {
 			return
 		}
@@ -252,16 +271,16 @@ const Player = function(props) {
 				index = 0
 			}
 			props.dispatch(setCurrentIndex(index))
-			props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
 			props.dispatch(setCurrentSong(props.playList[index]))
 			setSongReady(false)
 		}
 	},
-	[props.currentIndex, songReady]
-	// [songReady]
+	[props.currentIndex, songReady, lastAction, props.currentSong.id]
 	)
 
-	const prev = useCallback(function(e) {
+	const prev = useCallback(e => {
+		setLastAction('prev')
+
 		if (!songReady) {
 			return
 		}
@@ -274,13 +293,11 @@ const Player = function(props) {
 				index = props.playList.length - 1
 			}
 			props.dispatch(setCurrentIndex(index))
-			props.dispatch(setCurrentSong(props.playList[props.currentIndex]))
-			// props.dispatch(setCurrentSong(props.playList[index]))
+			props.dispatch(setCurrentSong(props.playList[index]))
 			setSongReady(false)
 		}
 	}, 
-	[props.currentIndex, songReady]
-	// [songReady]
+	[props.currentIndex, songReady, lastAction, props.currentSong.id]
 	)
 
 	const ready = useCallback(() => {
