@@ -82,7 +82,6 @@ const Player = props => {
 				props.dispatch(setCurrentSong(song))
 				audioRef.current.play()
 			} else {
-				alert('music error, play next...')
 				if (props.playList.length === 1) {
 					loop()
 				} else {
