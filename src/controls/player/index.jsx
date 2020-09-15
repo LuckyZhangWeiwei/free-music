@@ -41,7 +41,9 @@ const Player = props => {
 
 	const [lastAction, setLastAction] = useState(null)
 
-	const currentLineNumRef = useRef(-1)
+	const [lyricLines, setLyricLines] = useState([])
+
+	const [currentLineNum, setCurrentLineNum] = useState(-1)
 
 	const cdWrapperRef = useRef()
 
@@ -49,15 +51,15 @@ const Player = props => {
 
 	const playingStateRef = useRef(props.playingState)
 
-	const lyricRef = useRef()
+	const lyricRef = useRef(null)
 
-	const lyricListRef = useRef()
+	const lyricListRef = useRef(null)
 
-	const lyricLineRef = useRef()
+	const lyricLineRef = useRef(null)
 
 	const touchRef = useRef({})
 
-	const middleLRef = useRef()
+	const middleLRef = useRef(null)
 
 	useEffect(() => {
 		setShow(true)
@@ -105,12 +107,13 @@ const Player = props => {
 				.then(res => {
 					lyricRef.current = new Lyric(res.lyric, handleLyric)
 					if (playingStateRef.current) {
+						setLyricLines(lyricRef.current.lines)
 						lyricRef.current.play()
 					}
 				}).catch(() => {
 					lyricRef.current = null
 					setPlayingLyric('')
-					currentLineNumRef.current = 0
+					setCurrentLineNum(0)
 				})
 		}, 1000)
 		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(0, 0, 0)`
@@ -121,7 +124,7 @@ const Player = props => {
 	const handleLyric = useCallback(({lineNum, txt}) => {
 		if (!props.sequenceList.length) return
 		
-		currentLineNumRef.current = lineNum
+		setCurrentLineNum(lineNum)
 		if (lineNum > 5) {
 			let lineEl = lyricLineRef.current.children[lineNum - 5]
 			lyricListRef.current.scrollToElement(lineEl, 1000)
@@ -142,7 +145,7 @@ const Player = props => {
 			playingStateRef.current = true
 			props.dispatch(setPlayingState(playingStateRef.current))
 		}
-		currentLineNumRef.current = 0
+		setCurrentLineNum(0)
 	}, [props.currentSong.id])
 
 	const close = useCallback(function() {
@@ -453,8 +456,8 @@ const Player = props => {
 						</div>
 						<PlayerLyric
 						 lyricListRef={lyricListRef}
-						 lyricRef={lyricRef}
-						 currentLineNumRef={currentLineNumRef}
+						 lyricLines = {lyricLines}
+						 currentLineNum={currentLineNum}
 						 lyricLineRef={lyricLineRef}
 						/>
 					</div>
