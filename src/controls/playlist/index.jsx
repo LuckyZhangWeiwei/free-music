@@ -164,7 +164,7 @@ const PlayList = props => {
 
 	return (
 		<>
-			<CSSTransition timeout={300} classNames="list-fade" in={show}>
+			<CSSTransition timeout={300} classNames="slideup" in={show}>
 				<div className="playlist" onClick={e => hidePlaylist(e)}>
 					<div className="list-wrapper" onClick={e => {e.stopPropagation()}}>
 						<ListHeader showConfirm={() => onShowConfirm()} currentSongName={props.currentSong.name} />

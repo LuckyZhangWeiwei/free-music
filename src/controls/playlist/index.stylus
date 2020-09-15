@@ -10,17 +10,19 @@
 	z-index: 200
 	opacity 0
 	background-color: $color-background-d
-	&.list-fade-enter-active, &.list-fade-leave-active
-		transition: opacity 0.3s
-		.list-wrapper
-			transition: all 0.3s
-	&.list-fade-enter, &.list-fade-leave-to
-		opacity: 0
+	&.slideup-enter
+		opacity 1
 		.list-wrapper
 			transform: translate3d(0, 100%, 0)
-	&.list-fade-enter-done
+	&.slideup-enter-active
+		opacity 1
+		.list-wrapper
+			transition: transform 0.3s
+			transform: translate3d(0, 0, 0)
+	&.slideup-enter-done
 		opacity 1 !important
-	&.list-fade-enter
+		.list-wrapper
+			opacity 1 !important
 	.list-wrapper
 		position: absolute
 		left: 0
