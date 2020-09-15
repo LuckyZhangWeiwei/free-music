@@ -2,19 +2,18 @@ import React, {memo, useState, useEffect, useRef, useCallback, useMemo} from 're
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
-import classnames from 'classnames'
 import Lyric from 'lyric-parser'
 
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl, getLynic } from '../../common/js/models/song'
 import { setPlayingState, setCurrentIndex, setCurrentSong, setFullScreen } from '../../store/actions'
 import ProgressBar from './../progress-bar'
-import ProgressCircle from './../progress-circle'
 import { playMode } from '../../common/js/config'
-import Scroll from '../scroll'
 import PlayList from '../playlist'
-import PlayMode from '../../controls/playmode'
-
+import MusicOperator from './operators'
+import MiniPlayer from './mini-player'
+import Cover from './player-conver'
+import PlayerLyric from './Lyric'
 
 import './index.stylus'
 import './index.css'
@@ -94,7 +93,6 @@ const Player = props => {
 			}
 		})
 	},
-	// [props.currentSong.id, props.currentIndex]
 	[props.currentSong.id] 
 	)
 
@@ -453,76 +451,44 @@ const Player = props => {
 								<div className="playing-lyric">{playingLyric}</div>
 							</div>
 						</div>
-						<Scroll className="middle-r" ref={lyricListRef} data={lyricRef.current && lyricRef.current.lines}>
-							<div className="lyric-wrapper" ref={lyricLineRef}>
-								{
-									lyricRef.current &&
-									lyricRef.current.lines.map((item,index) => {
-										return (
-											<p key={index} className={classnames('text', {'current': currentLineNumRef.current === index})}>{item.txt}</p>
-										)	
-									})
-								}
-							</div>
-						</Scroll>
+						<PlayerLyric
+						 lyricListRef={lyricListRef}
+						 lyricRef={lyricRef}
+						 currentLineNumRef={currentLineNumRef}
+						 lyricLineRef={lyricLineRef}
+						/>
 					</div>
 					<div className="bottom">
-						<div className="dot-wrapper">
-							<span className={classnames('dot', {'active': currentShow === 'cd'})}></span>
-							<span className={classnames('dot', {'active': currentShow === 'lyric'})}></span>
-						</div>
-						<div className="progress-wrapper">
-							<span className="time time-l">{formatTime(currentTime)}</span>
-							<div className="progress-bar-wrapper">
-								<ProgressBar percent={percentage} percentageChanged={ (value, isMoveAction) => {percentageChanged(value, isMoveAction)} } />
-							</div>
-							{
-								audioRef.current &&
-								<span className="time time-r">{formatTime(audioRef.current.duration)}</span>
-							}
-						</div>
+						<Cover 
+							currentShow={currentShow}
+							formatTime={formatTime}
+							currentTime={currentTime}
+							audioRef={audioRef}
+						>
+							<ProgressBar percent={percentage} percentageChanged={ (value, isMoveAction) => {percentageChanged(value, isMoveAction)} } />
+						</Cover>
 						<div className="operators">
-							<PlayMode />
-							<div className={`icon i-left ${disableCls}`}>
-								<i className="icon-prev" onClick={e => prev(e)}></i>
-							</div>
-							<div className={`icon i-center ${disableCls}`}>
-								<i className={ playIcon } onClick={e => { togglePlaying(e) }}></i>
-							</div>
-							<div className={`icon i-right ${disableCls}`}>
-								<i className="icon-next" onClick={e => { next(e)}}></i>
-							</div>
-							<div className="icon i-right">
-								<i className="icon icon-not-favorite"></i>
-							</div>
+							<MusicOperator
+								disableCls={disableCls}
+								playIcon={playIcon}
+								prev={prev}
+								next={next}
+								togglePlaying={togglePlaying}
+							/>
 						</div>
 					</div>
 				</div>
 			</CSSTransition>
 			<CSSTransition timeout={200} in={!show} classNames="mini">
-				<div className="mini-player" onClick={() => open()}>
-					<div className="icon">
-						<img width="40" height="40" src={props.currentSong.image} className={cdCls} />
-					</div>
-					<div className="text">
-						<h2 className="name">{props.currentSong.name}</h2>
-						<p className="desc">{props.currentSong.singer}</p>
-					</div>
-					<div className="control" 
-						onClick={
-							e => {
-								e.stopPropagation()
-								togglePlaying() 
-							}
-						}>
-							<ProgressCircle radius={32} percentage={percentage}>
-								<i className={`icon-mini ${playMniIcon}`} />
-							</ProgressCircle>
-					</div>
-					<div className="control" onClick={e => {e.stopPropagation(); setShowPlayList(!showPlayList)}}>
-						<i className="icon-playlist" />
-					</div>
-				</div>
+				<MiniPlayer
+					open={open}
+					cdCls={cdCls}
+					togglePlaying={togglePlaying}
+					percentage={percentage}
+					playMniIcon={playMniIcon}
+					setShowPlayList={setShowPlayList}
+					showPlayList={showPlayList}
+				/>
 			</CSSTransition>
 			{
 				!!showPlayList &&
