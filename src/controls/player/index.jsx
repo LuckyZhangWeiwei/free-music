@@ -14,6 +14,8 @@ import MusicOperator from './operators'
 import MiniPlayer from './mini-player'
 import Cover from './player-conver'
 import PlayerLyric from './Lyric'
+import CD from './CD'
+import Top from './top'
 
 import './index.stylus'
 import './index.css'
@@ -433,27 +435,19 @@ const Player = props => {
 						<img width="100%" height="100%" src={props.currentSong.image} alt="" />
 					</div>
 					<div className="top">
-						<div className="back" onClick={() => close()}>
-							<i className="icon-back"></i>
-						</div>
-						<h1 className="title">{props.currentSong.name}</h1>
-						<h2 className="subtitle">{props.currentSong.singer}</h2>
+						<Top close={close} />
 					</div>
 					<div className="middle" 
 						onTouchStart={(e) => middleTouchStart(e)}
 						onTouchMove={(e) => middleTouchMove(e)}
 						onTouchEnd={(e) => middleTouchEnd(e)}
 						>
-						<div className="middle-l" ref={middleLRef}>
-							<div className="cd-wrapper" ref={cdWrapperRef}>
-								<div className={`cd ${cdCls}`}>
-									<img className="image" src={props.currentSong.image} alt="" />
-								</div>
-							</div>
-							<div className="playing-lyric-wrapper">
-								<div className="playing-lyric">{playingLyric}</div>
-							</div>
-						</div>
+						<CD
+							middleLRef={middleLRef}
+							cdWrapperRef={cdWrapperRef}
+							cdCls={cdCls}
+							playingLyric={playingLyric}
+						/>
 						<PlayerLyric
 						 lyricListRef={lyricListRef}
 						 lyricLines = {lyricLines}
@@ -495,9 +489,8 @@ const Player = props => {
 			</CSSTransition>
 			{
 				!!showPlayList &&
-				<PlayList hidePlayList = {() => {setShowPlayList(!showPlayList)}}></PlayList>
+				<PlayList hidePlayList = {() => setShowPlayList(!showPlayList)}></PlayList>
 			}
-			
 			<audio 
 				src={props.currentSong.url} 
 				ref={audioRef} 
