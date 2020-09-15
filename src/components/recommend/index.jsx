@@ -43,7 +43,7 @@ function Recommend(props) {
 
 	/********************************************* */
 	useEffect(() => {
-		if (!props.playList.length) {
+		if (props.currentIndex === -1) {
 			return
 		}
 		recommendlistRef.current.style['margin-bottom'] = '60px'
