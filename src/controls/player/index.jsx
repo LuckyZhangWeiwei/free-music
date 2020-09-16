@@ -128,6 +128,11 @@ const Player = props => {
 		middleLRef.current.style.opacity = 1
 	}, [props.currentSong.id])
 
+	useEffect(() => {
+		const audio = audioRef.current
+		props.playingState ? audio.play() : audio.pause()
+	}, [props.playingState])
+
 	const handleLyric = useCallback(({lineNum, txt}) => {
 		if (!props.sequenceList.length) return
 		
@@ -322,7 +327,7 @@ const Player = props => {
 		})
 	}
 
-	const onError = () => {
+	const onError = () => {  // todo - check state
 		if (lastPreOrNextAction === 'next') {
 				dispatch({
 					type: 'set_lastPre_or_next_action',
@@ -368,10 +373,7 @@ const Player = props => {
 		props.dispatch(setPlayingState(false))
 	}
 
-	useEffect(() => {
-		const audio = audioRef.current
-		props.playingState ? audio.play() : audio.pause()
-	}, [props.playingState])
+
 
 	const updateTime = useCallback((e) => {
 		let currentTime = e.target.currentTime
