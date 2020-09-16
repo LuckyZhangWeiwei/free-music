@@ -275,7 +275,7 @@ const Player = props => {
 			return
 		}
 
-		if (props.playList.length === 1) {
+		if (props.playList.length === 1 || props.playMode === playMode.loop) {
 			loop()
 		} else {
 			let index = props.currentIndex + 1
@@ -286,7 +286,7 @@ const Player = props => {
 			props.dispatch(setCurrentSong(props.playList[index]))
 		}
 	},
-	[songReady, props.currentSong.id]
+	[songReady, props.currentSong.id, props.playMode]
 	)
 
 	const prev = useCallback(() => {
@@ -306,7 +306,7 @@ const Player = props => {
 			return
 		}
 
-		if (props.playList.length === 1) {
+		if (props.playList.length === 1 || props.playMode === playMode.loop) {
 			loop()
 		} else {
 			let index = props.currentIndex - 1
@@ -317,7 +317,7 @@ const Player = props => {
 			props.dispatch(setCurrentSong(props.playList[index]))
 		}
 	}, 
-	[songReady, props.currentSong.id]
+	[songReady, props.currentSong.id, props.playMode]
 	)
 
 	const onCanPlay = () => {
