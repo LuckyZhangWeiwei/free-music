@@ -5,8 +5,14 @@ const Cover = props => {
 	return (
 		<>
 			<div className="dot-wrapper">
-				<span className={classnames('dot', {'active': props.currentShow === 'cd'})}></span>
-				<span className={classnames('dot', {'active': props.currentShow === 'lyric'})}></span>
+				{
+					props.lyricLines.length &&
+					<>
+						<span className={classnames('dot', {'active': props.currentShow === 'cd'})}></span>
+						<span className={classnames('dot', {'active': props.currentShow === 'lyric'})}></span>
+					</>
+				}
+				
 			</div>
 			<div className="progress-wrapper">
 				<span className="time time-l">{props.formatTime(props.currentTime)}</span>

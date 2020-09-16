@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, useRef, useCallback, useMemo} from 'react'
+import React, {memo, useState, useEffect, useRef, useCallback, useMemo, useReducer} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -9,6 +9,8 @@ import { getSongUrl, getLynic } from '../../common/js/models/song'
 import { setPlayingState, setCurrentIndex, setCurrentSong, setFullScreen } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import { playMode } from '../../common/js/config'
+import { formatTime } from '../../common/js/util'
+import { initialPlayerState, playerReducer } from './reducer/initState'
 import PlayList from '../playlist'
 import MusicOperator from './operators'
 import MiniPlayer from './mini-player'
@@ -25,31 +27,25 @@ const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 
 const Player = props => {
-	const [show, setShow] = useState(false)
+	const [state, dispatch] = useReducer(playerReducer, initialPlayerState)
 
-	const [songReady, setSongReady] = useState(false)
+	const {
+		showNormalPlayer,
+		showPlayList,
+		songReady,
+		currentTime,
+		percentage,
+		currentShow,
+		initTouch,
+		currentPlayingLyric,
+		currentLineNum,
+		lyricLines,
+		lastPreOrNextAction
+	} = state
 
-	const [currentTime, setCurrentTime] = useState(0)
+	const cdWrapperRef = useRef(null)
 
-	const [percentage, setPercentage] = useState(0)
-
-	const [currentShow, setCurrentShow] = useState('cd')
-
-	const [initTouch, setInitTouch] = useState(false)
-
-	const [playingLyric, setPlayingLyric] = useState('')
-
-	const [showPlayList, setShowPlayList] = useState(false)
-
-	const [lastAction, setLastAction] = useState(null)
-
-	const [lyricLines, setLyricLines] = useState([])
-
-	const [currentLineNum, setCurrentLineNum] = useState(-1)
-
-	const cdWrapperRef = useRef()
-
-	const audioRef = useRef()
+	const audioRef = useRef(null)
 
 	const playingStateRef = useRef(props.playingState)
 
@@ -64,40 +60,18 @@ const Player = props => {
 	const middleLRef = useRef(null)
 
 	useEffect(() => {
-		setShow(true)
-	}, [])
-
-	useEffect(() => {
-		setShow(props.isFullScreen)
-	}, [props.isFullScreen])
-
-	useEffect(() => {
 		getSongUrl(props.currentSong.name || props.currentSong.songname)
-		.then(songUrl => {
-			if (songUrl) {
-				const song = {
-					...props.currentSong,
-					url: songUrl
-				}
-				props.dispatch(setCurrentSong(song))
-				audioRef.current.play()
-			} else {
-				if (props.playList.length === 1) {
-					loop()
-				} else {
-					let index = props.currentIndex + 1
-					if (index === props.playList.length) {
-						index = 0
-					}
-					props.dispatch(setCurrentIndex(index))
-					props.dispatch(setCurrentSong(props.playList[index]))
-					setSongReady(false)
-				}
+		.then(playerUrl => {
+			const url = !!playerUrl ? playerUrl : ''
+			const song = {
+				...props.currentSong,
+				url
 			}
+			// update current song player url
+			props.dispatch(setCurrentSong(song))
+			audioRef.current.play()
 		})
-	},
-	[props.currentSong.id] 
-	)
+	}, [props.currentSong.id])
 
 	useEffect(() => {
 		if (lyricRef.current) {
@@ -108,56 +82,80 @@ const Player = props => {
 				.then(res => {
 					lyricRef.current = new Lyric(res.lyric, handleLyric)
 					if (playingStateRef.current) {
-						setLyricLines(lyricRef.current.lines)
+						dispatch({
+							type: 'set_lyricLines',
+							payload: lyricRef.current.lines
+						})
 						lyricRef.current.play()
 					}
 				}).catch(() => {
 					lyricRef.current = null
-					setPlayingLyric('')
-					setCurrentLineNum(0)
+					dispatch({
+						type: 'set_currentPlayingLyric',
+						payload: ''
+					})
+
+					dispatch({
+						type: 'set_currentLineNum',
+						payload: 0
+					})
 				})
 		}, 1000)
-		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(0, 0, 0)`
+		if (lyricListRef.current) {
+			lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(0, 0, 0)`
+			lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
+		}
 		middleLRef.current.style.opacity = 1
-		lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
 	}, [props.currentSong.id])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
 		if (!props.sequenceList.length) return
 		
-		setCurrentLineNum(lineNum)
+		dispatch({
+			type: 'set_currentLineNum',
+			payload: lineNum
+		})
 		if (lineNum > 5) {
 			let lineEl = lyricLineRef.current.children[lineNum - 5]
 			lyricListRef.current.scrollToElement(lineEl, 1000)
 		} else {
 			lyricListRef.current.scrollTo(0, 0, 1000)
 		}
-		setPlayingLyric(txt)
-		setCurrentShow('cd')
+		dispatch({
+			type: 'set_currentPlayingLyric',
+			payload: txt
+		})
+
+		dispatch({
+			type: 'set_current_show',
+			payload: 'cd'
+		})
 	}, [props.currentSong.id])
 
 	useEffect(() => {
-		const audio = audioRef.current
-		playingStateRef.current ? audio.play() : audio.pause()	 
-	}, [playingStateRef.current])
-
-	useEffect(() => {
-		if (!playingStateRef.current) {
-			playingStateRef.current = true
-			props.dispatch(setPlayingState(playingStateRef.current))
-		}
-		setCurrentLineNum(0)
+		dispatch({
+			type: 'set_currentLineNum',
+			payload: 0
+		})
 	}, [props.currentSong.id])
 
-	const close = useCallback(function() {
+	const close = () => {
 		props.dispatch(setFullScreen(false))
-		setShow(false)
-	}, [props.isFullScreen]) 
 
-	const open = useCallback(function() {
+		dispatch({
+			type: 'set_show_normal_player',
+			payload: false
+		})
+	}
+
+	const open = () => {
 		props.dispatch(setFullScreen(true))
-		setShow(true)
-	}, [props.isFullScreen])
+
+		dispatch({
+			type: 'set_show_normal_player',
+			payload: true
+		})
+	}
 
 	const playIcon = useMemo(() => {
 		return songReady && props.playingState ? 'icon-pause' : 'icon-play'
@@ -225,8 +223,8 @@ const Player = props => {
 		}
 	}, [])
 
-	const togglePlaying = useCallback((e) => {
-	  e && e.stopPropagation()
+	const togglePlaying = useCallback(e => {
+	  e.stopPropagation()
 		playingStateRef.current = !playingStateRef.current
 		props.dispatch(setPlayingState(playingStateRef.current))
 		if (lyricRef.current) {
@@ -242,24 +240,18 @@ const Player = props => {
 		return songReady ? '' : 'disable'
 	}, [songReady])
 
-	const formatTime = useCallback(time => {
-	  let	interval = time | 0
-		const minute = interval / 60 | 0
-		const second = _pad(interval % 60)
-		return `${minute}:${second}`
-	}, [])
+	const next = useCallback(() => {
+		dispatch({
+			type: 'set_lastPre_or_next_action',
+			payload: 'next'
+		})
 
-	const _pad = useCallback ((num, n=2) => {
-		let len = num.toString().length
-		while(len < n) {
-			num = '0' + num
-			len ++
+		if (!!props.currentSong.url) {
+			dispatch({
+				type: 'set_song_ready',
+				payload: false
+			})
 		}
-		return num
-	}, [])
-
-	const next = useCallback(e => {
-		setLastAction('next')
 
 		if (!songReady) {
 			return
@@ -274,14 +266,23 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-			setSongReady(false)
 		}
 	},
-	[props.currentIndex, songReady, lastAction, props.currentSong.id]
+	[songReady, props.currentSong.id]
 	)
 
-	const prev = useCallback(e => {
-		setLastAction('prev')
+	const prev = useCallback(() => {
+		dispatch({
+			type: 'set_lastPre_or_next_action',
+			payload: 'prev'
+		})
+
+		if (!!props.currentSong.url) {
+				dispatch({
+					type: 'set_song_ready',
+					payload: false
+				})
+		}
 
 		if (!songReady) {
 			return
@@ -296,25 +297,80 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-			setSongReady(false)
 		}
 	}, 
-	[props.currentIndex, songReady, lastAction, props.currentSong.id]
+	[songReady, props.currentSong.id]
 	)
 
-	const ready = useCallback(() => {
-		setSongReady(true)
-	}, [songReady])
+	const onCanPlay = () => {
+		dispatch({
+			type: 'set_song_ready',
+			payload: true
+		})
+	}
 
-	const error = useCallback(() => {
-		setSongReady(true)
-	}, [songReady])
+	const onError = () => {
+		if (lastPreOrNextAction === 'next') {
+				dispatch({
+					type: 'set_lastPre_or_next_action',
+					payload: 'next'
+				})
+
+				if (props.playList.length === 1) {
+					loop()
+				} else {
+					let index = props.currentIndex + 1
+					if (index === props.playList.length) {
+						index = 0
+					}
+					props.dispatch(setCurrentIndex(index))
+					props.dispatch(setCurrentSong(props.playList[index]))
+					dispatch({
+						type: 'set_song_ready',
+						payload: false
+					})
+				}
+		} else {
+			if (props.playList.length === 1) {
+				loop()
+			} else {
+				let index = props.currentIndex - 1
+				if (index < 0) {
+					index = props.playList.length - 1
+				}
+				props.dispatch(setCurrentIndex(index))
+				props.dispatch(setCurrentSong(props.playList[index]))
+				dispatch({
+					type: 'set_song_ready',
+					payload: false
+				})
+			}
+		}
+	}
+
+	const	onPlay = () => {
+		props.dispatch(setPlayingState(true))
+	}
+	const	onPause = () => {
+		props.dispatch(setPlayingState(false))
+	}
+
+	useEffect(() => {
+		const audio = audioRef.current
+		props.playingState ? audio.play() : audio.pause()
+	}, [props.playingState])
 
 	const updateTime = useCallback((e) => {
 		let currentTime = e.target.currentTime
-		setCurrentTime(currentTime)
+		dispatch({
+			type: 'set_currenttime',
+			payload: currentTime
+		})
 	  if(audioRef.current.duration) {
-			setPercentage(currentTime / audioRef.current.duration)
+			dispatch({
+				type: 'set_percentage',
+				payload: currentTime / audioRef.current.duration
+			})
 		} 
 	}, [])
 
@@ -322,14 +378,13 @@ const Player = props => {
 	  if (audioRef.current.duration) {
 			audioRef.current.currentTime = value * audioRef.current.duration
 		}
-
 		if (isMoveAction) {
-			playingStateRef.current = false
-			props.dispatch(setPlayingState(playingStateRef.current))
-		} else {
-			if (!playingStateRef.current) {
-				togglePlaying()
+			if (props.playingState) {
+				props.dispatch(setPlayingState(false))
 			}
+		} else {
+			//dragmove end
+			props.dispatch(setPlayingState(true))
 		}
 
 		if (lyricRef.current) {
@@ -355,8 +410,12 @@ const Player = props => {
 	}, [])
 
 	const middleTouchStart = useCallback((e) => {
-		if (!initTouch)
-			setInitTouch(true)
+		if (!initTouch) {
+			dispatch({
+				type: 'set_init_touch',
+				payload: true
+			})
+		}
 			const touch = e.touches[0]
 			touchRef.current.startX = touch.pageX
 			touchRef.current.startY = touch.pageY
@@ -396,7 +455,10 @@ const Player = props => {
 			if (touchRef.current.percentage > 0.1) {
 				offsetWidth = -window.innerWidth
 				offsetOpacity = 0
-				setCurrentShow('lyric')
+				dispatch({
+					type: 'set_current_show',
+					payload: 'lyric'
+				})
 			} else {
 				offsetWidth = 0
 				offsetOpacity = 1
@@ -405,7 +467,10 @@ const Player = props => {
 			if (touchRef.current.percentage < 0.9) {
 				offsetWidth = 0
 				offsetOpacity = 1
-				setCurrentShow('cd')
+					dispatch({
+					type: 'set_current_show',
+					payload: 'cd'
+				})
 			} else {
 				offsetWidth = -window.innerWidth
 				offsetOpacity = 0
@@ -415,20 +480,31 @@ const Player = props => {
 		lyricListRef.current.wrapperRef.current.style[transitionDuration] = '300ms'
 		middleLRef.current.style.opacity = offsetOpacity
 		middleLRef.current.style[transitionDuration] = '300ms'
-		setInitTouch(false)
+		dispatch({
+			type: 'set_init_touch',
+			payload: false
+		})
 	}, [initTouch, currentShow])
+
+	const setShowPlayList = useCallback(payload => {
+		dispatch({
+			type: 'set_show_playlist',
+			payload
+		})
+	}, [])
 
 	return (
 		<div className="player">
 			<CSSTransition 
 				timeout={400} 
-				in={show} 
+				in={showNormalPlayer} 
 				classNames="normal"
 				onEnter={() => onEnter()}
 				onEntering={() => onEntering()}
 				onEntered={() => onEntered()}
 				onExiting={() => onExiting()}
-				onExited={() => onExited()}>
+				onExited={() => onExited()}
+				>
 				<div className="normal-player">
 					<div className="background">
 						<img width="100%" height="100%" src={props.currentSong.image} alt="" />
@@ -445,7 +521,7 @@ const Player = props => {
 							middleLRef={middleLRef}
 							cdWrapperRef={cdWrapperRef}
 							cdCls={cdCls}
-							playingLyric={playingLyric}
+							playingLyric={currentPlayingLyric}
 						/>
 						<PlayerLyric
 						 lyricListRef={lyricListRef}
@@ -458,10 +534,13 @@ const Player = props => {
 						<Cover 
 							currentShow={currentShow}
 							formatTime={formatTime}
+							lyricLines = {lyricLines}
 							currentTime={currentTime}
 							audioRef={audioRef}
 						>
-							<ProgressBar percent={percentage} percentageChanged={ (value, isMoveAction) => {percentageChanged(value, isMoveAction)} } />
+							<ProgressBar 
+								percent={percentage} 
+								percentageChanged={ (value, isMoveAction) => percentageChanged(value, isMoveAction) } />
 						</Cover>
 						<div className="operators">
 							<MusicOperator
@@ -475,28 +554,36 @@ const Player = props => {
 					</div>
 				</div>
 			</CSSTransition>
-			<CSSTransition timeout={200} in={!show} classNames="mini">
-				<MiniPlayer
-					open={open}
-					cdCls={cdCls}
-					togglePlaying={togglePlaying}
-					percentage={percentage}
-					playMniIcon={playMniIcon}
-					setShowPlayList={setShowPlayList}
-					showPlayList={showPlayList}
-				/>
-			</CSSTransition>
+			{
+				!showNormalPlayer &&
+					<CSSTransition timeout={200} in={!showNormalPlayer} classNames="mini">
+						<MiniPlayer
+							open={open}
+							cdCls={cdCls}
+							togglePlaying={togglePlaying}
+							percentage={percentage}
+							playMniIcon={playMniIcon}
+							setShowPlayList={setShowPlayList}
+							showPlayList={showPlayList}
+						/>
+					</CSSTransition>
+			}
 			{
 				!!showPlayList &&
-				<PlayList hidePlayList = {() => setShowPlayList(!showPlayList)}></PlayList>
+				<PlayList 
+					hidePlayList = {() => setShowPlayList(!showPlayList)} 
+				/>
 			}
 			<audio 
 				src={props.currentSong.url} 
-				ref={audioRef} 
-				onCanPlay={() => ready()} 
-				onError={() => error()}
+				ref={audioRef}
+				onCanPlay={() => onCanPlay()} 
+				onError={() => onError()}
 				onTimeUpdate={e => updateTime(e)}
-				onEnded={()=>{end()}} />
+				onEnded={() => end()}
+				onPlay={() => onPlay()}
+				onPause={() => onPause()}
+			/>
 		</div>
 	)
 }

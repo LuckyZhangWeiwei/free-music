@@ -3,7 +3,9 @@ import classnames from 'classnames'
 import Scroll from './../../scroll'
 
 const PlayerLyric = props => {
-	return (
+	
+	if (props.lyricLines.length) {
+		return (
 			<Scroll className="middle-r"
 				ref={props.lyricListRef} 
 				data={props.lyricLines && props.lyricLines}
@@ -20,7 +22,11 @@ const PlayerLyric = props => {
 					}
 				</div>
 			</Scroll>
-	)
+		)
+	} else {
+	 return	<></>
+	}
+	
 }
 
 export default memo(PlayerLyric, ((preProps, nextProps) => {
