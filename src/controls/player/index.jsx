@@ -47,8 +47,6 @@ const Player = props => {
 
 	const audioRef = useRef(null)
 
-	const playingStateRef = useRef(props.playingState)
-
 	const lyricRef = useRef(null)
 
 	const lyricListRef = useRef(null)
@@ -80,14 +78,30 @@ const Player = props => {
 		setTimeout(() => {
 				getLynic(props.currentSong.name || props.currentSong.songname)
 				.then(res => {
-					lyricRef.current = new Lyric(res.lyric, handleLyric)
-					if (playingStateRef.current) {
-						dispatch({
-							type: 'set_lyricLines',
-							payload: lyricRef.current.lines
-						})
-						lyricRef.current.play()
+					if (res) {
+						lyricRef.current = new Lyric(res.lyric, handleLyric)
+						if (props.playingState) {
+							dispatch({
+								type: 'set_lyricLines',
+								payload: lyricRef.current.lines
+							})
+							lyricRef.current.play()
+						}
+					} else {
+							dispatch({
+								type: 'set_lyricLines',
+								payload: []
+							})
+							dispatch({
+								type: 'set_currentPlayingLyric',
+								payload: ''
+							})
+							dispatch({
+								type: 'set_currentLineNum',
+								payload: 0
+							})
 					}
+				
 				}).catch(() => {
 					lyricRef.current = null
 					dispatch({
@@ -100,7 +114,7 @@ const Player = props => {
 						payload: 0
 					})
 				})
-		}, 1000)
+		}, 300)
 		if (lyricListRef.current) {
 			lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(0, 0, 0)`
 			lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
@@ -116,9 +130,11 @@ const Player = props => {
 			payload: lineNum
 		})
 		if (lineNum > 5) {
-			let lineEl = lyricLineRef.current.children[lineNum - 5]
+			let lineEl = !!lyricLineRef.current && lyricLineRef.current.children[lineNum - 5]
+		  !!lyricListRef.current &&	!!lineEl &&
 			lyricListRef.current.scrollToElement(lineEl, 1000)
 		} else {
+			!!lyricListRef.current &&
 			lyricListRef.current.scrollTo(0, 0, 1000)
 		}
 		dispatch({
@@ -223,14 +239,12 @@ const Player = props => {
 		}
 	}, [])
 
-	const togglePlaying = useCallback(e => {
-	  e.stopPropagation()
-		playingStateRef.current = !playingStateRef.current
-		props.dispatch(setPlayingState(playingStateRef.current))
+	const togglePlaying = useCallback(() => {
+		props.dispatch(setPlayingState(!props.playingState))
 		if (lyricRef.current) {
 			lyricRef.current.togglePlay()
 		}
-	}, [])
+	}, [props.playingState])
 
 	const cdCls = useMemo(() => {
 		return props.playingState ? 'play' : 'play pause'
@@ -410,6 +424,9 @@ const Player = props => {
 	}, [])
 
 	const middleTouchStart = useCallback((e) => {
+		if (!lyricLines.length) {
+			return
+		}
 		if (!initTouch) {
 			dispatch({
 				type: 'set_init_touch',
@@ -419,13 +436,16 @@ const Player = props => {
 			const touch = e.touches[0]
 			touchRef.current.startX = touch.pageX
 			touchRef.current.startY = touch.pageY
-	}, [initTouch, currentShow])
+	}, [initTouch, currentShow, lyricLines])
 
-	const middleTouchMove = useCallback((e) => {
+	const middleTouchMove = useCallback(e => {
 		if (!touchRef.current) {
 			return
 		}
 		if (!initTouch) {
+			return
+		}
+		if (!lyricLines.length) {
 			return
 		}
 		const touch = e.touches[0]
@@ -439,14 +459,19 @@ const Player = props => {
 		const left = currentShow === 'cd' ? 0 : -window.innerWidth
 		const offsetWidth = Math.min(Math.max(-window.innerWidth, left + deltaX), 0)
 		touchRef.current.percentage = Math.abs(offsetWidth / window.innerWidth)
-		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
-		lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
+		if (lyricListRef.current) {
+			lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
+			lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
+		}
 		middleLRef.current.style.opacity = 1 - touchRef.current.percentage
 		middleLRef.current.style[transitionDuration] = 0
-	}, [initTouch, currentShow])
+	}, [initTouch, currentShow, lyricLines])
 
 	const middleTouchEnd = useCallback((e) => {
 		if (!touchRef.current.shouldSlide) {
+			return
+		}
+		if (!lyricLines.length) {
 			return
 		}
 		let offsetWidth
@@ -476,8 +501,10 @@ const Player = props => {
 				offsetOpacity = 0
 			}
 		}
-		lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
-		lyricListRef.current.wrapperRef.current.style[transitionDuration] = '300ms'
+		if (lyricListRef.current) {
+			lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
+			lyricListRef.current.wrapperRef.current.style[transitionDuration] = '300ms'
+		}
 		middleLRef.current.style.opacity = offsetOpacity
 		middleLRef.current.style[transitionDuration] = '300ms'
 		dispatch({

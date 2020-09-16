@@ -32,7 +32,7 @@ const playerReducer = (state, action) => {
 		case 'set_show_playlist':
 			return {...state, showPlayList: payload}
 		case 'set_lyricLines':
-			return {...state, lyricLines: payload}
+			return {...state, lyricLines: [...payload]}
 		case 'set_currentPlayingLyric':
 			return {...state, currentPlayingLyric: payload}
 		case 'set_currentLineNum':
