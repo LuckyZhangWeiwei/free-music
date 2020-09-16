@@ -258,37 +258,6 @@ const Player = props => {
 		return songReady ? '' : 'disable'
 	}, [songReady])
 
-	const next = useCallback(() => {
-		dispatch({
-			type: 'set_lastPre_or_next_action',
-			payload: 'next'
-		})
-
-		if (!!props.currentSong.url) {
-			dispatch({
-				type: 'set_song_ready',
-				payload: false
-			})
-		}
-
-		if (!songReady) {
-			return
-		}
-
-		if (props.playList.length === 1 || props.playMode === playMode.loop) {
-			loop()
-		} else {
-			let index = props.currentIndex + 1
-			if (index === props.playList.length) {
-				index = 0
-			}
-			props.dispatch(setCurrentIndex(index))
-			props.dispatch(setCurrentSong(props.playList[index]))
-		}
-	},
-	[songReady, props.currentSong.id, props.playMode]
-	)
-
 	const prev = useCallback(() => {
 		dispatch({
 			type: 'set_lastPre_or_next_action',
@@ -312,6 +281,38 @@ const Player = props => {
 			let index = props.currentIndex - 1
 			if (index < 0) {
 				index = props.playList.length - 1
+			}
+			props.dispatch(setCurrentIndex(index))
+			props.dispatch(setCurrentSong(props.playList[index]))
+		}
+	}, 
+	[songReady, props.currentSong.id, props.playMode]
+	)
+	const next = useCallback(() => {
+		dispatch({
+			type: 'set_lastPre_or_next_action',
+			payload: 'next'
+		})
+
+		if (!!props.currentSong.url) {
+			dispatch({
+				type: 'set_song_ready',
+				payload: false
+			})
+		}
+
+		if (!songReady) {
+			return
+		}
+
+		if (props.playList.length === 1 || props.playMode === playMode.loop) {
+			loop()
+		} else {
+			console.log(props.playList)
+			console.log(props.currentSong)
+			let index = props.currentIndex + 1
+			if (index === props.playList.length) {
+				index = 0
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
@@ -373,8 +374,6 @@ const Player = props => {
 		props.dispatch(setPlayingState(false))
 	}
 
-
-
 	const updateTime = useCallback((e) => {
 		let currentTime = e.target.currentTime
 		dispatch({
@@ -413,7 +412,7 @@ const Player = props => {
 		} else {
 			next()
 		}
-	}, [props.playMode, songReady])
+	}, [props.playMode, songReady, props.currentSong.id])
 
 	const loop = useCallback(() => {
 		audioRef.current.currentTime = 0
