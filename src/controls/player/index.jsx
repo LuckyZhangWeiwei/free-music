@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect, useRef, useCallback, useMemo, useReducer} from 'react'
+import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -85,6 +85,10 @@ const Player = props => {
 								type: 'set_lyricLines',
 								payload: lyricRef.current.lines
 							})
+							dispatch({
+								type: 'set_currentLineNum',
+								payload: 0
+							})
 							lyricRef.current.play()
 						}
 					} else {
@@ -101,7 +105,9 @@ const Player = props => {
 								payload: 0
 							})
 					}
-				
+				!!lyricListRef.current &&
+					lyricListRef.current.scrollTo(0, 0, 1000)
+
 				}).catch(() => {
 					lyricRef.current = null
 					dispatch({
@@ -145,13 +151,6 @@ const Player = props => {
 		dispatch({
 			type: 'set_current_show',
 			payload: 'cd'
-		})
-	}, [props.currentSong.id])
-
-	useEffect(() => {
-		dispatch({
-			type: 'set_currentLineNum',
-			payload: 0
 		})
 	}, [props.currentSong.id])
 
