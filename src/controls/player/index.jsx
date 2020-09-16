@@ -308,8 +308,6 @@ const Player = props => {
 		if (props.playList.length === 1 || props.playMode === playMode.loop) {
 			loop()
 		} else {
-			console.log(props.playList)
-			console.log(props.currentSong)
 			let index = props.currentIndex + 1
 			if (index === props.playList.length) {
 				index = 0
