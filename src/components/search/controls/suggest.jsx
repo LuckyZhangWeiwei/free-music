@@ -86,6 +86,7 @@ const Suggest = props => {
 	const [pageObj, setPageObj] = useState({})
 
 	useEffect(() => {
+		if (!props.query) return
 		searchSong(true)
 	}, [props.query])
 
@@ -127,7 +128,7 @@ const Suggest = props => {
 	const _genResult = useCallback(data => {
 		let ret = []
 		
-		if (data.zhida && data.zhida.singerid) {
+		if (data.zhida && data.zhida.singerid && props.showSinger) {
 			ret.push({...data.zhida, ...{type: TYPE_SINGER}})
 		}
 
@@ -151,14 +152,6 @@ const Suggest = props => {
 	const onScrollToEnd = () => {
 		searchMore()
 	}
-
-	// const searchMore = useCallback(() => {
-	// 	if (!hasMore) {
-	// 		return
-	// 	}
-	// 	pageRef.current = pageRef.current + 1
-	// 	searchSong(false)
-	// }, [props.query, pageRef.current])
 
 	const searchMore = () => {
 		if (!hasMore) {
@@ -203,8 +196,13 @@ const Suggest = props => {
 	)
 }
 
+Suggest.defaultProps = {
+	showSinger: true
+}
+
 Suggest.propTypes = {
 	query: PropTypes.string.isRequired,
+	showSinger: PropTypes.bool
 }
 
 export default connect(
