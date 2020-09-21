@@ -5,6 +5,7 @@ import SearchBox from '../../controls/search-box'
 import Suggest from '../../components/search/controls/suggest'
 import Switches from '../../controls/switches'
 import { setSearchHistory } from '../../store/actions'
+import RecentPlayList from './constrols/recentPlayList'
 import './index.stylus'
 
 const AddSong = props => {
@@ -81,6 +82,14 @@ const AddSong = props => {
 							currentIndex={switchesObj.currentIndex} 
 							switches={switchesObj.list}
 							onSwitchItem={switchItem} />
+							<div className="list-wrapper">
+								{
+									switchesObj.currentIndex === 0 ?
+									<RecentPlayList playHistory={props.playHistory}/>
+									:
+									null
+								}
+							</div>
 					</div>
 				}
 			</div>
