@@ -4,14 +4,17 @@ import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import Suggest from '../../components/search/controls/suggest'
 import Switches from '../../controls/switches'
-import { setSearchHistory } from '../../store/actions'
+import { setSearchHistory, delSearchHistoryItem, delSearchHistoryAll } from '../../store/actions'
 import RecentPlayList from './constrols/recentPlayList'
+import HistorySearchList from './constrols/historySearchList'
 import './index.stylus'
 
 const AddSong = props => {
 	const [show, setShow] = useState(false)
 
 	const [query, setQuery] = useState('')
+
+	const [selectedHotKey, setSelectedHotKey] = useState('')
 
 	const [switchesObj, setSwitchesObj] = useState({
 		currentIndex: 0,
@@ -50,6 +53,14 @@ const AddSong = props => {
 		setSwitchesObj(obj)
 	}
 
+	const selectHistoryItem = useCallback(item => {
+		setSelectedHotKey(item)
+	}, [selectedHotKey])
+
+	const selectHistoryIcon = item => {
+		props.dispatch(delSearchHistoryItem(item))
+	}
+
 	return (
 		<CSSTransition timeout={300} classNames="slide" in={show}>
 			<div className="add-song">
@@ -63,7 +74,8 @@ const AddSong = props => {
 					<SearchBox 
 						placeholder="搜素歌曲"
 						ref={searchBoxRef}
-						searchChanged={value => onSearchChanged(value)} 
+						searchChanged={value => onSearchChanged(value)}
+						selectedHotKey={selectedHotKey} 
 					/>
 				</div>
 				{
@@ -85,9 +97,14 @@ const AddSong = props => {
 							<div className="list-wrapper">
 								{
 									switchesObj.currentIndex === 0 ?
-									<RecentPlayList playHistory={props.playHistory}/>
+									<RecentPlayList 
+										playHistory={props.playHistory} />
 									:
-									null
+									<HistorySearchList 
+										searchHistory={props.searchHistory} 
+										onClickItem={item => selectHistoryItem(item)}
+										onClickIcon={item => selectHistoryIcon(item)}
+									/>
 								}
 							</div>
 					</div>
