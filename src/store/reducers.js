@@ -11,11 +11,12 @@ import {
 	SET_TOPLIST,
 	SET_SEARCHHISTORY,
 	SET_DEL_HISTORY_ITEM,
-	SET_DEL_HISTORY_ALL
+	SET_DEL_HISTORY_ALL,
+	SET_PLAY_HISTORY
 } from './actions'
 
 import { playMode } from '../common/js/config'
-import { loadSearch } from '../common/js/cache'
+import { loadPlay, loadSearch } from '../common/js/cache'
 
 export default {
 	singer(state=null, action) {
@@ -128,6 +129,15 @@ export default {
 					return [...payload]
 				case SET_DEL_HISTORY_ALL:
 					return []
+			default:
+		}
+		return state
+	},
+	playHistory(state = loadPlay(), action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_PLAY_HISTORY:
+				return state.concat(payload)
 			default:
 		}
 		return state

@@ -6,7 +6,7 @@ import Lyric from 'lyric-parser'
 
 import { prefixStyle } from '../../common/js/dom'
 import { getSongUrl, getLynic } from '../../common/js/models/song'
-import { setPlayingState, setCurrentIndex, setCurrentSong, setFullScreen } from '../../store/actions'
+import { setPlayingState, setCurrentIndex, setCurrentSong, setFullScreen, setPlayHistory } from '../../store/actions'
 import ProgressBar from './../progress-bar'
 import { playMode } from '../../common/js/config'
 import { formatTime } from '../../common/js/util'
@@ -325,6 +325,8 @@ const Player = props => {
 			type: 'set_song_ready',
 			payload: true
 		})
+
+		props.dispatch(setPlayHistory(props.currentSong))
 	}
 
 	const onError = () => {  // todo - check state

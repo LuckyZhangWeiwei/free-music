@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import Suggest from '../../components/search/controls/suggest'
+import Switches from '../../controls/switches'
 import { setSearchHistory } from '../../store/actions'
 import './index.stylus'
 
@@ -10,6 +11,14 @@ const AddSong = props => {
 	const [show, setShow] = useState(false)
 
 	const [query, setQuery] = useState('')
+
+	const [switchesObj, setSwitchesObj] = useState({
+		currentIndex: 0,
+		list:[
+			{name: '最近播放'},
+			{name: '搜索历史'}
+			]
+	})
 
 	const searchBoxRef = useRef(null)
 
@@ -23,7 +32,6 @@ const AddSong = props => {
 	}, [])
 
 	const onSearchChanged = useCallback(value => {
-		if(!value) return
 		setQuery(value)
 	}, [query])
 
@@ -34,6 +42,12 @@ const AddSong = props => {
 	const selectSuggestItem = useCallback(() => {
 		props.dispatch(setSearchHistory(query))
 	}, [query, props.searchHistory])
+
+	const switchItem = currentIndex => {
+		switchesObj.currentIndex = currentIndex
+		let obj = Object.assign({}, switchesObj)
+		setSwitchesObj(obj)
+	}
 
 	return (
 		<CSSTransition timeout={300} classNames="slide" in={show}>
@@ -62,7 +76,12 @@ const AddSong = props => {
 						/>
 					</div>
 					:
-					<div className="shortcut"></div>
+					<div className="shortcut">
+						<Switches 
+							currentIndex={switchesObj.currentIndex} 
+							switches={switchesObj.list}
+							onSwitchItem={switchItem} />
+					</div>
 				}
 			</div>
 		</CSSTransition>
