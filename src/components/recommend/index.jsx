@@ -79,7 +79,7 @@ function Recommend(props) {
 										return (
 											<div key={item.id}>
 												<a href={item.linkUrl}>
-													<img src={item.picUrl} alt="" onLoad={loadImage} className="needsclick" />
+													<img src={item.picUrl} alt="" onLoad={loadImage} className="needsclick" className="slider-image" />
 												</a>
 											</div>
 										)
