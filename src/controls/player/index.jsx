@@ -329,7 +329,7 @@ const Player = props => {
 		props.dispatch(setPlayHistory(props.currentSong))
 	}
 
-	const onError = () => {  // todo - check state
+	const onError = () => {
 		dispatch({
 			type: 'set_song_ready',
 			payload: true
@@ -347,6 +347,10 @@ const Player = props => {
 			})
 			prev(null, true)
 		}
+		dispatch({
+			type: 'set_song_ready',
+			payload: false
+		})
 	}
 
 	const	onPlay = () => {
