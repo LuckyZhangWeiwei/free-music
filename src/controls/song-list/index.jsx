@@ -3,26 +3,50 @@ import PropTypes from 'prop-types'
 
 import './index.stylus'
 
-const SongList = function(props) {
-	const songs = props.songs
+const getRankCls = index => {
+	if (index <= 2) {
+		return `icon icon${index}`
+	} else {
+		return 'text'
+	}
+}
 
-	const selectItem = useCallback(function(song, index) {
+const getRankText = index => {
+	if (index > 2) {
+		return index + 1
+	}
+}
+
+const SongListItem = memo(props => {
+
+	const selectItem = useCallback((song, index) => {
 		props.select(song, index)
-	}, [songs])
+	}, [])
 
-	const getRankCls = (index) => {
-		if (index <= 2) {
-			return `icon icon${index}`
-		} else {
-			return 'text'
-		}
-	}
+	return (
+			<li className="item" onClick={() => selectItem(props.song, props.index)}>
+				{
+					props.rank 
+					&&
+					<div className="rank">
+						<span className={getRankCls(props.index)}>{getRankText(props.index)}</span>
+					</div>
+				}
+				<div className="content">
+					<h2 className="name">{props.song.name}</h2>
+					{
+						props.song.album ?
+						<p className="desc">{`${props.song.singer} . ${props.song.album}`}</p>
+						:
+						<p className="desc">{`${props.song.singer}`}</p>
+					}
+				</div>
+			</li>
+	)
+})
 
-	const getRankText = (index) => {
-		if (index > 2) {
-			return index + 1
-		}
-	}
+const SongList = props => {
+	const songs = props.songs
 
 	return (
 		<div className="song-list">
@@ -30,24 +54,13 @@ const SongList = function(props) {
 				{
 					songs.map((song, index) => {
 					  return(
-									<li className="item" key={index} onClick={() => selectItem(song, index)}>
-										{
-											props.rank 
-											&&
-											<div className="rank">
-												<span className={getRankCls(index)}>{getRankText(index)}</span>
-											</div>
-										}
-										<div className="content">
-											<h2 className="name">{song.name}</h2>
-											{
-												song.album ?
-												<p className="desc">{`${song.singer} . ${song.album}`}</p>
-												:
-												<p className="desc">{`${song.singer}`}</p>
-											}
-										</div>
-									</li>
+									<SongListItem 
+										key={index}
+										rank={props.rank}
+										song={song}
+										index={index}
+										select={(song, index) => props.select(song, index)}
+									/>
 								)
 					})
 				}
