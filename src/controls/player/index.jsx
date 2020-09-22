@@ -265,10 +265,7 @@ const Player = props => {
 		})
 
 		if (!!props.currentSong.url) {
-				dispatch({
-					type: 'set_song_ready',
-					payload: false
-				})
+				_setMusicReadyState(false)
 		}
 
 		if (!songReady && !errorSkip) {
@@ -296,10 +293,7 @@ const Player = props => {
 		})
 
 		if (!!props.currentSong.url) {
-			dispatch({
-				type: 'set_song_ready',
-				payload: false
-			})
+			_setMusicReadyState(false)
 		}
 
 		if (!songReady && !errorSkip) {
@@ -321,19 +315,14 @@ const Player = props => {
 	)
 
 	const onCanPlay = () => {
-		dispatch({
-			type: 'set_song_ready',
-			payload: true
-		})
+		_setMusicReadyState(true)
 
 		props.dispatch(setPlayHistory(props.currentSong))
 	}
 
 	const onError = () => {
-		dispatch({
-			type: 'set_song_ready',
-			payload: true
-		})
+		_setMusicReadyState(true)
+
 		if (lastPreOrNextAction === 'next') {
 			dispatch({
 				type: 'set_lastPre_or_next_action',
@@ -347,18 +336,12 @@ const Player = props => {
 			})
 			prev(null, true)
 		}
-		dispatch({
-			type: 'set_song_ready',
-			payload: false
-		})
+		_setMusicReadyState(false)
 	}
 
 	const	onPlay = () => {
 		props.dispatch(setPlayingState(true))
-		dispatch({
-			type: 'set_song_ready',
-			payload: false
-		})
+		_setMusicReadyState(false)
 	}
 	const	onPause = () => {
 		props.dispatch(setPlayingState(false))
@@ -509,6 +492,13 @@ const Player = props => {
 			payload
 		})
 	}, [])
+
+	const _setMusicReadyState = useCallback(props => {
+		dispatch({
+			type: 'set_song_ready',
+			payload: props
+		})
+	}, [songReady])
 
 	return (
 		<div className="player">
