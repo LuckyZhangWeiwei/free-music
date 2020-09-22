@@ -137,7 +137,8 @@ export default {
 		const { type, payload } = action
 		switch (type) {
 			case SET_PLAY_HISTORY:
-				return state.concat(payload)
+				let obj = [...loadPlay()]
+				return obj
 			default:
 		}
 		return state
