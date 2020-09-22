@@ -258,7 +258,7 @@ const Player = props => {
 		return songReady ? '' : 'disable'
 	}, [songReady])
 
-	const prev = useCallback((errorSkip = false) => {
+	const prev = useCallback((e, errorSkip = false) => {
 		dispatch({
 			type: 'set_lastPre_or_next_action',
 			payload: 'prev'
@@ -288,7 +288,7 @@ const Player = props => {
 	}, 
 	[songReady, props.currentSong.id, props.playMode]
 	)
-	const next = useCallback((errorSkip = false) => {
+	const next = useCallback((e, errorSkip = false) => {
 		// why can not get current songReady state ???
 		dispatch({
 			type: 'set_lastPre_or_next_action',
@@ -339,14 +339,22 @@ const Player = props => {
 				type: 'set_lastPre_or_next_action',
 				payload: 'next'
 			})
-			next(true)
+			next(null, true)
 		} else {
-			prev(true)
+			dispatch({
+				type: 'set_lastPre_or_next_action',
+				payload: 'prev'
+			})
+			prev(null, true)
 		}
 	}
 
 	const	onPlay = () => {
 		props.dispatch(setPlayingState(true))
+		dispatch({
+			type: 'set_song_ready',
+			payload: false
+		})
 	}
 	const	onPause = () => {
 		props.dispatch(setPlayingState(false))
