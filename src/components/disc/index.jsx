@@ -10,7 +10,7 @@ import { loadPlayList } from '../../store/actions'
 
 import './index.stylus'
 
-const Disc = function(props) {
+const Disc = props => {
 	
 	const [show, setShow] = useState(false)
 	const [song, setSong] = useState([])
@@ -26,6 +26,7 @@ const Disc = function(props) {
 			})
 			return
 		}
+		
 		getDiscDetail(props.disc.id).then(data => {
 			return data.playlist.trackIds
 		}).then(idObjects => {
