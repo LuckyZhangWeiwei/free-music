@@ -233,7 +233,7 @@ export function delSong(song) {
 			currentIndex--
 		}
 
-		if (currentIndex !== currentIndex === playList.length - 1 && currentIndex === pIndex) {
+		if (currentIndex !== playList.length - 1 && currentIndex === pIndex) {
 			currentIndex++
 		}
 

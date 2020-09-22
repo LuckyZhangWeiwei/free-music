@@ -6,7 +6,7 @@ const MiniPlayer = props => {
 	return (
 				<div className="mini-player" onClick={ () => props.open() }>
 					<div className="icon">
-						<img width="40" height="40" src={props.currentSong.image} className={props.cdCls} />
+						<img width="40" height="40" src={props.currentSong.image} className={props.cdCls} alt="" />
 					</div>
 					<div className="text">
 						<h2 className="name">{props.currentSong.name}</h2>
