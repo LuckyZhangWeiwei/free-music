@@ -8,7 +8,7 @@ import { selectPlay, random } from '../../store/actions'
 
 import './index.stylus'
 
-const MusicList = function (props) {
+const MusicList = props => {
 	const scrollRef = useRef()
 	const bgImageRef = useRef()
 	const bgLayerRef = useRef()
@@ -97,7 +97,13 @@ const MusicList = function (props) {
 			</div>
 			<div className="bg-layer" ref={bgLayerRef}>
 			</div>
-			<Scroll className="list" data={props.song} ref={scrollRef} probeType={3} listenScroll={true} scroll={scroll}>
+			<Scroll 
+				className="list"
+				data={props.song}
+				ref={scrollRef}
+				probeType={3}
+				listenScroll={true}
+				scroll={scroll}>
 				<div className="song-list-wrapper">
 					<SongList songs={props.song} select={(item, index) => selectItem(item, index)} rank={props.rank}/>
 				</div>
