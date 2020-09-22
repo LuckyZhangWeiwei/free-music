@@ -225,7 +225,7 @@ class Slider extends React.Component {
 		}
 	
 		this.timer = setTimeout(() => {
-			this.slider.goToPage(pageIndex, 0, 400)
+			!!this.slider &&	this.slider.goToPage(pageIndex, 0, 400)
 		}, this.props.interval)
 	}
 }
