@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, forwardRef } from 'react'
 import Scroll from '../../scroll'
 import SongList from '../../song-list'
 
@@ -20,4 +20,4 @@ const RecentPlayList = props => {
 	)
 }
 
-export default memo(RecentPlayList)
+export default memo(forwardRef((props, ref) => {return <RecentPlayList {...props} myRef={ref} />}))

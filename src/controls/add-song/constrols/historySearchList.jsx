@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react'
+import React, { memo, useCallback, forwardRef } from 'react'
 import Scroll from '../../scroll'
 import SearchList from '../../../controls/search-list'
 
@@ -21,4 +21,6 @@ const HistorySearchList = props => {
 	)
 }
 
-export default memo(HistorySearchList)
+export default memo(forwardRef((props, ref) => {
+	return <HistorySearchList {...props} myRef={ref}/>
+}))

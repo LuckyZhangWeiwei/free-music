@@ -93,7 +93,7 @@ const AddSong = props => {
 		setShowTopTip(true)
 
 		clearTimeout(timerRef)
-		
+
 	  timerRef.current =	setTimeout(() => {
 			setShowTopTip(false)
 		}, 1000)
@@ -136,12 +136,12 @@ const AddSong = props => {
 								{
 									switchesObj.currentIndex === 0 ?
 									<RecentPlayList
-										myRef={recentPlayListRef}
+										ref={recentPlayListRef}
 										playHistory={props.playHistory}
 										select={(song, index) => recentPlayItemClick(song, index)} />
 									:
 									<HistorySearchList
-										myRef={playHistoryRef}
+										ref={playHistoryRef}
 										searchHistory={props.searchHistory} 
 										onClickItem={item => selectHistoryItem(item)}
 										onClickIcon={item => selectHistoryIcon(item)}
