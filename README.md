@@ -1,4 +1,5 @@
 #### `free music`
+参考了vue-music 项目
 
 ### `技术栈`
 
