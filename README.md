@@ -8,6 +8,8 @@ redux<br/>
 es6<br/>
 stylus<br/>
 create-react-app
+### `API`
+github 网易云音乐的api（NeteaseCloudMusicApi） + 腾讯音乐， 二者结合
 
 ### `截图`
 
