@@ -1,12 +1,13 @@
-free music
+#### `free music`
 
 ### `技术栈`
 
-react16+
-各种hooks
-redux
-es6
-stylus
+react16+<br/>
+各种hooks<br/>
+redux<br/>
+es6<br/>
+stylus<br/>
+create-react-app
 
 ### `截图`
 
