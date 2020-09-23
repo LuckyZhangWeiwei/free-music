@@ -1,0 +1,15 @@
+@import "../../common/stylus/variable"
+
+.top-tip
+	position: fixed
+	top: 0
+	width: 100%
+	z-index: 500
+	transform: translate3d(0, -100%, 0)
+	background: $color-dialog-background
+	&.drop-enter-active, &.drop-leave-active
+		transition: all 0.5s
+		transform: translate3d(0, 0, 0)
+
+
+		top-tip drop-enter drop-enter-active

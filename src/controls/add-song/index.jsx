@@ -4,9 +4,11 @@ import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import Suggest from '../../components/search/controls/suggest'
 import Switches from '../../controls/switches'
-import { setSearchHistory, delSearchHistoryItem } from '../../store/actions'
+import { setSearchHistory, delSearchHistoryItem, insertSong } from '../../store/actions'
+import { Song } from '../../common/js/models/song'
 import RecentPlayList from './constrols/recentPlayList'
 import HistorySearchList from './constrols/historySearchList'
+import TopTip from '../../controls/top-tip'
 import './index.stylus'
 
 const AddSong = props => {
@@ -24,11 +26,15 @@ const AddSong = props => {
 			]
 	})
 
+  const [showTopTip, setShowTopTip] = useState(false)
+
 	const searchBoxRef = useRef(null)
 
 	const recentPlayListRef = useRef(null)
 
 	const playHistoryRef = useRef(null)
+
+	const timerRef = useRef(null)
 
 	useEffect(() => {
 		setShow(true)
@@ -69,10 +75,28 @@ const AddSong = props => {
 
 	const selectHistoryItem = useCallback(item => {
 		setSelectedHotKey(item)
-	}, [selectedHotKey])
+		_showTip()
+	}, [selectedHotKey, showTopTip])
 
 	const selectHistoryIcon = item => {
 		props.dispatch(delSearchHistoryItem(item))
+	}
+
+	const recentPlayItemClick = useCallback((song, index) => {
+		if (index !==0) {
+			props.dispatch(insertSong(new Song(song)))
+			_showTip()
+		}
+	}, [])
+
+	const _showTip = () => {
+		setShowTopTip(true)
+
+		clearTimeout(timerRef)
+		
+	  timerRef.current =	setTimeout(() => {
+			setShowTopTip(false)
+		}, 1000)
 	}
 
 	return (
@@ -113,7 +137,8 @@ const AddSong = props => {
 									switchesObj.currentIndex === 0 ?
 									<RecentPlayList
 										myRef={recentPlayListRef}
-										playHistory={props.playHistory} />
+										playHistory={props.playHistory}
+										select={(song, index) => recentPlayItemClick(song, index)} />
 									:
 									<HistorySearchList
 										myRef={playHistoryRef}
@@ -124,6 +149,16 @@ const AddSong = props => {
 								}
 							</div>
 					</div>
+				}
+				{
+					showTopTip
+					&&
+					<TopTip>
+						<div className="tip-title">
+							<i className="icon-ok"></i>
+							<span className="text">一首歌曲已经加入到播放队列</span>
+						</div>
+					</TopTip>
 				}
 			</div>
 		</CSSTransition>

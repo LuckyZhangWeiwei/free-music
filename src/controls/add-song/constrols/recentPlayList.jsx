@@ -1,17 +1,8 @@
-import React, { memo, useCallback } from 'react'
-import { connect } from 'react-redux'
+import React, { memo } from 'react'
 import Scroll from '../../scroll'
 import SongList from '../../song-list'
-import { insertSong } from '../../../store/actions'
-import { Song } from '../../../common/js/models/song'
 
 const RecentPlayList = props => {
-	const select = useCallback((song, index) => {
-		if (index !==0) {
-			props.dispatch(insertSong(new Song(song)))
-		}
-	}, [])
-
 	return (
 		<>
 		<Scroll
@@ -21,7 +12,7 @@ const RecentPlayList = props => {
 			<div className="list-inner">
 				<SongList 
 					songs={props.playHistory} 
-					select={(song, index) => select(song, index)} 
+					select={(song, index) => props.select(song, index)} 
 				/>
 			</div>
 		</Scroll>
@@ -29,10 +20,4 @@ const RecentPlayList = props => {
 	)
 }
 
-export default connect(function mapStateToProps(state) {
-	return state
-}, function mapDispatchToProps(dispatch) {
-	return {
-		dispatch
-	}
-})(memo(RecentPlayList))
+export default memo(RecentPlayList)
