@@ -10,7 +10,7 @@ const HistorySearchList = props => {
 		props.onClickIcon(item)
 	}, [])
 	return (
-		<Scroll className="list-scroll" data={props.searchHistory}>
+		<Scroll className="list-scroll" data={props.searchHistory} ref={props.myRef}>
 			<div className="list-inner">
 				<SearchList 
 					itemClick={item => onItemClick(item)}

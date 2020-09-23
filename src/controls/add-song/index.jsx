@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
 import Suggest from '../../components/search/controls/suggest'
 import Switches from '../../controls/switches'
-import { setSearchHistory, delSearchHistoryItem, delSearchHistoryAll } from '../../store/actions'
+import { setSearchHistory, delSearchHistoryItem } from '../../store/actions'
 import RecentPlayList from './constrols/recentPlayList'
 import HistorySearchList from './constrols/historySearchList'
 import './index.stylus'
@@ -26,9 +26,23 @@ const AddSong = props => {
 
 	const searchBoxRef = useRef(null)
 
+	const recentPlayListRef = useRef(null)
+
+	const playHistoryRef = useRef(null)
+
 	useEffect(() => {
 		setShow(true)
 	}, [])
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (switchesObj.currentIndex === 0) {
+				recentPlayListRef.current.refresh()
+			} else {
+				playHistoryRef.current.refresh()
+			}
+		}, 20)
+	}, [switchesObj.currentIndex])
 
 	const close = useCallback(e => {
 		e.stopPropagation()
@@ -90,17 +104,19 @@ const AddSong = props => {
 					</div>
 					:
 					<div className="shortcut">
-						<Switches 
+						<Switches
 							currentIndex={switchesObj.currentIndex} 
 							switches={switchesObj.list}
 							onSwitchItem={switchItem} />
 							<div className="list-wrapper">
 								{
 									switchesObj.currentIndex === 0 ?
-									<RecentPlayList 
+									<RecentPlayList
+										myRef={recentPlayListRef}
 										playHistory={props.playHistory} />
 									:
-									<HistorySearchList 
+									<HistorySearchList
+										myRef={playHistoryRef}
 										searchHistory={props.searchHistory} 
 										onClickItem={item => selectHistoryItem(item)}
 										onClickIcon={item => selectHistoryIcon(item)}

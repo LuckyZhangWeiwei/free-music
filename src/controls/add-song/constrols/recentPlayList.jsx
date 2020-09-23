@@ -14,9 +14,15 @@ const RecentPlayList = props => {
 
 	return (
 		<>
-		<Scroll className="list-scroll" data={props.playHistory}>
+		<Scroll
+		 	ref={props.myRef}
+			className="list-scroll" 
+			data={props.playHistory}>
 			<div className="list-inner">
-				<SongList songs={props.playHistory} select={(song, index) => select(song, index)}></SongList>
+				<SongList 
+					songs={props.playHistory} 
+					select={(song, index) => select(song, index)} 
+				/>
 			</div>
 		</Scroll>
 		</>
