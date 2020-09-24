@@ -1,28 +1,9 @@
-import React, {memo, useCallback} from 'react'
+import React, {memo} from 'react'
 import { connect } from 'react-redux'
 import PlayMode from '../../../controls/playmode'
-import {setFaviorateList, deleteFavoriteList} from '../../../store/actions'
-
+import FavoriteButton from './favorite-button'
 
 const MusicOperator = props => {
-	const getFavoriteIcon = useCallback(() => {
-		return _isFavoriate() ? 'icon-favorite' : 'icon-not-favorite'
-	}, [props.favoriteList.length])
-
-	const toggleFavoriate = useCallback(e => {
-		e.stopPropagation()
-		if (_isFavoriate()) {
-			props.dispatch(deleteFavoriteList(props.currentSong))
-		} else {
-			props.dispatch(setFaviorateList(props.currentSong))
-		}
-	}, [props.favoriteList.length])
-
-	const _isFavoriate = useCallback(() => {
-		const index = props.favoriteList.findIndex(item => { return item.id === props.currentSong.id })
-		return index > -1
-	}, [props.favoriteList.length])
-
 	return (
 		<>
 			<PlayMode />
@@ -35,9 +16,10 @@ const MusicOperator = props => {
 			<div className={`icon i-right ${props.disableCls}`}>
 				<i className="icon-next" onClick={e => props.next(e)}></i>
 			</div>
-			<div className="icon i-right" onClick={e => toggleFavoriate(e)}>
-				<i className={`icon ${getFavoriteIcon()}`}></i>
-			</div>
+			<FavoriteButton 
+				className="icon i-right"
+				song={props.currentSong}
+			/>
 		</>
 	)
 }

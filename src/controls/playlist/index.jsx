@@ -10,6 +10,7 @@ import Confirm from '../../controls/confirm'
 import { clearList } from '../../store/actions'
 import PlayMode from '../../controls/playmode'
 import AddSong from '../../controls/add-song'
+import FavoriteButton from '../player/operators/favorite-button'
 
 import './index.stylus'
 
@@ -35,9 +36,10 @@ const MusicListItem = props => {
 			<li className="item" onClick={e => selectItem(e, props.item, props.index)}>
 				<i className={classnames('current', {'icon-play': props.currentSong.id === props.item.id})} />
 				<span className="text">{props.item.name}</span>
-				<span className="like">
-					<i className="icon-not-favorite"></i>
-				</span>
+				<FavoriteButton 
+					className="like"
+					song={props.item}
+				/>
 				<span className="delete" onClick={e => deleteItem(e, props.item)}>
 					<i className="icon-delete"></i>
 				</span>
