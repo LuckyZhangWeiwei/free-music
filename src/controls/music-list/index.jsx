@@ -4,7 +4,8 @@ import Scroll from '../scroll'
 import SongList from '../../controls/song-list'
 import Loading from '../../controls/loading'
 import { prefixStyle } from '../../common/js/dom'
-import { selectPlay, random } from '../../store/actions'
+import { selectPlay } from '../../store/actions'
+import RandomPlay from '../../controls/random-play'
 
 import './index.stylus'
 
@@ -70,10 +71,10 @@ const MusicList = props => {
 		 props.dispatch(selectPlay(props.song, index))
 	}, [props.song])
 
-	const randomPlay = useCallback(() => {
-		props.dispatch(random(props.sequenceList))
-		props.dispatch(selectPlay(props.song, props.currentIndex + 1))
-	}, [props.sequenceList])
+	// const randomPlay = useCallback(() => {
+	// 	props.dispatch(random(props.sequenceList))
+	// 	props.dispatch(selectPlay(props.song, props.currentIndex + 1))
+	// }, [props.sequenceList])
 
 	return (
 		<div className="music-list">
@@ -85,12 +86,11 @@ const MusicList = props => {
 				{
 					props.song.length 
 					&&
-					<div className="play-wrapper" ref={playWrapperRef}>
-						<div className="play" onClick={() => {randomPlay()}}>
-							<i className="icon-play"></i>
-							<span className="text">随机播放全部</span>
-						</div>
-					</div>
+					<RandomPlay
+						text="随机播放全部" 
+						playWrapperRef={playWrapperRef}
+						song={props.song}
+					/>
 				}
 				
 				<div className="filter"></div>

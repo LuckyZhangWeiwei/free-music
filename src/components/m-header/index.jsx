@@ -1,5 +1,7 @@
 import React, {memo} from 'react'
-import { NavLink } from "react-router-dom"
+import { NavLink, Switch, HashRouter } from "react-router-dom"
+import { renderRoutes } from "react-router-config"
+import UserCenter from './../../components/user-center'
 
 import './index.stylus'
 import logo from './timg.jpg'
@@ -15,9 +17,19 @@ const MHeader = memo(function () {
 					left: '20px'
 				}}/>
       <h1 className="text">Free Music</h1>
-			<NavLink className="mine" to="/user">
-				<i className="icon-mine"></i>
-			</NavLink>
+			<HashRouter>
+				<NavLink className="mine" to="/user">
+					<i className="icon-mine" />
+				</NavLink>
+					<Switch>
+						{ 
+						renderRoutes([{
+								path: "/user",
+								component: UserCenter
+							}]) 
+						}
+					</Switch>
+			</HashRouter>
     </div>
   )
 })
