@@ -12,11 +12,12 @@ import {
 	SET_SEARCHHISTORY,
 	SET_DEL_HISTORY_ITEM,
 	SET_DEL_HISTORY_ALL,
-	SET_PLAY_HISTORY
+	SET_PLAY_HISTORY,
+	SET_FAVIORITE_LIST
 } from './actions'
 
 import { playMode } from '../common/js/config'
-import { loadPlay, loadSearch } from '../common/js/cache'
+import { loadFavorite, loadPlay, loadSearch } from '../common/js/cache'
 
 export default {
 	singer(state=null, action) {
@@ -138,6 +139,16 @@ export default {
 		switch (type) {
 			case SET_PLAY_HISTORY:
 				let obj = [...loadPlay()]
+				return obj
+			default:
+		}
+		return state
+	},
+	favoriteList(state=loadFavorite(), action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_FAVIORITE_LIST:
+				let obj = [...loadFavorite()]
 				return obj
 			default:
 		}

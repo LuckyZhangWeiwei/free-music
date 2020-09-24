@@ -556,6 +556,7 @@ const Player = props => {
 								prev={prev}
 								next={next}
 								togglePlaying={togglePlaying}
+								currentSong={props.currentSong}
 							/>
 						</div>
 					</div>
