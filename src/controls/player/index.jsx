@@ -60,6 +60,15 @@ const Player = props => {
 	useEffect(() => {
 		getSongUrl(props.currentSong.name || props.currentSong.songname)
 		.then(playerUrl => {
+
+			// change music-show normal player
+			props.dispatch(setFullScreen(true))
+			
+			dispatch({
+				type: 'set_show_normal_player',
+				payload: true
+			})
+
 			const url = !!playerUrl ? playerUrl : ''
 			const song = {
 				...props.currentSong,
@@ -67,6 +76,10 @@ const Player = props => {
 			}
 			// update current song player url
 			props.dispatch(setCurrentSong(song))
+
+			// reset song ready status
+			_setMusicReadyState(false)
+
 			audioRef.current.play()
 		})
 	}, [props.currentSong.id])
@@ -341,7 +354,6 @@ const Player = props => {
 
 	const	onPlay = () => {
 		props.dispatch(setPlayingState(true))
-		_setMusicReadyState(false)
 	}
 	const	onPause = () => {
 		props.dispatch(setPlayingState(false))
