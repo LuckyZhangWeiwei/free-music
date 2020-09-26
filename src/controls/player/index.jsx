@@ -75,8 +75,8 @@ const Player = props => {
 		})
 	}, [props.currentSong.id])
 
+	//when switch music, change music-show normal player fistly
 	useEffect(() => {
-			// change music-show normal player
 			props.dispatch(setFullScreen(true))
 			
 			dispatch({
