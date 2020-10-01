@@ -1,4 +1,4 @@
-import React, {useCallback, memo, ConcurrentMode} from 'react'
+import React, {useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
 
 import './index.stylus'
@@ -49,7 +49,6 @@ const SongList = props => {
 	const songs = props.songs
 
 	return (
-		<ConcurrentMode>
 			<div className="song-list">
 				<ul>
 					{
@@ -67,7 +66,6 @@ const SongList = props => {
 					}
 				</ul>
 			</div>
-		</ConcurrentMode>
 	)
 }
 

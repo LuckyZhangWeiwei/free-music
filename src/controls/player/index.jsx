@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer, ConcurrentMode } from 'react'
+import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -514,7 +514,6 @@ const Player = props => {
 	}, [songReady])
 
 	return (
-		<ConcurrentMode>
 			<div className="player">
 				<CSSTransition 
 					timeout={400} 
@@ -607,7 +606,6 @@ const Player = props => {
 					onPause={() => onPause()}
 				/>
 			</div>
-		</ConcurrentMode>
 	)
 }
 
