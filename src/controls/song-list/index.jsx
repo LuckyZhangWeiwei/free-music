@@ -1,4 +1,4 @@
-import React, {useCallback, memo} from 'react'
+import React, {useCallback, memo, ConcurrentMode} from 'react'
 import PropTypes from 'prop-types'
 
 import './index.stylus'
@@ -49,23 +49,25 @@ const SongList = props => {
 	const songs = props.songs
 
 	return (
-		<div className="song-list">
-			<ul>
-				{
-					songs.map((song, index) => {
-					  return(
-									<SongListItem 
-										key={index}
-										rank={props.rank}
-										song={song}
-										index={index}
-										select={(song, index) => props.select(song, index)}
-									/>
-								)
-					})
-				}
-			</ul>
-		</div>
+		<ConcurrentMode>
+			<div className="song-list">
+				<ul>
+					{
+						songs.map((song, index) => {
+							return(
+										<SongListItem 
+											key={index}
+											rank={props.rank}
+											song={song}
+											index={index}
+											select={(song, index) => props.select(song, index)}
+										/>
+									)
+						})
+					}
+				</ul>
+			</div>
+		</ConcurrentMode>
 	)
 }
 

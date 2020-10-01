@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer} from 'react'
+import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer, ConcurrentMode } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -514,98 +514,100 @@ const Player = props => {
 	}, [songReady])
 
 	return (
-		<div className="player">
-			<CSSTransition 
-				timeout={400} 
-				in={showNormalPlayer} 
-				classNames="normal"
-				onEnter={() => onEnter()}
-				onEntering={() => onEntering()}
-				onEntered={() => onEntered()}
-				onExiting={() => onExiting()}
-				onExited={() => onExited()}
-				>
-				<div className="normal-player">
-					<div className="background">
-						<img width="100%" height="100%" src={props.currentSong.image} alt="" />
-					</div>
-					<div className="top">
-						<Top close={close} />
-					</div>
-					<div className="middle" 
-						onTouchStart={(e) => middleTouchStart(e)}
-						onTouchMove={(e) => middleTouchMove(e)}
-						onTouchEnd={(e) => middleTouchEnd(e)}
-						>
-						<CD
-							middleLRef={middleLRef}
-							cdWrapperRef={cdWrapperRef}
-							cdCls={cdCls}
-							playingLyric={currentPlayingLyric}
-						/>
-						<PlayerLyric
-						 lyricListRef={lyricListRef}
-						 lyricLines = {lyricLines}
-						 currentLineNum={currentLineNum}
-						 lyricLineRef={lyricLineRef}
-						/>
-					</div>
-					<div className="bottom">
-						<Cover 
-							currentShow={currentShow}
-							formatTime={formatTime}
+		<ConcurrentMode>
+			<div className="player">
+				<CSSTransition 
+					timeout={400} 
+					in={showNormalPlayer} 
+					classNames="normal"
+					onEnter={() => onEnter()}
+					onEntering={() => onEntering()}
+					onEntered={() => onEntered()}
+					onExiting={() => onExiting()}
+					onExited={() => onExited()}
+					>
+					<div className="normal-player">
+						<div className="background">
+							<img width="100%" height="100%" src={props.currentSong.image} alt="" />
+						</div>
+						<div className="top">
+							<Top close={close} />
+						</div>
+						<div className="middle" 
+							onTouchStart={(e) => middleTouchStart(e)}
+							onTouchMove={(e) => middleTouchMove(e)}
+							onTouchEnd={(e) => middleTouchEnd(e)}
+							>
+							<CD
+								middleLRef={middleLRef}
+								cdWrapperRef={cdWrapperRef}
+								cdCls={cdCls}
+								playingLyric={currentPlayingLyric}
+							/>
+							<PlayerLyric
+							lyricListRef={lyricListRef}
 							lyricLines = {lyricLines}
-							currentTime={currentTime}
-							audioRef={audioRef}
-						>
-							<ProgressBar 
-								percent={percentage} 
-								percentageChanged={ (value, isMoveAction) => percentageChanged(value, isMoveAction) } />
-						</Cover>
-						<div className="operators">
-							<MusicOperator
-								disableCls={disableCls}
-								playIcon={playIcon}
-								prev={prev}
-								next={next}
-								togglePlaying={togglePlaying}
-								currentSong={props.currentSong}
+							currentLineNum={currentLineNum}
+							lyricLineRef={lyricLineRef}
 							/>
 						</div>
+						<div className="bottom">
+							<Cover 
+								currentShow={currentShow}
+								formatTime={formatTime}
+								lyricLines = {lyricLines}
+								currentTime={currentTime}
+								audioRef={audioRef}
+							>
+								<ProgressBar 
+									percent={percentage} 
+									percentageChanged={ (value, isMoveAction) => percentageChanged(value, isMoveAction) } />
+							</Cover>
+							<div className="operators">
+								<MusicOperator
+									disableCls={disableCls}
+									playIcon={playIcon}
+									prev={prev}
+									next={next}
+									togglePlaying={togglePlaying}
+									currentSong={props.currentSong}
+								/>
+							</div>
+						</div>
 					</div>
-				</div>
-			</CSSTransition>
-			{
-				!showNormalPlayer &&
-					<CSSTransition timeout={200} in={!showNormalPlayer} classNames="mini">
-						<MiniPlayer
-							open={open}
-							cdCls={cdCls}
-							togglePlaying={togglePlaying}
-							percentage={percentage}
-							playMniIcon={playMniIcon}
-							setShowPlayList={setShowPlayList}
-							showPlayList={showPlayList}
-						/>
-					</CSSTransition>
-			}
-			{
-				!!showPlayList &&
-				<PlayList 
-					hidePlayList = {() => setShowPlayList(!showPlayList)} 
+				</CSSTransition>
+				{
+					!showNormalPlayer &&
+						<CSSTransition timeout={200} in={!showNormalPlayer} classNames="mini">
+							<MiniPlayer
+								open={open}
+								cdCls={cdCls}
+								togglePlaying={togglePlaying}
+								percentage={percentage}
+								playMniIcon={playMniIcon}
+								setShowPlayList={setShowPlayList}
+								showPlayList={showPlayList}
+							/>
+						</CSSTransition>
+				}
+				{
+					!!showPlayList &&
+					<PlayList 
+						hidePlayList = {() => setShowPlayList(!showPlayList)} 
+					/>
+				}
+				<audio 
+					src={props.currentSong.url} 
+					ref={audioRef}
+					onCanPlay={() => onCanPlay()} 
+					onError={() => onError()}
+					onTimeUpdate={e => updateTime(e)}
+					onEnded={() => end()}
+					onPlay={() => onPlay()}
+					onPause={() => onPause()}
 				/>
-			}
-			<audio 
-				src={props.currentSong.url} 
-				ref={audioRef}
-				onCanPlay={() => onCanPlay()} 
-				onError={() => onError()}
-				onTimeUpdate={e => updateTime(e)}
-				onEnded={() => end()}
-				onPlay={() => onPlay()}
-				onPause={() => onPause()}
-			/>
-		</div>
+			</div>
+		</ConcurrentMode>
 	)
 }
 
