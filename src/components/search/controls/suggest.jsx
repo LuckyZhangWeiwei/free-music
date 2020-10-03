@@ -32,7 +32,6 @@ const getDisplayName = item => {
 }
 
 const SuggestItem = memo(props => {
-
 	const [selectedItem, setSelectedItem] = useState()
 
 	const selectItem = useCallback(item => {

@@ -22,6 +22,15 @@ function UserCenter(props) {
 		setShow(true)
 	}, [])
 
+/**********************************************/
+	useEffect(() => {
+		if (props.currentIndex === -1) {
+			return
+		}
+	  listWrapperRef.current.children[0].children[0].children[0].style['margin-bottom'] = '60px'
+	}, [props.currentIndex])
+	/********************************************* */
+
 	const switchItem = useCallback(index => {
 		setCurrentIndex(index)
 	}, [])
@@ -52,18 +61,18 @@ function UserCenter(props) {
 					song={currentIndex === 0 ? props.favoriteList : props.playHistory}
 				/>
 				<div className="list-wrapper" ref={listWrapperRef}>
-						{
-								currentIndex === 0 ?
-								 <ScrollList
-										data={props.favoriteList}
-										select={(song, index) => favoriteListClick(song, index)}
-									/>
-									:
-								 <ScrollList
-										data={props.playHistory}
-										select={(song, index) => historyListClick(song, index)}
-									/>
-								}
+					{
+						currentIndex === 0 ?
+							<ScrollList
+								data={props.favoriteList}
+								select={(song, index) => favoriteListClick(song, index)}
+							/>
+							:
+							<ScrollList
+								data={props.playHistory}
+								select={(song, index) => historyListClick(song, index)}
+							/>
+							}
 				</div>
 			</div>
 		</CSSTransition>

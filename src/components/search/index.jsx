@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, memo} from 'react'
+import React, { useEffect, useState, useCallback, useRef, memo} from 'react'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
 import SearchBox from '../../controls/search-box'
@@ -19,6 +19,21 @@ function Search(props) {
 	const [showConfirm, setShowConfirm] = useState(false)
 
 	const searchBoxRef = useRef(null)
+
+	const suggestListRef = useRef(null)
+
+	const containerRef = useRef(null)
+
+	/********************************************* */
+	useEffect(() => {
+		if (props.currentIndex === -1) {
+			return
+		}
+		if (!!suggestListRef.current)
+	  	suggestListRef.current.style['margin-bottom'] = '60px'
+		containerRef.current.style['margin-bottom'] = '60px'
+	}, [props.currentIndex, query])
+	/********************************************* */
 
 	const onSearchChanged = useCallback(value => {
 		setQuery(value)
@@ -68,30 +83,32 @@ function Search(props) {
 					searchChanged={value => onSearchChanged(value)} 
 				/>
 			</div>
-			{
-				<div className="shortcut-wrapper" style={{display: !query ? "block":"none"}}>
-					<HotSearch
-						title="热门搜索"
-						selectedHotKey={selectedHotKey}
-						hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}>
-						{
-						  props.searchHistory.length ?
-							<SearchHistory 
-								title="搜索历史"
-								onSearchListDelAll={() => delAllHistory()}
-								onSearchListItemClick={item => searchListItemClick(item)}
-								onSearchListIconClick={item => searchListIconClick(item)}
-							/>
-							:
-							null
-						}
-					</HotSearch>
-				</div>
-			}
+			<div 
+				className="shortcut-wrapper" 
+				style={{display: !query ? "block":"none"}}
+				ref={containerRef}
+			>
+				<HotSearch
+					title="热门搜索"
+					selectedHotKey={selectedHotKey}
+					hotKeyClicked={hotKey => onHotKeyClicked(hotKey.first)}>
+					{
+						props.searchHistory.length ?
+						<SearchHistory 
+							title="搜索历史"
+							onSearchListDelAll={() => delAllHistory()}
+							onSearchListItemClick={item => searchListItemClick(item)}
+							onSearchListIconClick={item => searchListIconClick(item)}
+						/>
+						:
+						null
+					}
+				</HotSearch>
+			</div>
 			{
 				query
 				&&
-				<div className="search-result">
+				<div className="search-result" ref={suggestListRef}>
 					<Suggest 
 						query={query} 
 						{...props} 

@@ -47,7 +47,6 @@ function Recommend(props) {
 			return
 		}
 		recommendlistRef.current.style['margin-bottom'] = '60px'
-		scrollRef.current.refresh()
 	}, [props.currentIndex])
 	/********************************************* */
 

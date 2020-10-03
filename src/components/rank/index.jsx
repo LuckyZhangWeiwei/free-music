@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useCallback } from 'react'
+import React, { useState, useEffect, memo, useCallback, useRef } from 'react'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
@@ -13,6 +13,7 @@ import './index.stylus'
 function Rank(props) {
 	
 	const [topicList, setTopicList] = useState([])
+	const rankContainerRef = useRef(null)
 
 	useEffect(() => {
 		
@@ -33,8 +34,17 @@ function Rank(props) {
 		props.dispatch(setTopList(item))
 	}, [])
 
+	/********************************************* */
+	useEffect(() => {
+		if (props.currentIndex === -1) {
+			return
+		}
+		rankContainerRef.current.style['margin-bottom'] = '60px'
+	}, [props.currentIndex])
+	/********************************************* */
+
   return (
-    <div className="rank">
+    <div className="rank" ref={rankContainerRef}>
 			{
 				topicList.length ? 
 					<Scroll className="toplist" data={topicList}>

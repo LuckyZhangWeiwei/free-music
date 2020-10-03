@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import SearchList from '../../../controls/search-list'
 
 const SearchHistory = memo(props => {
-
 	const click = e => {
 		e.stopPropagation()
 		props.onSearchListDelAll()

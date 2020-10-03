@@ -16,7 +16,7 @@ const HotSearch = props => {
 	useEffect(() => {
 		setData(tags.concat(props.searchHistory))
 		setTimeout(() => {
-			scrollRef.current.refresh()	
+			!!scrollRef.current && scrollRef.current.refresh()	
 		}, 20)
 	}, [tags, props.searchHistory])
 
@@ -33,7 +33,7 @@ const HotSearch = props => {
 
 	useEffect(()=>{
 		setTimeout(() => {
-			scrollRef.current.refresh()	
+			!!scrollRef.current && scrollRef.current.refresh()	
 		}, 20)
 	}, [props.selectedHotKey])
 
@@ -44,24 +44,24 @@ const HotSearch = props => {
 	return (
 		<Scroll className="shortcut" data={data} ref={scrollRef}>
 			<div>
-					<div className="hot-key">
-						<h1 className="title">{props.title}</h1>
-						<ul>
-							{
-								tags.map(item => {
-								return	<li 
-													className="item" 
-													key={item.first} 
-													onClick={() => onHotKeyClicked(item)}>
-														{item.first}
-												</li>
-								})
-							}
-						</ul>
-					</div>
-					{
-						props.children
-					}
+				<div className="hot-key">
+					<h1 className="title">{props.title}</h1>
+					<ul>
+						{
+							tags.map(item => {
+							return <li 
+											className="item" 
+											key={item.first} 
+											onClick={() => onHotKeyClicked(item)}>
+												{item.first}
+										</li>
+							})
+						}
+					</ul>
+				</div>
+				{
+					props.children
+				}
 			</div>
 		</Scroll>
 	)

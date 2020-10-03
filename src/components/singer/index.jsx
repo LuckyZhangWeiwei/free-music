@@ -30,6 +30,16 @@ function Singer(props) {
 		})
 	},[])
 
+	
+	/********************************************* */
+	useEffect(() => {
+		if (props.currentIndex === -1) {
+			return
+		}
+		singerRef.current.style['margin-bottom'] = '60px'
+	}, [props.currentIndex])
+	/********************************************* */
+
   return (
 		<div className="singer" ref={singerRef}>
 			<ListView data={singers} probeType={3} selectItem={onSelectItem} listenScroll={true} ref={listViewRef} />

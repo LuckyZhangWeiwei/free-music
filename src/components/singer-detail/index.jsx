@@ -1,4 +1,4 @@
-import React, {useState, useEffect, memo} from 'react'
+import React, {useState, useEffect, memo, useRef} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { getSingerDetail } from './../../api/singer'
@@ -12,6 +12,8 @@ import { loadPlayList } from '../../store/actions'
 const SingerDetail = function(props) {
 	const [show, setShow] = useState(false)
 	const [song, setSong] = useState([])
+
+	const containerRef = useRef(null)
 	
 	useEffect(() => {
 		setShow(true)
@@ -48,9 +50,11 @@ const SingerDetail = function(props) {
 	}
 
 	return (
-		<CSSTransition timeout={300} classNames="slide" in={show}>
-			<MusicList song={song} title={props.singer.name} bgImage={props.singer.avatar} history={props.history} />
-		</CSSTransition>
+		<div ref={containerRef}>
+			<CSSTransition timeout={300} classNames="slide" in={show}>
+				<MusicList song={song} title={props.singer.name} bgImage={props.singer.avatar} history={props.history} />
+			</CSSTransition>
+		</div>
 	)
 }
 

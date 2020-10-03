@@ -16,6 +16,7 @@ const MusicList = props => {
 	const minTranslateYRef = useRef()
 	const imageHeightRef = useRef()
 	const playWrapperRef = useRef()
+	const songListRef = useRef(null)
 
 	let minTranslateY
 	let zIndex = 0
@@ -34,6 +35,15 @@ const MusicList = props => {
 			scrollRef.current.destroy()
 		}
 	}, [])
+
+	/********************************************* */
+	useEffect(() => {
+		if (props.currentIndex === -1) {
+			return
+		}
+		songListRef.current.children[0].style['margin-bottom'] = '60px'
+	}, [props.currentIndex])
+	/********************************************* */
 	
  const handleScrollY = useCallback(function (scrollY) {
 	 	let translateY = Math.max(minTranslateYRef.current, scrollY)
@@ -71,11 +81,6 @@ const MusicList = props => {
 		 props.dispatch(selectPlay(props.song, index))
 	}, [props.song])
 
-	// const randomPlay = useCallback(() => {
-	// 	props.dispatch(random(props.sequenceList))
-	// 	props.dispatch(selectPlay(props.song, props.currentIndex + 1))
-	// }, [props.sequenceList])
-
 	return (
 		<div className="music-list">
 			<div className="back" onClick={() => {props.history.goBack()}}>
@@ -104,8 +109,8 @@ const MusicList = props => {
 				probeType={3}
 				listenScroll={true}
 				scroll={scroll}>
-				<div className="song-list-wrapper">
-					<SongList songs={props.song} select={(item, index) => selectItem(item, index)} rank={props.rank}/>
+				<div className="song-list-wrapper" ref={songListRef}>
+					<SongList songs={props.song} select={(item, index) => selectItem(item, index)} rank={props.rank} />
 				</div>
 				{
 					!props.song.length

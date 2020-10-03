@@ -42,6 +42,15 @@ const ListView = function(props) {
 		}
 	}, [])
 
+		/********************************************* */
+	useEffect(() => {
+		if (props.currentIndex === -1) {
+			return
+		}
+		scrollRef.current.refresh()
+	}, [props.currentIndex])
+	/********************************************* */
+
 	const _getFixedTitle= useMemo(() => {
 		return data[currentIndex] ? data[currentIndex].title : ''
 	}, [currentIndex, data])
