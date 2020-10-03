@@ -40,7 +40,7 @@ function Rank(props) {
 			return
 		}
 		rankContainerRef.current.style['margin-bottom'] = '60px'
-	}, [props.currentIndex])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
   return (

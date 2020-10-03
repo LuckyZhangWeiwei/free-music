@@ -32,7 +32,7 @@ function Search(props) {
 		if (!!suggestListRef.current)
 	  	suggestListRef.current.style['margin-bottom'] = '60px'
 		containerRef.current.style['margin-bottom'] = '60px'
-	}, [props.currentIndex, query])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
 	const onSearchChanged = useCallback(value => {

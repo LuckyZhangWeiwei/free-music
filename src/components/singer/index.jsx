@@ -37,7 +37,7 @@ function Singer(props) {
 			return
 		}
 		singerRef.current.style['margin-bottom'] = '60px'
-	}, [props.currentIndex])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
   return (

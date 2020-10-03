@@ -47,7 +47,7 @@ function Recommend(props) {
 			return
 		}
 		recommendlistRef.current.style['margin-bottom'] = '60px'
-	}, [props.currentIndex])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
 	const loadImage = useCallback(function () {

@@ -28,7 +28,7 @@ function UserCenter(props) {
 			return
 		}
 	  listWrapperRef.current.children[0].children[0].children[0].style['margin-bottom'] = '60px'
-	}, [props.currentIndex])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
 	const switchItem = useCallback(index => {

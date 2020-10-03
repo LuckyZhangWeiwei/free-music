@@ -42,7 +42,7 @@ const MusicList = props => {
 			return
 		}
 		songListRef.current.children[0].style['margin-bottom'] = '60px'
-	}, [props.currentIndex])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 	
  const handleScrollY = useCallback(function (scrollY) {

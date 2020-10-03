@@ -48,7 +48,7 @@ const ListView = function(props) {
 			return
 		}
 		scrollRef.current.refresh()
-	}, [props.currentIndex])
+	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
 	const _getFixedTitle= useMemo(() => {
