@@ -46,7 +46,11 @@ function Recommend(props) {
 		if (props.currentIndex === -1) {
 			return
 		}
-		recommendlistRef.current.style['margin-bottom'] = '60px'
+		if (props.currentSong && props.currentSong.id) {
+			recommendlistRef.current.style['margin-bottom'] = '60px'
+		} else {
+			recommendlistRef.current.style['margin-bottom'] = '0px'
+		}
 	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 

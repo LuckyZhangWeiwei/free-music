@@ -29,9 +29,11 @@ function Search(props) {
 		if (props.currentIndex === -1) {
 			return
 		}
-		if (!!suggestListRef.current)
-	  	suggestListRef.current.style['margin-bottom'] = '60px'
-		containerRef.current.style['margin-bottom'] = '60px'
+		if (props.currentSong && props.currentSong.id) {
+				containerRef.current.style['margin-bottom'] = '60px'
+			} else {
+				containerRef.current.style['margin-bottom'] = '0px'
+		}
 	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 
@@ -110,7 +112,8 @@ function Search(props) {
 				&&
 				<div className="search-result" ref={suggestListRef}>
 					<Suggest 
-						query={query} 
+						query={query}
+						suggestListRef={suggestListRef}
 						{...props} 
 						onScroll={() => onScroll()} 
 						select={item => {setToSearchHistory(item)}} 

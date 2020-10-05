@@ -36,7 +36,11 @@ function Singer(props) {
 		if (props.currentIndex === -1) {
 			return
 		}
-		singerRef.current.style['margin-bottom'] = '60px'
+		if (props.currentSong && props.currentSong.id) {
+			singerRef.current.style['margin-bottom'] = '60px'
+		} else {
+			singerRef.current.style['margin-bottom'] = '0px'
+		}
 	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 

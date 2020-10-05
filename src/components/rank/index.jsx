@@ -39,7 +39,12 @@ function Rank(props) {
 		if (props.currentIndex === -1) {
 			return
 		}
-		rankContainerRef.current.style['margin-bottom'] = '60px'
+		if (props.currentSong && props.currentSong.id) {
+			rankContainerRef.current.style['margin-bottom'] = '60px'
+		} else {
+			rankContainerRef.current.style['margin-bottom'] = '0px'
+		}
+		
 	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 

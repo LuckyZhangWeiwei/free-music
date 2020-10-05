@@ -27,7 +27,11 @@ function UserCenter(props) {
 		if (props.currentIndex === -1) {
 			return
 		}
-	  listWrapperRef.current.children[0].children[0].children[0].style['margin-bottom'] = '60px'
+		if (props.currentSong && props.currentSong.id) {
+			listWrapperRef.current.children[0].children[0].children[0].style['margin-bottom'] = '60px'
+		} else {
+			listWrapperRef.current.children[0].children[0].children[0].style['margin-bottom'] = '0px'
+		}
 	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 

@@ -93,6 +93,16 @@ const Suggest = props => {
 		_checkMore()
 	}, [data, props.query])
 
+	useEffect(() => {
+		if (!!props.suggestListRef.current) {
+			if (props.currentSong && props.currentSong.id) {
+				props.suggestListRef.current.style['margin-bottom'] = '60px'
+			} else {
+				props.suggestListRef.current.style['margin-bottom'] = '0px'
+			}
+		}
+	}, [data, props.query, props.currentSong && props.currentSong.id])
+
 	const searchSong = useCallback((isInit = true) => {
 		setHasMore(true)
 		search(props.query, pageRef.current, true, PAGE_SIZE).then(res => {

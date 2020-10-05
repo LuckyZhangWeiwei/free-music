@@ -41,7 +41,11 @@ const MusicList = props => {
 		if (props.currentIndex === -1) {
 			return
 		}
-		songListRef.current.children[0].style['margin-bottom'] = '60px'
+		if (props.currentSong && props.currentSong.id) {
+			songListRef.current.children[0].style['margin-bottom'] = '60px'
+		} else {
+			songListRef.current.children[0].style['margin-bottom'] = '0px'
+		}
 	}, [props.currentSong && props.currentSong.id])
 	/********************************************* */
 	
