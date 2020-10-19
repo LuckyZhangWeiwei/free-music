@@ -6,10 +6,17 @@
 		align-items: center
 		height: 40px
 		overflow: hidden
-		&.list-enter-active, &.list-leave-active
-			transition: all 0.1s
-		&.list-enter, &.list-leave-to
+		box-sizing border-box
+		&.item-exit
+			opacity: 1
+			height: 40px
+		&.item-exit-active
+			opacity: 0
 			height: 0
+			transition: all 300ms ease-in
+		&.item-exit-done
+			height: 0
+			opacity: 0
 		.text
 			flex: 1
 			color: $color-text-l

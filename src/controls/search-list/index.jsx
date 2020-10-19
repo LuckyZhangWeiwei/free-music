@@ -1,4 +1,5 @@
 import React, { memo, useCallback } from 'react'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 
 import './index.stylus'
@@ -28,18 +29,18 @@ const ItemLine = memo(props => {
 const SearchList = memo(props => {
 	return (
 		<div className="search-list">
-			{
-				props.searchHistory.map((item, index) => {
-					return (
-						<ItemLine 
-							key={item} 
-							item={item} 
-							onItemclick={item => props.itemClick(item)} 
-							onIconClick={item => props.iconClick(item)} 
-						/>
-					)
-				})
-			}
+				<TransitionGroup>
+					{
+						props.searchHistory.map(item =>
+							<CSSTransition key={item} timeout={300} classNames="item">
+								<ItemLine
+									item={item} 
+									onItemclick={item => props.itemClick(item)} 
+									onIconClick={item => props.iconClick(item)} 
+								/>
+							</CSSTransition>
+						)}
+				</TransitionGroup>
 		</div>
 	)
 })
