@@ -1,4 +1,4 @@
-import React, {memo, useState, useEffect} from 'react'
+import React, {memo, useState, useEffect, useCallback} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 
@@ -61,9 +61,18 @@ const Disc = props => {
 		})
 	}, [props.disc.id])
 
+	const handleBackClick = useCallback(() => {
+		setShow(false)
+	}, [show])
+
 	return (
 		<CSSTransition timeout={300} classNames="slide" in={show}>
-			<MusicList song={song} title={props.disc.name} bgImage={props.disc.coverImgUrl} history={props.history} />
+			<MusicList 
+				song={song} 
+				title={props.disc.name} 
+				bgImage={props.disc.coverImgUrl} 
+				history={props.history} 
+				handleBackClick={() => handleBackClick()} />
 		</CSSTransition>
 	)
 }

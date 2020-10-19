@@ -87,7 +87,15 @@ const MusicList = props => {
 
 	return (
 		<div className="music-list">
-			<div className="back" onClick={() => {props.history.goBack()}}>
+			<div className="back" 
+				onClick={
+					() => {
+							!!props.handleBackClick && props.handleBackClick()
+							setTimeout(() => {
+								props.history.goBack() 
+							}, 301)
+						}
+					}>
 				<i className="icon-back"></i>
 			</div>
 			<h1 className="title">{props.title}</h1>

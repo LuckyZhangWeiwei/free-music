@@ -27,8 +27,8 @@ function Recommend(props) {
 	useEffect(() => {
 		getRecommend()
 			.then(res => {
-				if (res.code === ERR_OK) {
-					const { slider } = res.data
+				if (res.code === ERR_OK_lOCAL) {
+					const slider = res.data
 					setSlider(slider)
 				}
 			})
@@ -39,7 +39,7 @@ function Recommend(props) {
 				setDiscList(playlists)
 			}
 		})
-	}, [])
+	}, [!!slider && slider.length])
 
 	/********************************************* */
 	useEffect(() => {
@@ -76,15 +76,15 @@ function Recommend(props) {
 						<div className="slider-wrapper" style={{ maxHeight:165, minHeight: 165 }} >
 							<Slider loop={true} interval={4000} autoPlay={true}>
 								{
-									slider.length > 0 
+									!!slider
 									&&
-									slider.map(item=>{
+									slider.map(item=> {
 										return (
-											<div key={item.id}>
-												<a href={item.linkUrl}>
+											<div key={item.targetId}>
+												<a href={item.url}>
 													<img 
-														alt={item.id} 
-														src={item.picUrl} 
+														alt={item.typeTitle} 
+														src={item.pic} 
 														onLoad={loadImage} 
 														className="needsclick slider-image" />
 												</a>

@@ -47,10 +47,18 @@ function UserCenter(props) {
 		props.dispatch(insertSong(new Song(song)))
 	}, [props.currentSong.id])
 
+	const goBack = useCallback(() => {
+		setShow(false)
+		setTimeout(() => {
+			props.history.goBack()
+		}, 300)
+		
+	}, [show])
+
   return (
     <CSSTransition timeout={300} classNames="slide" in={show}>
 			<div className="user-center">
-				<div className="back" onClick={() => props.history.goBack()}>
+				<div className="back" onClick={() => goBack()}>
 					<i className="icon-back"></i>
 				</div>
 				<div className="switches-wrapper">

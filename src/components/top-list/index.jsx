@@ -45,6 +45,10 @@ const TopList = function (props) {
 		return ret
 	}, [])
 
+	const handleBackClick  = useCallback(() => {
+			setShow(false)
+	}, [show])
+
 	return (
 		<CSSTransition timeout={300} classNames="slide" in={show}>
 			<MusicList 
@@ -52,7 +56,8 @@ const TopList = function (props) {
 				title={props.topList.topTitle} 
 				bgImage={props.topList.picUrl} 
 				history={props.history} 
-				rank={true} 
+				rank={true}
+				handleBackClick={() => handleBackClick()}
 			/>
 		</CSSTransition>
 	)

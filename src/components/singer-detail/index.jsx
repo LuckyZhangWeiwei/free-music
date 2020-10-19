@@ -1,4 +1,4 @@
-import React, {useState, useEffect, memo, useRef} from 'react'
+import React, {useState, useEffect, useCallback, memo, useRef} from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import { getSingerDetail } from './../../api/singer'
@@ -8,6 +8,16 @@ import MusicList from '../../controls/music-list'
 import './index.stylus'
 import { ERR_OK } from '../../api/config'
 import { loadPlayList } from '../../store/actions'
+
+function _normalizeSongs (list) {
+		let result = []
+		list.forEach(item => {
+			let { musicData } = item
+			const ret = creatSong(musicData)
+			result.push(ret)
+		})
+		return result
+}
 
 const SingerDetail = function(props) {
 	const [show, setShow] = useState(false)
@@ -36,23 +46,23 @@ const SingerDetail = function(props) {
 					props.dispatch(loadPlayList(ret))
 				}
 			})
-	}, [props.singer.id, props.history]
+		}, [props.singer.id, props.history]
 	)
 
-	function _normalizeSongs (list) {
-		let result = []
-		list.forEach(item => {
-			let { musicData } = item
-			const ret = creatSong(musicData)
-			result.push(ret)
-		})
-		return result
-	}
+	const handleBackClick = useCallback(() => {
+		setShow(false)
+	}, [show])
 
 	return (
 		<div ref={containerRef}>
 			<CSSTransition timeout={300} classNames="slide" in={show}>
-				<MusicList song={song} title={props.singer.name} bgImage={props.singer.avatar} history={props.history} />
+				<MusicList 
+					song={song} 
+					title={props.singer.name} 
+					bgImage={props.singer.avatar} 
+					history={props.history}
+					handleBackClick={() => handleBackClick()}
+				/>
 			</CSSTransition>
 		</div>
 	)
