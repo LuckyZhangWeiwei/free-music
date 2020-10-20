@@ -52,7 +52,6 @@ function UserCenter(props) {
 		setTimeout(() => {
 			props.history.goBack()
 		}, 300)
-		
 	}, [show])
 
   return (

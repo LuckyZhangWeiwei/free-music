@@ -1,7 +1,5 @@
 import React, {memo} from 'react'
-import { NavLink, Switch, HashRouter } from "react-router-dom"
-import { renderRoutes } from "react-router-config"
-import UserCenter from './../../components/user-center'
+import { NavLink, HashRouter } from "react-router-dom"
 
 import './index.stylus'
 import logo from './timg.jpg'
@@ -21,14 +19,6 @@ const MHeader = memo(function () {
 				<NavLink className="mine" to="/user">
 					<i className="icon-mine" />
 				</NavLink>
-					<Switch>
-						{ 
-						renderRoutes([{
-								path: "/user",
-								component: UserCenter
-							}]) 
-						}
-					</Switch>
 			</HashRouter>
     </div>
   )

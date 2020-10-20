@@ -7,6 +7,7 @@ import MHeader from './components/m-header'
 import Player from './controls/player'
 
 function App(props) {
+	console.log('props:', props)
 	return (
 		<>
 			<Router>

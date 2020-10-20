@@ -15,12 +15,11 @@
 	&.slide-enter-done
 		opacity 1
 	&.slide-exit
+		opacity 1
 		transform: translate3d(0, 0, 0)
 	&.slide-exit-active
+		opacity 1
 		transition: transform 0.3s
-		transform: translate3d(100%, 0, 0)
-	&.slide-exit-done
-		opacity 0
 		transform: translate3d(100%, 0, 0)
 	.back
 		position absolute
