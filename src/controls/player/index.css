@@ -87,3 +87,7 @@
 	opacity: 0;
 	z-index: -99;
 }
+
+.cd-wrapper .play {
+	transform-origin: center;
+} 

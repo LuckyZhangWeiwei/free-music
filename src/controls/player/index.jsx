@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer } from 'react'
+import React, {memo, useEffect, useState, useRef, useCallback, useMemo, useReducer } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -40,7 +40,8 @@ const Player = props => {
 		currentPlayingLyric,
 		currentLineNum,
 		lyricLines,
-		lastPreOrNextAction
+		lastPreOrNextAction,
+		sliderAction
 	} = state
 
 	const cdWrapperRef = useRef(null)
@@ -72,6 +73,14 @@ const Player = props => {
 			_setMusicReadyState(false)
 
 			audioRef.current.play()
+
+			setTimeout(() => {
+				dispatch({
+					type: 'set_slider_action',
+					payload: null
+				})
+			}, 305);
+		
 		})
 	}, [props.currentSong.id])
 
@@ -266,7 +275,7 @@ const Player = props => {
 
 	const cdCls = useMemo(() => {
 		return props.playingState ? 'play' : 'play pause'
-	}, [props.playingState])
+	}, [props.playingState, sliderAction])
 
 	const disableCls = useMemo(() => {
 		return songReady ? '' : 'disable'
@@ -295,9 +304,13 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
+			dispatch({
+				type: 'set_slider_action',
+				payload: 'left'
+			})
 		}
 	}, 
-	[songReady, props.currentSong.id, props.playMode]
+	[songReady, props.currentSong.id, props.playMode, sliderAction]
 	)
 	const next = useCallback((e, errorSkip = false) => {
 		// why can not get current songReady state ???
@@ -323,9 +336,14 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
+
+			dispatch({
+				type: 'set_slider_action',
+				payload: 'right'
+			})
 		}
 	}, 
-	[songReady, props.currentSong.id, props.playMode]
+	[songReady, props.currentSong.id, props.playMode, sliderAction]
 	)
 
 	const onCanPlay = () => {
@@ -542,6 +560,7 @@ const Player = props => {
 								cdWrapperRef={cdWrapperRef}
 								cdCls={cdCls}
 								playingLyric={currentPlayingLyric}
+								showSlider={sliderAction}
 							/>
 							<PlayerLyric
 							lyricListRef={lyricListRef}

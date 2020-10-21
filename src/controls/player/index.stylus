@@ -72,9 +72,9 @@
 						box-sizing: border-box
 						border: 10px solid rgba(255, 255, 255, 0.1)
 						border-radius: 50%
-						&.play
+						.play
 							animation: rotate 20s linear infinite
-						&.pause
+						.pause
 							animation-play-state: paused
 						.image
 							position: absolute
@@ -83,7 +83,6 @@
 							width: 100%
 							height: 100%
 							border-radius: 50%
-
 				.playing-lyric-wrapper
 					width: 80%
 					margin: 30px auto 0 auto
@@ -220,6 +219,34 @@
 				position: absolute
 				left: 0
 				top: 0
+
+.rightslide-enter {
+	left: 120% !important;
+	top: 0 !important;
+}
+
+.rightslide-enter-active {
+	transition: left 0.3s ease-in-out;
+	left: 0 !important;
+}
+
+.rightslide-enter-done {
+	left: 0 !important;
+}
+
+.leftslide-enter {
+	left: -120% !important;
+	top: 0 !important;
+}
+
+.leftslide-enter-active {
+	transition: left 0.3s ease-in-out;
+	left: 0 !important;
+}
+
+.leftslide-enter-done {
+	left: 0 !important;
+}
 
 @keyframes rotate
 	0%

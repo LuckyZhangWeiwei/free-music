@@ -9,7 +9,8 @@ const initialPlayerState = {
 	currentPlayingLyric: null,
 	currentLineNum: null,
 	lyricLines: [],
-	lastPreOrNextAction: 'next'
+	lastPreOrNextAction: 'next',
+	sliderAction: null
 }
 
 const playerReducer = (state, action) => {
@@ -37,6 +38,8 @@ const playerReducer = (state, action) => {
 			return {...state, currentPlayingLyric: payload}
 		case 'set_currentLineNum':
 			return {...state, currentLineNum: payload}
+		case 'set_slider_action':
+			return {...state, sliderAction: payload}
 	}
 }
 
