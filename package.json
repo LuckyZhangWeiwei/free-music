@@ -75,7 +75,8 @@
     "redux-thunk": "^2.3.0",
     "create-keyframe-animation": "^0.1.0",
     "lyric-parser": "^1.0.1",
-    "good-storage": "^1.1.1"
+    "good-storage": "^1.1.1",
+    "redux-persist": "^6.0.0"
   },
   "scripts": {
     "start": "node scripts/start.js",

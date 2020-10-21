@@ -3,11 +3,11 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { renderRoutes } from "react-router-config"
 import { connect } from 'react-redux'
 import { getRecommend, getDiscList } from '../../api/recommend'
-import { ERR_OK, ERR_OK_lOCAL } from '../../api/config'
+import { ERR_OK_lOCAL } from '../../api/config'
 import Slider from '../../controls/slider'
 import Scroll from '../../controls/scroll'
 import Loading from '../../controls/loading'
-import { setDisc } from '../../store/actions'
+import { setDisc, setBanner, setDiscList } from '../../store/actions'
 
 import './index.stylus'
 import 'react-lazy-load-image-component/src/effects/blur.css'
@@ -18,28 +18,28 @@ function Recommend(props) {
 
 	const recommendlistRef = useRef()
 
-	const [slider, setSlider] = useState([])
-
-	const [discList, setDiscList] = useState([])
-
 	const scrollRef = useRef()
 
 	useEffect(() => {
-		getRecommend()
+		if (props.banners.length === 0) {
+			getRecommend()
 			.then(res => {
 				if (res.code === ERR_OK_lOCAL) {
 					const slider = res.data
-					setSlider(slider)
+					props.dispatch(setBanner(slider))
 				}
 			})
-
-		getDiscList().then(res => {
-			if (res.code === ERR_OK_lOCAL) {
-				const { playlists } = res
-				setDiscList(playlists)
-			}
-		})
-	}, [!!slider && slider.length])
+		}
+		if (props.discList.length === 0) {
+			getDiscList().then(res => {
+				if (res.code === ERR_OK_lOCAL) {
+					const { playlists } = res
+					props.dispatch(setDiscList(playlists))
+				}
+			})
+		}
+		
+	}, [!!props.banners && props.banners.length])
 
 	/********************************************* */
 	useEffect(() => {
@@ -71,14 +71,14 @@ function Recommend(props) {
 
   return (
 		<div className="recommend" ref={recommendlistRef}>
-			 <Scroll className="recommend-content" data={discList}  ref={scrollRef}>
+			 <Scroll className="recommend-content" data={props.discList}  ref={scrollRef}>
 					<div>
 						<div className="slider-wrapper" style={{ maxHeight:165, minHeight: 165 }} >
 							<Slider loop={true} interval={4000} autoPlay={true}>
 								{
-									!!slider
+									!!props.banners
 									&&
-									slider.map(item=> {
+									props.banners.map(item=> {
 										return (
 											<div key={item.targetId}>
 												<a href={item.url}>
@@ -100,7 +100,7 @@ function Recommend(props) {
 							</h1>
 							<ul>
 								{
-									discList.map((item, index) => {
+									props.discList.map((item, index) => {
 										return (
 											<li className="item" key={item.id} onClick={() => selectItem(item)}>
 													<div className="icon">
@@ -123,7 +123,7 @@ function Recommend(props) {
 						</div>
 				</div>
 				{
-					!discList.length 
+					!props.discList.length 
 					&&
 					<div className="loading-container">
 						<Loading title="正在加载..."/>

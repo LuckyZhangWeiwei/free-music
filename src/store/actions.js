@@ -36,6 +36,12 @@ export const SET_PLAY_HISTORY = 'SET_PLAY_HISTORY'
 
 export const SET_FAVIORITE_LIST = 'SET_FAVIORITE_LIST'
 
+export const SET_BANNER = 'SET_BANNER'
+
+export const SET_HOT_LIST = 'SET_HOT_LIST'
+
+export const SET_DISC_LIST = 'SET_DISC_LIST'
+
 export function setSinger(singer) {
 	return {
 		type: SET_SINGER,
@@ -281,5 +287,26 @@ export function deleteFavoriteList(state) {
 	return {
 		type: SET_FAVIORITE_LIST,
 		payload: deleteFavorite(state)
+	}
+}
+
+export function setBanner(state) {
+	return {
+		type: SET_BANNER,
+		payload: state
+	}
+}
+
+export function setHotList(state) {
+	return {
+		type: SET_HOT_LIST,
+		payload: state
+	}
+}
+
+export function setDiscList(state) {
+	return {
+		type: SET_DISC_LIST,
+		payload: state
 	}
 }

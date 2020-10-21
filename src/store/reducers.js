@@ -13,7 +13,10 @@ import {
 	SET_DEL_HISTORY_ITEM,
 	SET_DEL_HISTORY_ALL,
 	SET_PLAY_HISTORY,
-	SET_FAVIORITE_LIST
+	SET_FAVIORITE_LIST,
+	SET_BANNER,
+	SET_HOT_LIST,
+	SET_DISC_LIST
 } from './actions'
 
 import { playMode } from '../common/js/config'
@@ -149,6 +152,36 @@ export default {
 		switch (type) {
 			case SET_FAVIORITE_LIST:
 				let obj = [...loadFavorite()]
+				return obj
+			default:
+		}
+		return state
+	},
+	banners(state=[], action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_BANNER:
+				let obj = [...payload]
+				return obj
+			default:
+		}
+		return state
+	},
+	hot(state=[], action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_HOT_LIST:
+				let obj = [...payload]
+				return obj
+			default:
+		}
+		return state
+	},
+	discList(state=[], action) {
+		const { type, payload } = action
+		switch (type) {
+			case SET_DISC_LIST:
+				let obj = [...payload]
 				return obj
 			default:
 		}
