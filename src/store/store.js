@@ -12,7 +12,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const persistConfig = {
 	key: 'root',
 	storage: storage,
-	stateReconclier: autoMergeLevel2
+	stateReconclier: autoMergeLevel2,
+	blacklist: ['currentIndex', 'currentSong', 'isFullScreen','playMode', 'playingState', 'singer']
 }
 
 const myPersistReducer = persistReducer(persistConfig, combineReducers(reducers))
