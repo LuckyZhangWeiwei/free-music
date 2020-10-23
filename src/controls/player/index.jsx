@@ -304,10 +304,14 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-			dispatch({
-				type: 'set_slider_action',
-				payload: 'left'
-			})
+
+			setTimeout(() => {
+				dispatch({
+					type: 'set_slider_action',
+					payload: 'left'
+				})	
+			}, 100);
+
 		}
 	}, 
 	[songReady, props.currentSong.id, props.playMode, sliderAction]
@@ -337,10 +341,13 @@ const Player = props => {
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
 
-			dispatch({
-				type: 'set_slider_action',
-				payload: 'right'
-			})
+			setTimeout(() => {
+				dispatch({
+					type: 'set_slider_action',
+					payload: 'right'
+				})
+			}, 100);
+			
 		}
 	}, 
 	[songReady, props.currentSong.id, props.playMode, sliderAction]
