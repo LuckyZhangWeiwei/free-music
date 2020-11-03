@@ -2,14 +2,14 @@ import axios from 'axios'
 import {commonParams, options} from './config'
 
 export function getHotSearchTag() {
-	const url = 'http://localhost:3000/search/hot/'
+	const url = 'http://8.131.69.222:3000/search/hot/'
 	return axios.get(url).then((res) => {
     return Promise.resolve(res.data)
   })
 }
 
 export function search(query, page, zhida, perpage) {
-  const url = 'http://localhost:3000/extrnal/search'
+  const url = 'http://8.131.69.222:3000/extrnal/search'
   const data = Object.assign({}, commonParams, {
     g_tk: 1928093487,
     inCharset: 'utf-8',

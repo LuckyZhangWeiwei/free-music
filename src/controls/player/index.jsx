@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState, useRef, useCallback, useMemo, useReducer } from 'react'
+import React, {memo, useEffect, useRef, useCallback, useMemo, useReducer } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import { connect } from 'react-redux'
 import animations from 'create-keyframe-animation'
@@ -157,6 +157,9 @@ const Player = props => {
 	}, [props.playingState])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
+
+		clearTimeout(lyricRef.current.timer)
+
 		if (!props.sequenceList.length) return
 		
 		dispatch({

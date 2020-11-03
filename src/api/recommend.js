@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export function getRecommend() {
-	const url = 'http://localhost:3000/dj/banner'
+	const url = 'http://8.131.69.222:3000/dj/banner'
 	return axios.get(url, {
     params: null
   }).then((res) => {
@@ -10,7 +10,7 @@ export function getRecommend() {
 }
 
 export function getDiscList() {
-	const url = 'http://localhost:3000/top/playlist/highquality?limit=20'
+	const url = 'http://8.131.69.222:3000/top/playlist/highquality?limit=20'
 	return axios.get(url, {
     params: null
   }).then((res) => {
@@ -19,7 +19,7 @@ export function getDiscList() {
 }
 
 export function getDiscDetail(discId) {
-	const url = `http://localhost:3000/playlist/detail?id=${discId}`
+	const url = `http://8.131.69.222:3000/playlist/detail?id=${discId}`
 	return axios.get(url).then((res) => {
     return Promise.resolve(res.data)
   })
