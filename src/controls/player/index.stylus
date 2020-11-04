@@ -8,7 +8,6 @@
 		right: 0
 		top: 0
 		bottom: 0
-		// z-index: 150
 		background: $color-background
 		.background
 			position: absolute
@@ -72,16 +71,17 @@
 						box-sizing: border-box
 						border: 10px solid rgba(255, 255, 255, 0.1)
 						border-radius: 50%
+						background: url('https://s3.music.126.net/mobile-new/img/disc.png?d3bdd1080a72129346aa0b4b4964b75f=') no-repeat center/contain;
 						.play
 							animation: rotate 20s linear infinite
 						.pause
 							animation-play-state: paused
 						.image
 							position: absolute
-							left: 0
-							top: 0
-							width: 100%
-							height: 100%
+							left: 66px
+							top: 66px
+							width: 200px
+							height: 200px
 							border-radius: 50%
 				.playing-lyric-wrapper
 					width: 80%
@@ -222,30 +222,30 @@
 
 .rightslide-enter {
 	left: 120% !important;
-	top: 0 !important;
+	top: 66px !important;
 }
 
 .rightslide-enter-active {
 	transition: left 0.3s ease-in-out;
-	left: 0 !important;
+	left: 66px !important;
 }
 
 .rightslide-enter-done {
-	left: 0 !important;
+	left: 66px !important;
 }
 
 .leftslide-enter {
 	left: -120% !important;
-	top: 0 !important;
+	top: 66px !important;
 }
 
 .leftslide-enter-active {
 	transition: left 0.3s ease-in-out;
-	left: 0 !important;
+	left: 66px !important;
 }
 
 .leftslide-enter-done {
-	left: 0 !important;
+	left: 66px !important;
 }
 
 @keyframes rotate
