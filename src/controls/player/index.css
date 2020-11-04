@@ -100,7 +100,7 @@
 	top: -150px;
 	left: 0px;
 	background: url('https://s3.music.126.net/m/s/img/needle.png?702cf6d95f29e2e594f53a3caab50e12') no-repeat center/contain;
-	transform: rotate(-25deg);
+	transform: rotate(-20deg);
 	transform-origin: 24px 10px;
 	transition: transform .5s ease-in-out;
 }

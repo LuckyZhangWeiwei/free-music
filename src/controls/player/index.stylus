@@ -78,10 +78,10 @@
 							animation-play-state: paused
 						.image
 							position: absolute
-							left: 66px
-							top: 66px
-							width: 200px
-							height: 200px
+							left: 20%
+							top: 20%
+							width: 60%
+							height: 60%
 							border-radius: 50%
 				.playing-lyric-wrapper
 					width: 80%
@@ -222,30 +222,30 @@
 
 .rightslide-enter {
 	left: 120% !important;
-	top: 66px !important;
+	top: 20% !important;
 }
 
 .rightslide-enter-active {
 	transition: left 0.3s ease-in-out;
-	left: 66px !important;
+	left: 20% !important;
 }
 
 .rightslide-enter-done {
-	left: 66px !important;
+	left: 20% !important;
 }
 
 .leftslide-enter {
 	left: -120% !important;
-	top: 66px !important;
+	top: 20% !important;
 }
 
 .leftslide-enter-active {
 	transition: left 0.3s ease-in-out;
-	left: 66px !important;
+	left: 20% !important;
 }
 
 .leftslide-enter-done {
-	left: 66px !important;
+	left: 20% !important;
 }
 
 @keyframes rotate
