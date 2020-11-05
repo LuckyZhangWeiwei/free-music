@@ -106,5 +106,5 @@
 }
 
 .playing .cd-wrapper::after {
-	transform: rotate(-14deg);
+	transform: rotate(-12deg);
 }
