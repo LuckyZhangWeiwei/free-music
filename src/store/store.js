@@ -13,7 +13,16 @@ const persistConfig = {
 	key: 'root',
 	storage: storage,
 	stateReconclier: autoMergeLevel2,
-	blacklist: ['currentIndex', 'currentSong', 'isFullScreen','playMode', 'playingState', 'singer']
+	blacklist: [
+		'currentIndex', 
+		'currentSong', 
+		'isFullScreen',
+		'playMode', 
+		'playingState', 
+		'singer', 
+		'sequenceList', 
+		'playList'
+	]
 }
 
 const myPersistReducer = persistReducer(persistConfig, combineReducers(reducers))
