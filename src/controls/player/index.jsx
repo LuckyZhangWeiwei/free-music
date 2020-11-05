@@ -101,8 +101,8 @@ const Player = props => {
 		setTimeout(() => {
 				getLynic(props.currentSong.name || props.currentSong.songname)
 				.then(res => {
+					lyricRef.current = new Lyric(res.lyric, handleLyric)
 					if (res) {
-						lyricRef.current = new Lyric(res.lyric, handleLyric)
 						if (props.playingState) {
 							dispatch({
 								type: 'set_lyricLines',
@@ -245,14 +245,14 @@ const Player = props => {
 
 	const onExiting = useCallback(function(el) {
 		cdWrapperRef.current.style.transition = 'all 0.2s'
-    const {x, y, scale} = _getPosAndScale
-    cdWrapperRef.current.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
-    cdWrapperRef.current.addEventListener('transitionend', null)
+		const {x, y, scale} = _getPosAndScale
+		cdWrapperRef.current.style[transform] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`
+		cdWrapperRef.current.addEventListener('transitionend', null)
 	}, [])
 
 	const onExited = useCallback(function(el) {
 		cdWrapperRef.current.style.transition = ''
-    cdWrapperRef.current.style[transform] = ''
+    	cdWrapperRef.current.style[transform] = ''
 	}, [])
 
 	const _getPosAndScale = useMemo(() => {
@@ -381,10 +381,10 @@ const Player = props => {
 		_setMusicReadyState(false)
 	}
 
-	const	onPlay = () => {
+	const onPlay = () => {
 		props.dispatch(setPlayingState(true))
 	}
-	const	onPause = () => {
+	const onPause = () => {
 		props.dispatch(setPlayingState(false))
 	}
 
@@ -447,9 +447,9 @@ const Player = props => {
 				payload: true
 			})
 		}
-			const touch = e.touches[0]
-			touchRef.current.startX = touch.pageX
-			touchRef.current.startY = touch.pageY
+		const touch = e.touches[0]
+		touchRef.current.startX = touch.pageX
+		touchRef.current.startY = touch.pageY
 	}, [initTouch, currentShow, lyricLines])
 
 	const middleTouchMove = useCallback(e => {
