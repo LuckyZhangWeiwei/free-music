@@ -14,7 +14,7 @@ import { initialPlayerState, playerReducer } from './reducer/initState'
 import PlayList from '../playlist'
 import MusicOperator from './operators'
 import MiniPlayer from './mini-player'
-import Cover from './player-conver'
+import Cover from './player-cover'
 import PlayerLyric from './Lyric'
 import CD from './CD'
 import Top from './top'
@@ -100,8 +100,6 @@ const Player = props => {
 		}
 		getLynic(props.currentSong.name || props.currentSong.songname)
 		.then(res => {
-			console.log('res:', res)
-
 			if (res && res.lyric.length > 0) {
 				lyricRef.current = new Lyric(res.lyric, handleLyric)
 				if (props.playingState) {
