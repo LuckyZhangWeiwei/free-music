@@ -14,10 +14,10 @@ const PlayerLyric = props => {
 					{
 						props.lyricLines.map((item,index) => 
 						 <p 
-								key={index} 
-								className={classnames('text', {'current': props.currentLineNum === index})}>
-									{item.txt}
-							</p>
+							key={index} 
+							className={classnames('text', {'current': props.currentLineNum === index})}>
+							{item.txt}
+						</p>
 						)
 					}
 				</div>
