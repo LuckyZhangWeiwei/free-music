@@ -290,6 +290,11 @@ const Player = props => {
 			payload: 'prev'
 		})
 
+		dispatch({
+			type: 'set_percentage',
+			payload: 0
+		})
+
 		if (!!props.currentSong.url) {
 				_setMusicReadyState(false)
 		}
@@ -324,6 +329,11 @@ const Player = props => {
 		dispatch({
 			type: 'set_lastPre_or_next_action',
 			payload: 'next'
+		})
+
+		dispatch({
+			type: 'set_percentage',
+			payload: 0
 		})
 
 		if (!!props.currentSong.url) {
