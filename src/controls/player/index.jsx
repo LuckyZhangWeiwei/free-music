@@ -100,6 +100,7 @@ const Player = props => {
 		}
 		getLynic(props.currentSong.name || props.currentSong.songname)
 		.then(res => {
+			// console.log('res', res)
 			if (res && res.lyric.length > 0) {
 				lyricRef.current = new Lyric(res.lyric, handleLyric)
 				if (props.playingState) {
@@ -175,7 +176,7 @@ const Player = props => {
 			type: 'set_current_show',
 			payload: 'cd'
 		})
-	}, [props.currentSong.id])
+	}, [props.currentSong.id, lyricLines])
 
 	const close = () => {
 		props.dispatch(setFullScreen(false))
@@ -526,7 +527,7 @@ const Player = props => {
 			type: 'set_init_touch',
 			payload: false
 		})
-	}, [initTouch, currentShow])
+	}, [initTouch, currentShow, lyricLines])
 
 	const setShowPlayList = useCallback(payload => {
 		dispatch({
