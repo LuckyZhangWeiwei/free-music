@@ -98,52 +98,42 @@ const Player = props => {
 		if (lyricRef.current) {
 			lyricRef.current.stop()
 		}
-		setTimeout(() => {
-				getLynic(props.currentSong.name || props.currentSong.songname)
-				.then(res => {
-					lyricRef.current = new Lyric(res.lyric, handleLyric)
-					if (res) {
-						if (props.playingState) {
-							dispatch({
-								type: 'set_lyricLines',
-								payload: lyricRef.current.lines
-							})
-							dispatch({
-								type: 'set_currentLineNum',
-								payload: 0
-							})
-							lyricRef.current.play()
-						}
-					} else {
-							dispatch({
-								type: 'set_lyricLines',
-								payload: []
-							})
-							dispatch({
-								type: 'set_currentPlayingLyric',
-								payload: ''
-							})
-							dispatch({
-								type: 'set_currentLineNum',
-								payload: 0
-							})
-					}
-				!!lyricListRef.current &&
-					lyricListRef.current.scrollTo(0, 0, 1000)
+		getLynic(props.currentSong.name || props.currentSong.songname)
+		.then(res => {
+			console.log('res:', res)
 
-				}).catch(() => {
-					lyricRef.current = null
+			if (res && res.lyric.length > 0) {
+				lyricRef.current = new Lyric(res.lyric, handleLyric)
+				if (props.playingState) {
 					dispatch({
-						type: 'set_currentPlayingLyric',
-						payload: ''
+						type: 'set_lyricLines',
+						payload: lyricRef.current.lines
 					})
-
 					dispatch({
 						type: 'set_currentLineNum',
 						payload: 0
 					})
+					lyricRef.current.play()
+				}
+			} else {
+				lyricRef.current = null
+				dispatch({
+					type: 'set_lyricLines',
+					payload: []
 				})
-		}, 300)
+				dispatch({
+					type: 'set_currentLineNum',
+					payload: 0
+				})
+				dispatch({
+					type: 'set_currentPlayingLyric',
+					payload: ''
+				})
+			}
+		!!lyricListRef.current &&
+			lyricListRef.current.scrollTo(0, 0, 1000)
+		})
+
 		if (lyricListRef.current) {
 			lyricListRef.current.wrapperRef.current.style[transform] = `translate3d(0, 0, 0)`
 			lyricListRef.current.wrapperRef.current.style[transitionDuration] = 0
@@ -157,6 +147,10 @@ const Player = props => {
 	}, [props.playingState])
 
 	const handleLyric = useCallback(({lineNum, txt}) => {
+		
+		if (!lyricRef.current) {	// no lyric
+			return
+		}
 
 		clearTimeout(lyricRef.current.timer)
 
@@ -296,7 +290,7 @@ const Player = props => {
 		})
 
 		if (!!props.currentSong.url) {
-				_setMusicReadyState(false)
+			_setMusicReadyState(false)
 		}
 
 		if (!songReady && !errorSkip) {
@@ -359,8 +353,7 @@ const Player = props => {
 					type: 'set_slider_action',
 					payload: 'right'
 				})
-			}, 100);
-			
+			}, 100)
 		}
 	}, 
 	[songReady, props.currentSong.id, props.playMode, sliderAction]
