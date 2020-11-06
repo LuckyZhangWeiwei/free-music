@@ -103,6 +103,8 @@ const Player = props => {
 			// console.log('res', res)
 			if (res && res.lyric.length > 0) {
 				lyricRef.current = new Lyric(res.lyric, handleLyric)
+				// clearTimeout(lyricRef.current.timer)
+				// lyricRef.current.currentLineNum = 0
 				if (props.playingState) {
 					dispatch({
 						type: 'set_lyricLines',
@@ -145,14 +147,13 @@ const Player = props => {
 		props.playingState ? audio.play() : audio.pause()
 	}, [props.playingState])
 
-	const handleLyric = useCallback(({lineNum, txt}) => {
-		
+	const handleLyric = useCallback(({lineNum = 0, txt}) => {
+		// console.log('handleLyric')
+		clearTimeout(lyricRef.current.timer)
+
 		if (!lyricRef.current) {	// no lyric
 			return
 		}
-
-		clearTimeout(lyricRef.current.timer)
-
 		if (!props.sequenceList.length) return
 		
 		dispatch({
