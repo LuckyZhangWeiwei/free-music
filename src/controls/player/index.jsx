@@ -439,7 +439,7 @@ const Player = props => {
 	}, [])
 
 	const middleTouchStart = useCallback((e) => {
-		if (!lyricLines.length) {
+		if (!lyricLines|| !lyricLines.length) {
 			return
 		}
 		if (!initTouch) {
