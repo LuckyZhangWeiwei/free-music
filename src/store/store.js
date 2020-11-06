@@ -21,7 +21,8 @@ const persistConfig = {
 		'playingState', 
 		'singer', 
 		'sequenceList', 
-		'playList'
+		'playList',
+		'disc'
 	]
 }
 

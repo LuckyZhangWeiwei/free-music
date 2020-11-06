@@ -7,9 +7,11 @@ import { Provider } from 'react-redux'
 import store from './store/store'
 import { persistor } from './store/store'
 import { PersistGate } from 'redux-persist/lib/integration/react'
-// import * as serviceWorker from './serviceWorker'
+
+import axios from 'axios'
 
 initReactFastclick();
+axios.defaults.baseURL = 'http://8.131.69.222:3000/'
 
 ReactDOM.render(
 	<Provider store={store}>
