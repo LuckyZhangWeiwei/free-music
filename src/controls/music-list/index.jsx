@@ -32,7 +32,7 @@ const MusicList = props => {
 		minTranslateYRef.current = minTranslateY
 		scrollDom.style.top = `${imageHeightRef.current}px`
 		return () => {
-			scrollRef.current.destroy()
+			scrollRef && scrollRef.current &&	scrollRef.current.destroy()
 		}
 	}, [])
 

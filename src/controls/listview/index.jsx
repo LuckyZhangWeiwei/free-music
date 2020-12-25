@@ -38,7 +38,8 @@ const ListView = function(props) {
 	useEffect(() => {
 		touchRef.current = {}
 		return () => {
-			scrollRef.current.destroy()
+
+			scrollRef && scrollRef.current && scrollRef.current.destroy()
 		}
 	}, [])
 
