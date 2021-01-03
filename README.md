@@ -17,8 +17,11 @@ github 网易云音乐的 api（NeteaseCloudMusicApi） + 腾讯音乐， 二者
 
 ### `OnLine`
 
+<<<<<<< HEAD
 ![image](https://github.com/LuckyZhangWeiwei/free-music/blob/master/screendumps/webwxgetmsgimg.jpg)
 请点击 继续访问
+=======
+>>>>>>> b8149e73b6fbd33c9f542dd4166dac72f5e97542
 ![image](https://github.com/LuckyZhangWeiwei/free-music/blob/master/screendumps/1609509642.png)
 
 ### `截图`
