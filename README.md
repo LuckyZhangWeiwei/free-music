@@ -1,18 +1,24 @@
 #### `free music`
-参考了vue-music 项目
+
+参考了 vue-music 项目
 
 ### `技术栈`
 
-react16+<br/>
-各种hooks<br/>
+react17<br/>
+各种 hooks<br/>
 redux<br/>
 es6<br/>
 stylus<br/>
 create-react-app
+
 ### `API`
-github 网易云音乐的api（NeteaseCloudMusicApi） + 腾讯音乐， 二者结合
+
+github 网易云音乐的 api（NeteaseCloudMusicApi） + 腾讯音乐， 二者结合
+
 ### `OnLine`
-<http://8.131.69.222:8099/>
+
+![image](https://github.com/LuckyZhangWeiwei/free-music/blob/master/screendumps/1609509642.PNG)
+
 ### `截图`
 
 ![image](https://github.com/LuckyZhangWeiwei/free-music/blob/master/screendumps/%E6%8D%95%E8%8E%B7.PNG)
