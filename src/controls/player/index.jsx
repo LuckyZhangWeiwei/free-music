@@ -73,21 +73,12 @@ const Player = props => {
 			_setMusicReadyState(false)
 
 			audioRef.current.play()
-
-			setTimeout(() => {
-				dispatch({
-					type: 'set_slider_action',
-					payload: null
-				})
-			}, 305);
-		
 		})
 	}, [props.currentSong.id])
 
 	//when switch music, change music-show normal player fistly
 	useEffect(() => {
 			props.dispatch(setFullScreen(true))
-			
 			dispatch({
 				type: 'set_show_normal_player',
 				payload: true
@@ -100,8 +91,7 @@ const Player = props => {
 		}
 		getLynic(props.currentSong.name || props.currentSong.songname)
 		.then(res => {
-			// console.log('res', res)
-			if (res && res.lyric.length > 0) {
+			if (res && res.lyric && res.lyric.length > 0) {
 				lyricRef.current = new Lyric(res.lyric, handleLyric)
 				// clearTimeout(lyricRef.current.timer)
 				// lyricRef.current.currentLineNum = 0
@@ -148,7 +138,6 @@ const Player = props => {
 	}, [props.playingState])
 
 	const handleLyric = useCallback(({lineNum = 0, txt}) => {
-		// console.log('handleLyric')
 		clearTimeout(lyricRef.current.timer)
 
 		if (!lyricRef.current) {	// no lyric
@@ -306,17 +295,15 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-
 			setTimeout(() => {
 				dispatch({
 					type: 'set_slider_action',
 					payload: 'left'
 				})	
-			}, 100);
-
+			}, 80)
 		}
 	}, 
-	[songReady, props.currentSong.id, props.playMode, sliderAction]
+	[songReady, props.currentSong.id, props.playMode]
 	)
 	const next = useCallback((e, errorSkip = false) => {
 		// why can not get current songReady state ???
@@ -347,16 +334,14 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-
 			setTimeout(() => {
-				dispatch({
-					type: 'set_slider_action',
-					payload: 'right'
-				})
-			}, 100)
+			dispatch({
+				type: 'set_slider_action',
+				payload: 'right'
+			})}, 80)
 		}
 	}, 
-	[songReady, props.currentSong.id, props.playMode, sliderAction]
+	[songReady, props.currentSong.id, props.playMode]
 	)
 
 	const onCanPlay = () => {
@@ -382,10 +367,20 @@ const Player = props => {
 			prev(null, true)
 		}
 		_setMusicReadyState(false)
+		// 清除飞入的效果
+		dispatch({
+			type: 'set_slider_action',
+			payload: null
+		})
 	}
 
 	const onPlay = () => {
 		props.dispatch(setPlayingState(true))
+		// 清除飞入的效果
+		dispatch({
+			type: 'set_slider_action',
+			payload: null
+		})
 	}
 	const onPause = () => {
 		props.dispatch(setPlayingState(false))
