@@ -295,12 +295,10 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-			setTimeout(() => {
-				dispatch({
-					type: 'set_slider_action',
-					payload: 'left'
-				})	
-			}, 80)
+			dispatch({
+				type: 'set_slider_action',
+				payload: 'left'
+			})	
 		}
 	}, 
 	[songReady, props.currentSong.id, props.playMode]
@@ -334,11 +332,10 @@ const Player = props => {
 			}
 			props.dispatch(setCurrentIndex(index))
 			props.dispatch(setCurrentSong(props.playList[index]))
-			setTimeout(() => {
 			dispatch({
 				type: 'set_slider_action',
 				payload: 'right'
-			})}, 80)
+			})
 		}
 	}, 
 	[songReady, props.currentSong.id, props.playMode]
@@ -352,7 +349,13 @@ const Player = props => {
 
 	const onError = () => {
 		_setMusicReadyState(true)
-
+		// 清除飞入的效果
+		setTimeout(() => {
+			dispatch({
+				type: 'set_slider_action',
+				payload: null
+			})	
+		}, 305);
 		if (lastPreOrNextAction === 'next') {
 			dispatch({
 				type: 'set_lastPre_or_next_action',
@@ -367,20 +370,18 @@ const Player = props => {
 			prev(null, true)
 		}
 		_setMusicReadyState(false)
-		// 清除飞入的效果
-		dispatch({
-			type: 'set_slider_action',
-			payload: null
-		})
 	}
 
 	const onPlay = () => {
 		props.dispatch(setPlayingState(true))
 		// 清除飞入的效果
-		dispatch({
-			type: 'set_slider_action',
-			payload: null
-		})
+		setTimeout(() => {
+			dispatch({
+				type: 'set_slider_action',
+				payload: null
+			})	
+		}, 305);
+		
 	}
 	const onPause = () => {
 		props.dispatch(setPlayingState(false))
