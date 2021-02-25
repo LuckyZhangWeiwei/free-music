@@ -115,8 +115,6 @@ import './index.styl'
 
 class Slider extends React.Component {
 	constructor(props) {
-		super(props)
-
 		this.sliderRef = React.createRef()
 		this.sliderGroupRef = React.createRef()
 
