@@ -1,11 +1,14 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from "react";
 
 // Our hook
-export default function useDebounce(fn, delay, dep=[]) {
-   const { current } = useRef({ fn, timer: null });
-  useEffect(function () {
-    current.fn = fn;
-  }, [fn]);
+export default function useDebounce(fn, delay, dep = []) {
+  const { current } = useRef({ fn, timer: null });
+  useEffect(
+    function () {
+      current.fn = fn;
+    },
+    [fn]
+  );
 
   return useCallback(function f(...args) {
     if (current.timer) {
@@ -14,5 +17,5 @@ export default function useDebounce(fn, delay, dep=[]) {
     current.timer = setTimeout(() => {
       current.fn.call(this, ...args);
     }, delay);
-  }, dep)
+  }, dep);
 }
