@@ -1,36 +1,36 @@
-import React, {memo} from 'react'
-import classnames from 'classnames'
-import Scroll from './../../scroll'
+import React, { memo } from "react";
+import classnames from "classnames";
+import Scroll from "./../../scroll";
 
-const PlayerLyric = props => {
-	
-	if (props.lyricLines.length) {
-		return (
-			<Scroll className="middle-r"
-				ref={props.lyricListRef} 
-				data={props.lyricLines && props.lyricLines}
-				>
-				<div className="lyric-wrapper" ref={props.lyricLineRef}>
-					{
-						props.lyricLines.map((item,index) => 
-						 <p 
-							key={index} 
-							className={classnames('text', {'current': props.currentLineNum === index})}>
-							{item.txt}
-						</p>
-						)
-					}
-				</div>
-			</Scroll>
-		)
-	} else {
-	 return	<></>
-	}
-	
-}
+const PlayerLyric = (props) => {
+  if (props.lyricLines.length) {
+    return (
+      <Scroll
+        className="middle-r"
+        ref={props.lyricListRef}
+        data={props.lyricLines && props.lyricLines}
+      >
+        <div className="lyric-wrapper" ref={props.lyricLineRef}>
+          {props.lyricLines.map((item, index) => (
+            <p
+              key={index}
+              className={classnames("text", {
+                current: props.currentLineNum === index,
+              })}
+            >
+              {item.txt}
+            </p>
+          ))}
+        </div>
+      </Scroll>
+    );
+  } else {
+    return <></>;
+  }
+};
 
-export default memo(PlayerLyric, ((preProps, nextProps) => {
-	let lyrics = preProps.lyricLines === nextProps.lyricLines
-	let currentLine = preProps.currentLineNum === nextProps.currentLineNum
-	return lyrics && currentLine
-}))
+export default memo(PlayerLyric, (preProps, nextProps) => {
+  let lyrics = preProps.lyricLines === nextProps.lyricLines;
+  let currentLine = preProps.currentLineNum === nextProps.currentLineNum;
+  return lyrics && currentLine;
+});
