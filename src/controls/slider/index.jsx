@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import BScroll from 'better-scroll'
-import classnames from 'classnames'
-import { addClass } from '../../common/js/dom'
-import './index.styl'
+import React from "react";
+import PropTypes from "prop-types";
+import BScroll from "better-scroll";
+import classnames from "classnames";
+import { addClass } from "../../common/js/dom";
+import "./index.styl";
 
 // function Slider(props) {
-	
+
 // 	const { loop, autoPlay, interval } = props
 // 	const [currentPageIndex, setCurrentPageIndex] = useState(0)
 
@@ -36,7 +36,7 @@ import './index.styl'
 // 			slider.refresh()
 // 		})
 // 	}, [])
-	
+
 // 	return (
 // 		<div className="slider" ref={sliderRef}>
 // 			<div className="slider-group" ref={sliderGroupRef}>
@@ -44,7 +44,7 @@ import './index.styl'
 // 			</div>
 // 			<div className="dots">
 // 				{
-// 					props.children.length 
+// 					props.children.length
 // 					&&
 // 					props.children.map((item, index) => {
 // 						return (
@@ -70,7 +70,7 @@ import './index.styl'
 // 		  width += 2 * sliderWidth
 // 		}
 // 		sliderGroupRef.current.style.width = width + 'px'
-		
+
 // 	}
 
 // 	function _initSlider() {
@@ -114,124 +114,130 @@ import './index.styl'
 // export default Slider
 
 class Slider extends React.Component {
-	constructor(props) {
-		this.sliderRef = React.createRef()
-		this.sliderGroupRef = React.createRef()
+  constructor(props) {
+    super(props);
+    this.sliderRef = React.createRef();
+    this.sliderGroupRef = React.createRef();
 
-		this.state = {
-			currentPageIndex: 0
-		}
-	}
+    this.state = {
+      currentPageIndex: 0,
+    };
+  }
 
-	componentDidMount() {
-		// let that = this
-		// window.onload = function() {
-		// 		setTimeout(() => {
-		// 			that._setSliderWidth()
-		// 			that._initSlider()	
-		// }, 200);}
-			setTimeout(() => {
-				this._setSliderWidth()
-				this._initSlider()	
-			}, 400);
-		
-	
-		if (this.props.autoPlay) {
-			this._play()
-		}
-		window.addEventListener('resize', () => {
-			if (!this.slider) {
-				return
-			}
-			this._setSliderWidth(true)
-			this.slider.refresh()
-		})
-	}
-	componentWillUnmount() {
-		clearTimeout(this.timer)
-		this.slider = null
-	}
-	render() {
-		return (
-			<div className="slider" ref={this.sliderRef}>
-  			<div className="slider-group" ref={this.sliderGroupRef}>
- 				{ this.props.children }
- 			</div>
- 			<div className="dots">
- 				{
- 					this.props.children
- 					&&
- 					this.props.children.map((item, index) => {
- 						return (
- 							<span key={index} className={classnames('dot', {'active': this.state.currentPageIndex === index})}></span>
- 						)
- 					})
- 				}
- 			</div>
- 		</div> 
-		)
-	}
+  componentDidMount() {
+    // let that = this
+    // window.onload = function() {
+    // 		setTimeout(() => {
+    // 			that._setSliderWidth()
+    // 			that._initSlider()
+    // }, 200);}
+    setTimeout(() => {
+      this._setSliderWidth();
+      this._initSlider();
+    }, 400);
 
-	_setSliderWidth(isResize) {
-		let children = this.sliderGroupRef.current ? this.sliderGroupRef.current.children : []
-		let width = 0
-		let sliderWidth = this.sliderRef.current ? this.sliderRef.current.clientWidth : 0
-		for (let i = 0; i < children.length; i++) {
-			let child = children[i]
-			addClass(child, 'slider-item')
-			child.style.width = `${sliderWidth}px`
-			width += sliderWidth
-		}
+    if (this.props.autoPlay) {
+      this._play();
+    }
+    window.addEventListener("resize", () => {
+      if (!this.slider) {
+        return;
+      }
+      this._setSliderWidth(true);
+      this.slider.refresh();
+    });
+  }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+    this.slider = null;
+  }
+  render() {
+    return (
+      <div className="slider" ref={this.sliderRef}>
+        <div className="slider-group" ref={this.sliderGroupRef}>
+          {this.props.children}
+        </div>
+        <div className="dots">
+          {this.props.children &&
+            this.props.children.map((item, index) => {
+              return (
+                <span
+                  key={index}
+                  className={classnames("dot", {
+                    active: this.state.currentPageIndex === index,
+                  })}
+                ></span>
+              );
+            })}
+        </div>
+      </div>
+    );
+  }
 
-		if (this.props.loop && !isResize) {
-		  width += 2 * sliderWidth
-		}
-		if (this.sliderGroupRef.current) {
-			this.sliderGroupRef.current.style.width = `${width}px`
-		}
-	}
+  _setSliderWidth(isResize) {
+    let children = this.sliderGroupRef.current
+      ? this.sliderGroupRef.current.children
+      : [];
+    let width = 0;
+    let sliderWidth = this.sliderRef.current
+      ? this.sliderRef.current.clientWidth
+      : 0;
+    for (let i = 0; i < children.length; i++) {
+      let child = children[i];
+      addClass(child, "slider-item");
+      child.style.width = `${sliderWidth}px`;
+      width += sliderWidth;
+    }
 
-	_initSlider() {
-		this.slider = new BScroll(this.sliderRef.current, {
-				scrollX: true,
-				scrollY: false,
-				momentum: false,
-				snap: {loop: true},
-				snapLoop: this.props.loop,
-				snapThreshold: 0.3,
-				snapSpeed: 400
-		})
+    if (this.props.loop && !isResize) {
+      width += 2 * sliderWidth;
+    }
+    if (this.sliderGroupRef.current) {
+      this.sliderGroupRef.current.style.width = `${width}px`;
+    }
+  }
 
-		this.slider.on('scrollEnd', () => {
-			const currentPage = this.slider ? this.slider.getCurrentPage() : 0
-			let pageIndex = currentPage === null ? 0 : currentPage.pageX
-		
-			this.setState({
-				currentPageIndex: pageIndex
-			})
+  _initSlider() {
+    this.slider = new BScroll(this.sliderRef.current, {
+      scrollX: true,
+      scrollY: false,
+      momentum: false,
+      snap: { loop: true },
+      snapLoop: this.props.loop,
+      snapThreshold: 0.3,
+      snapSpeed: 400,
+    });
 
-			if (this.props.autoPlay) {
-				clearTimeout(this.timer)
-				this._play()
-			}
-		})
-	}
-	_play() {
-		let pageIndex = this.state.currentPageIndex + 1
-		if (pageIndex === this.props.children.length) {
-			pageIndex = 0
-		}
-	
-		this.timer = setTimeout(() => {
-			!!this.slider &&	this.slider.goToPage(pageIndex, 0, 400)
-		}, this.props.interval)
-	}
+    this.slider.on("scrollEnd", () => {
+      const currentPage = this.slider ? this.slider.getCurrentPage() : 0;
+      let pageIndex = currentPage === null ? 0 : currentPage.pageX;
+
+      this.setState({
+        currentPageIndex: pageIndex,
+      });
+
+      if (this.props.autoPlay) {
+        clearTimeout(this.timer);
+        this._play();
+      }
+    });
+  }
+  _play() {
+    let pageIndex = this.state.currentPageIndex + 1;
+    if (pageIndex === this.props.children.length) {
+      pageIndex = 0;
+    }
+
+    this.timer = setTimeout(() => {
+      !!this.slider && this.slider.goToPage(pageIndex, 0, 400);
+    }, this.props.interval);
+  }
 }
 
 Slider.propTypes = {
-	loop: PropTypes.bool,
-	interval: PropTypes.number,
-	autoPlay: PropTypes.bool
-}
+  loop: PropTypes.bool,
+  interval: PropTypes.number,
+  autoPlay: PropTypes.bool,
+};
 
-export default Slider
+export default Slider;
