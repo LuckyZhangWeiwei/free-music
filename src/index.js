@@ -11,7 +11,8 @@ import { PersistGate } from "redux-persist/lib/integration/react";
 import axios from "axios";
 
 initReactFastclick();
-axios.defaults.baseURL = "http://localhost:3000/";
+// axios.defaults.baseURL = "http://localhost:3000/";
+axios.defaults.baseURL = "http://www.zwwz.fun:3000/";
 
 ReactDOM.render(
   <Provider store={store}>

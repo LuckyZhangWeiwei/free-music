@@ -25,6 +25,20 @@ export function creatSong(musicData) {
   });
 }
 
+export function createSong2(musicData) {
+  // console.log("musicData", musicData);
+  return new Song({
+    id: musicData.id,
+    mid: null,
+    singer: filterSinger(musicData.artists),
+    name: musicData.name,
+    album: musicData.album.name,
+    duration: musicData.duration,
+    image: musicData.artists[0].img1v1Url,
+    url: null,
+  });
+}
+
 function filterSinger(singer) {
   let ret = [];
   if (!singer) {
