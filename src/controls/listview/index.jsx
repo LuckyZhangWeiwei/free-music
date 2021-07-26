@@ -1,203 +1,220 @@
-import React, {useState, useEffect, useRef, useMemo, memo} from 'react'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
-import classnames from 'classnames'
-import PropTypes from 'prop-types'
-import Scroll from '../scroll'
-import { getData } from '../../common/js/dom'
-import Loading from '../loading'
+import React, { useState, useEffect, useRef, useMemo, memo } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import classnames from "classnames";
+import PropTypes from "prop-types";
+import Scroll from "../scroll";
+import { getData } from "../../common/js/dom";
+import Loading from "../loading";
 
+import "react-lazy-load-image-component/src/effects/blur.css";
+import "./index.stylus";
 
-import 'react-lazy-load-image-component/src/effects/blur.css'
-import './index.stylus'
+const ListView = function (props) {
+  const ANCHOR_HEIGHT = 18;
+  const TITLE_HEIGHT = 30;
 
-const ListView = function(props) {
-	const ANCHOR_HEIGHT = 18
-	const TITLE_HEIGHT = 30
+  const listGroupRef = useRef();
+  const scrollRef = useRef();
+  const fixedTitleRef = useRef();
+  const touchRef = useRef();
 
-	const listGroupRef = useRef()
-	const scrollRef = useRef()
-	const fixedTitleRef = useRef()
-	const touchRef = useRef()
+  const [shortCutList, setShortCutList] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [data, setData] = useState([]);
+  const [listHeight, setListHeight] = useState([]);
 
-	const [shortCutList, setShortCutList] = useState([])
-	const [currentIndex, setCurrentIndex] = useState(0)
-	const [data, setData] = useState([])
-	const [listHeight, setListHeight] = useState([])
+  useEffect(() => {
+    setData(props.data);
+    const list = props.data.map((group) => {
+      return group.title.substr(0, 1);
+    });
 
-	useEffect(() => {
-		setData(props.data)
-		const list = props.data.map(group => {
-			return group.title.substr(0, 1)
-		})
+    setShortCutList(list);
+    _calculateHeight();
+  }, [props.data]);
 
-		setShortCutList(list)
-		_calculateHeight()
-		
-	}, [props.data])
+  useEffect(() => {
+    touchRef.current = {};
+    return () => {
+      scrollRef && scrollRef.current && scrollRef.current.destroy();
+    };
+  }, []);
 
-	useEffect(() => {
-		touchRef.current = {}
-		return () => {
+  /********************************************* */
+  useEffect(() => {
+    if (props.currentIndex === -1) {
+      return;
+    }
+    scrollRef.current.refresh();
+  }, [props.currentSong && props.currentSong.id]);
+  /********************************************* */
 
-			scrollRef && scrollRef.current && scrollRef.current.destroy()
-		}
-	}, [])
+  const _getFixedTitle = useMemo(() => {
+    return data[currentIndex] ? data[currentIndex].title : "";
+  }, [currentIndex, data]);
 
-		/********************************************* */
-	useEffect(() => {
-		if (props.currentIndex === -1) {
-			return
-		}
-		scrollRef.current.refresh()
-	}, [props.currentSong && props.currentSong.id])
-	/********************************************* */
+  return (
+    <Scroll className="listview" {...props} ref={scrollRef} scroll={scroll}>
+      <ul ref={listGroupRef}>
+        {props.data.map((group, index) => {
+          return (
+            <li className="list-group" key={group.title}>
+              <h2 className="list-group-title">{group.title}</h2>
+              <ul>
+                {group.items.map((item, index) => {
+                  return (
+                    <li
+                      className="list-group-item"
+                      key={item.id}
+                      onClick={() => selectItem(item)}
+                    >
+                      <LazyLoadImage
+                        className="avatar"
+                        src={item.avatar}
+                        alt={item.name}
+                        effect="blur"
+                      />
+                      <span className="name">{item.name}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
+      <div
+        className="list-shortcut"
+        onTouchStart={onShortcutTouchStart}
+        onTouchMove={onShortcutTouchMove}
+      >
+        <ul>
+          {shortCutList.map((item, index) => {
+            return (
+              <li
+                className={classnames("item", {
+                  current: currentIndex === index,
+                })}
+                key={item}
+                data-index={index}
+              >
+                {item}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div className="list-fixed" ref={fixedTitleRef}>
+        <h1 className="fixed-title">{_getFixedTitle}</h1>
+      </div>
+      {!data.length && (
+        <div className="loading-container">
+          <Loading title="正在加载..." />
+        </div>
+      )}
+    </Scroll>
+  );
 
-	const _getFixedTitle= useMemo(() => {
-		return data[currentIndex] ? data[currentIndex].title : ''
-	}, [currentIndex, data])
+  function onShortcutTouchStart(e) {
+    let anchorIndex = getData(e.target, "index");
+    let firstTouch = e.touches[0];
+    touchRef.current.y1 = firstTouch.pageY;
+    touchRef.current.anchorIndex = anchorIndex;
+    _scrollTo(anchorIndex);
+  }
 
-	return (
-		<Scroll className="listview" {...props} ref={scrollRef} scroll={scroll}>
-			<ul ref={listGroupRef}>
-			{
-				props.data.map((group, index) => {
-					return (
-						<li className="list-group" key={group.title}>
-							<h2 className="list-group-title">{group.title}</h2>
-							<ul>
-								{
-									group.items.map((item, index) => {
-										return (
-											<li className="list-group-item" key={item.id} onClick={() => selectItem(item)}>
-												<LazyLoadImage className="avatar" src={item.avatar} alt={item.name} effect="blur" />
-												<span className="name">{item.name}</span>
-											</li>
-										)
-									})
-								}
-							</ul>
-						</li>
-						)
-					})
-				}
-			</ul>
-			<div className="list-shortcut" onTouchStart={onShortcutTouchStart} onTouchMove={onShortcutTouchMove}>
-				<ul>
-					{
-						shortCutList.map((item, index) => {
-							return (
-								<li className={classnames('item', {'current': currentIndex === index})} key={item} data-index={index}>{item}</li>
-							)
-						})
-					}
-				</ul>
-			</div>
-			<div className="list-fixed" ref={fixedTitleRef}>
-				<h1 className="fixed-title">{_getFixedTitle}</h1>
-			</div>
-			{
-				!data.length
-				&&
-				<div className="loading-container">
-					<Loading title="正在加载..." />
-				</div>
-			}
-		</Scroll>
-	)
-
- function onShortcutTouchStart(e) {
- 		let anchorIndex = getData(e.target, 'index')
- 		let firstTouch = e.touches[0]
- 		touchRef.current.y1 = firstTouch.pageY
- 		touchRef.current.anchorIndex = anchorIndex
- 		_scrollTo(anchorIndex)
- 	}
-
- function	onShortcutTouchMove(e) {
- 		e.stopPropagation()
- 		let nextTouch = e.touches[0]
- 		touchRef.current.y2 = nextTouch.pageY
- 		let delta = (touchRef.current.y2 - touchRef.current.y1) / ANCHOR_HEIGHT | 0
- 		let anchorIndex = parseInt(touchRef.current.anchorIndex) + delta
- 		_scrollTo(anchorIndex)
- 	}
+  function onShortcutTouchMove(e) {
+    e.stopPropagation();
+    let nextTouch = e.touches[0];
+    touchRef.current.y2 = nextTouch.pageY;
+    let delta =
+      ((touchRef.current.y2 - touchRef.current.y1) / ANCHOR_HEIGHT) | 0;
+    let anchorIndex = parseInt(touchRef.current.anchorIndex) + delta;
+    _scrollTo(anchorIndex);
+  }
 
   function _scrollTo(index) {
-		if (!index && index !==0) {
-			return
-		}
-		if (index < 0) {
-			index = 0
-		} else if (index > listHeight.length -1) {
-			index = listHeight.length -1
-		}
- 		const group =	listGroupRef.current.children
- 		const touchedGroup = Array.from(group)[index]
- 		scrollRef.current.scrollToElement(touchedGroup, 0)
- 	}
+    if (!index && index !== 0) {
+      return;
+    }
+    if (index < 0) {
+      index = 0;
+    } else if (index > listHeight.length - 1) {
+      index = listHeight.length - 1;
+    }
+    const group = listGroupRef.current.children;
+    const touchedGroup = Array.from(group)[index];
+    scrollRef.current.scrollToElement(touchedGroup, 0);
+  }
 
- function	scroll(pos) {
-		const { y } = pos
-		if (fixedTitleRef.current) {
-			if (y > 0) {
-			 	fixedTitleRef.current.style.display = "none"
-			} else {
-				fixedTitleRef.current.style.display = "block"
-			}
-		}
+  function scroll(pos) {
+    const { y } = pos;
+    if (fixedTitleRef.current) {
+      if (y > 0) {
+        fixedTitleRef.current.style.display = "none";
+      } else {
+        fixedTitleRef.current.style.display = "block";
+      }
+    }
 
-		for (let i = 0; i < listHeight.length - 1; i++) {
-			let h1 = listHeight[i]
-			let h2 = listHeight[i + 1]
-			if (-y >= h1 && -y < h2) {
-				setCurrentIndex(i + 1)
-				/************handle fixed title transition****************/
-					if(h2 - TITLE_HEIGHT <= -y) {
-						fixedTitleRef.current.style.transform = `translate3d(0, ${-(TITLE_HEIGHT-(h2 + y))}px, 0)`
-					} else {
-						fixedTitleRef.current.style.transform = `translate3d(0, 0, 0)`
-					}
-				/****************************/
-				return
-			}
-		}
-		setCurrentIndex(0)
-		/***********handle fixed title transition***************/
-		if(listHeight[0] - TITLE_HEIGHT <= -y) {
-			fixedTitleRef.current.style.transform = `translate3d(0, ${-(TITLE_HEIGHT-(listHeight[0] + y))}px, 0)`
-		}
-		/**************************/
- 	}
+    for (let i = 0; i < listHeight.length - 1; i++) {
+      let h1 = listHeight[i];
+      let h2 = listHeight[i + 1];
+      if (-y >= h1 && -y < h2) {
+        setCurrentIndex(i + 1);
+        /************handle fixed title transition****************/
+        if (h2 - TITLE_HEIGHT <= -y) {
+          fixedTitleRef.current.style.transform = `translate3d(0, ${-(
+            TITLE_HEIGHT -
+            (h2 + y)
+          )}px, 0)`;
+        } else {
+          fixedTitleRef.current.style.transform = `translate3d(0, 0, 0)`;
+        }
+        /****************************/
+        return;
+      }
+    }
+    setCurrentIndex(0);
+    /***********handle fixed title transition***************/
+    if (listHeight[0] - TITLE_HEIGHT <= -y) {
+      fixedTitleRef.current.style.transform = `translate3d(0, ${-(
+        TITLE_HEIGHT -
+        (listHeight[0] + y)
+      )}px, 0)`;
+    }
+    /**************************/
+  }
 
   function _calculateHeight() {
-		let tempListHeight = []
-		const list = Array.from(listGroupRef.current.children)
-		let height = 0
-		if (list.length > 0) {
-			for (let i = 0; i < list.length; i++) {
-				let item = list[i]
-				height += item.clientHeight
-				tempListHeight.push(height)
-			}
-		}
-		setListHeight(tempListHeight)
- 	}
+    let tempListHeight = [];
+    const list = Array.from(listGroupRef.current.children);
+    let height = 0;
+    if (list.length > 0) {
+      for (let i = 0; i < list.length; i++) {
+        let item = list[i];
+        height += item.clientHeight;
+        tempListHeight.push(height);
+      }
+    }
+    setListHeight(tempListHeight);
+  }
 
-	function selectItem(item) {
-		props.selectItem(item)
-	}
+  function selectItem(item) {
+    props.selectItem(item);
+  }
 
-	function refresh() {
-		scrollRef.current.refresh()
-	}
-}
+  function refresh() {
+    scrollRef.current.refresh();
+  }
+};
 
 ListView.propTypes = {
-	data: PropTypes.array.isRequired,
-	selectItem: PropTypes.func
-}
+  data: PropTypes.array.isRequired,
+  selectItem: PropTypes.func,
+};
 
-export default memo(ListView)
+export default memo(ListView);
 
 /*******************************/
 // import React from 'react'
@@ -208,7 +225,6 @@ export default memo(ListView)
 // import { getData } from '../../common/js/dom'
 // import Loading from '../loading'
 
-
 // import 'react-lazy-load-image-component/src/effects/blur.css'
 // import './index.stylus'
 
@@ -217,7 +233,7 @@ export default memo(ListView)
 // 	constructor(props) {
 // 		super(props)
 // 		this.state = {
-// 			shortCutList: [], 
+// 			shortCutList: [],
 // 			currentIndex: 0,
 // 			data: [],
 // 			diff: -1
@@ -231,7 +247,7 @@ export default memo(ListView)
 
 // 		this.listGroupRef = React.createRef()
 // 		this.scrollRef = React.createRef()
-		
+
 // 		this.fixedTitleRef = React.createRef()
 
 // 		this.onShortcutTouchMove = this.onShortcutTouchMove.bind(this)
@@ -269,7 +285,7 @@ export default memo(ListView)
 
 // 		this.fixedTitleDiv = this.fixedTitleRef.current
 // 		this._isMounted = true
-	
+
 // 	}
 
 // 	UNSAFE_componentWillUpdate(nextProps, nextState) {
@@ -281,7 +297,7 @@ export default memo(ListView)
 // 		this.fixedTop = fixedTop
 // 		if (this.fixedTitleDiv) {
 // 			this.fixedTitleDiv.style.transform = `translate3d(0, ${fixedTop}px, 0)`
-// 		}	
+// 		}
 // 	}
 
 // 	componentWillUnmount() {
@@ -386,7 +402,7 @@ export default memo(ListView)
 // 				this.fixedTitleDiv.style.display = "block"
 // 			}
 // 		}
-		
+
 // 		for (let i = 0; i < listHeight.length - 1; i++) {
 // 			let h1 = listHeight[i]
 // 			let h2 = listHeight[i + 1]
@@ -395,7 +411,7 @@ export default memo(ListView)
 // 					this.setState({
 // 						currentIndex: i + 1,
 // 						diff:  h2 + y
-// 					})	
+// 					})
 // 				}, 20)
 // 				return
 // 			}
@@ -403,7 +419,7 @@ export default memo(ListView)
 // 		setTimeout(() => {
 // 			this.setState({
 // 				currentIndex: 0
-// 			})	
+// 			})
 // 		}, 20)
 //  	}
 
